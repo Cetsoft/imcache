@@ -29,7 +29,7 @@ package com.cetsoft.imcache;
 public interface Cache<K, V> {
 
 	/**
-	 * Put.
+	 * Puts the value with the specified key.
 	 *
 	 * @param key the key
 	 * @param value the value
@@ -37,7 +37,7 @@ public interface Cache<K, V> {
 	void put(K key, V value);
 
 	/**
-	 * Gets the.
+	 * Gets the value with the specified key.
 	 *
 	 * @param key the key
 	 * @return the value
@@ -45,7 +45,7 @@ public interface Cache<K, V> {
 	V get(K key);
 
 	/**
-	 * Invalidate.
+	 * Invalidate the value with the specified key.
 	 *
 	 * @param key the key
 	 * @return the value
