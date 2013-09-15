@@ -51,6 +51,14 @@ public interface Cache<K, V> {
 	 * @return the value
 	 */
 	V invalidate(K key);
+	
+	/**
+	 * Check if Cache Contains the specified key.
+	 *
+	 * @param key the key
+	 * @return true, if successful
+	 */
+	boolean contains(K key);
 
 	/**
 	 * Clear the cache.
