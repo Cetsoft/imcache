@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.cetsoft</groupId>
+	<version>0.0.1</version>
+	<name>imcache</name>
+	<description>Imcache is a java caching library.</description>
+	<properties>
+	    <javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
+	</properties>
+	<licenses>
+		<license>
+			<name>GNU GENERAL PUBLIC LICENSE</name>
+			<url>http://opensource.org/licenses/GPL-3.0</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+	<scm>
+		<url>http://github.com/Cetsoft/imcache/</url>
+		<connection>http://github.com/Cetsoft/imcache.git</connection>
+	</scm>
+	<developers>
+		<developer>
+			<name>Yusuf Aytas</name>
+			<organization>Cetsoft</organization>
+			<email>yusufaytas@cetsoft.com</email>
+			<organizationUrl>http://www.cetsoft.com</organizationUrl>
+			<url>http://www.yusufaytas.com</url>
+			<roles>
+				<role>Software Engineer</role>
+				<role>Computer Scientist</role>
+			</roles>
+		</developer>
+	</developers>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<artifactId>imcache</artifactId>
+</project>
