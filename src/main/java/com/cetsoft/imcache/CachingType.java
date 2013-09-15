@@ -21,47 +21,14 @@
 package com.cetsoft.imcache;
 
 /**
- * The Interface Cache.
- *
- * @param <K> the key type
- * @param <V> the value type
+ * The Enum CachingType.
  */
-public interface Cache<K, V> {
-
-	/**
-	 * Put.
-	 *
-	 * @param key the key
-	 * @param value the value
-	 */
-	void put(K key, V value);
-
-	/**
-	 * Gets the.
-	 *
-	 * @param key the key
-	 * @return the value
-	 */
-	V get(K key);
-
-	/**
-	 * Invalidate.
-	 *
-	 * @param key the key
-	 * @return the value
-	 */
-	V invalidate(K key);
+public enum CachingType {
 	
-	/**
-	 * Check if Cache contains the specified key.
-	 *
-	 * @param key the key
-	 * @return true, if successful
-	 */
-	boolean contains(K key);
-
-	/**
-	 * Clear the cache.
-	 */
-	void clear();
+	/** The heap. */
+	HEAP, 
+	/** The offheap. */
+	OFFHEAP, 
+	/** The distributed. */
+	DISTRIBUTED;
 }
