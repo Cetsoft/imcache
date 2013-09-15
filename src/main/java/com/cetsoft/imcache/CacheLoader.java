@@ -28,10 +28,8 @@ package com.cetsoft.imcache;
  * <code>addCacheLoader<code> method. When the loading is requested, 
  * that object's appropriate method is invoked.
  * 
- * @param <K>
- *            the key type
- * @param <V>
- *            the value type
+ * @param <K> the key type
+ * @param <V> the value type
  */
 public interface CacheLoader<K, V> {
 
