@@ -1,6 +1,15 @@
-*.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
+.classpath
+.project
+.settings/
+bin/
+target/
+flexi-core/.classpath
+flexi-core/.project
+flexi-core/.settings/
+flexi-core/target/
+/demo*
+/archive
+/store
+/working
+/preprocessing
+/file/
