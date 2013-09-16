@@ -64,4 +64,11 @@ public interface Cache<K, V> {
 	 * Clear the cache.
 	 */
 	void clear();
+	
+	/**
+	 * Calculates the Hit ratio.
+	 *
+	 * @return the double
+	 */
+	double hitRatio();
 }
