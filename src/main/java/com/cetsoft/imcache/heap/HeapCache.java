@@ -42,10 +42,10 @@ import com.cetsoft.imcache.EvictionListener;
 public class HeapCache<K,V> extends AbstractCache<K, V> {
 	
 	/** The hit. */
-	protected double hit;
+	protected long hit;
 	
 	/** The miss. */
-	protected double miss;
+	protected long miss;
 	
 	/** The cache. */
 	protected Map<K,V> cache;
@@ -225,7 +225,9 @@ public class HeapCache<K,V> extends AbstractCache<K, V> {
 		@SuppressWarnings("unchecked")
 		public V remove(Object key){
 			V value = super.remove(key);
-			HeapCache.this.evictionListener.onEviction((K) key, value);
+			if(value!=null){
+				HeapCache.this.evictionListener.onEviction((K) key, value);
+			}
 			return value;
 		}
 		
