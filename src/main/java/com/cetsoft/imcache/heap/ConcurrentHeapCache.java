@@ -27,6 +27,17 @@ import com.cetsoft.imcache.AbstractCache;
 import com.cetsoft.imcache.CacheLoader;
 import com.cetsoft.imcache.EvictionListener;
 
+/**
+ * The Class ConcurrentHeapCache.
+ * ConcurrentHeapCache uses LRU(Least Recently Used) as eviction 
+ * strategy by the help of ConcurrentLinkedHashMap. As a result, 
+ * ConcurrentHeapCache discards the least recently used items first
+ * when eviction required. Eviction occurs if the size of
+ * the cache is equal to the cache capacity in a put operation
+ *
+ * @param <K> the key type
+ * @param <V> the value type
+ */
 public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 
 	/** The hit. */
