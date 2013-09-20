@@ -18,7 +18,7 @@
 * Author : Yusuf Aytas
 * Date   : Sep 19, 2013
 */
-package com.cetsoft.imcache.heap;
+package com.cetsoft.imcache.concurrent;
 
 import java.io.IOException;
 import java.io.Serializable;
