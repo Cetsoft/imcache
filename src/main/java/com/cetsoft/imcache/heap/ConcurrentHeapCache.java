@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import com.cetsoft.imcache.AbstractCache;
 import com.cetsoft.imcache.CacheLoader;
 import com.cetsoft.imcache.EvictionListener;
+import com.cetsoft.imcache.concurrent.ConcurrentLinkedHashMap;
 
 /**
  * The Class ConcurrentHeapCache.
