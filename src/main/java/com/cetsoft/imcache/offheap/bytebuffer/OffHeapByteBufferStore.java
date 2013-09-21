@@ -180,4 +180,10 @@ public class OffHeapByteBufferStore implements OffHeapStore{
 		availableBuffers.add(bufferIndex);
 	}
 	
+	public void freeAll(){
+		for (int i = 0; i < bufferSize; i++) {
+			freeBuffer(i);
+		}
+	}
+	
 }
