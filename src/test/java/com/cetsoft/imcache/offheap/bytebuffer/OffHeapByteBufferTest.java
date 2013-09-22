@@ -9,6 +9,9 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import com.cetsoft.imcache.bytebuffer.OffHeapByteBuffer;
+import com.cetsoft.imcache.bytebuffer.Pointer;
+
 public class OffHeapByteBufferTest {
 
 	public static void main(String[] args) {

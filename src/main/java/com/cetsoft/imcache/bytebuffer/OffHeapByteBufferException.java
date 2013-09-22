@@ -16,19 +16,25 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Sep 15, 2013
+* Date   : Sep 22, 2013
 */
-package com.cetsoft.imcache;
+package com.cetsoft.imcache.bytebuffer;
 
 /**
- * The Enum CachingType.
+ * The Class OffHeapByteBufferException.
  */
-public enum CachingType {
+public class OffHeapByteBufferException extends RuntimeException{
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 5414061921999468983L;
 	
-	/** The heap. */
-	HEAP, 
-	/** The offheap. */
-	OFFHEAP, 
-	/** The distributed. */
-	DISTRIBUTED;
+	/**
+	 * Instantiates a new off heap byte buffer exception.
+	 *
+	 * @param string the string
+	 */
+	public OffHeapByteBufferException(String string) {
+		super(string);
+	}
+
 }

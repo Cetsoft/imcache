@@ -18,7 +18,7 @@
  * Author : Yusuf Aytas
  * Date   : Sep 20, 2013
  */
-package com.cetsoft.imcache.offheap;
+package com.cetsoft.imcache.cache.offheap;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,13 +37,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.cetsoft.imcache.AbstractCache;
-import com.cetsoft.imcache.CacheLoader;
-import com.cetsoft.imcache.EvictionListener;
+import com.cetsoft.imcache.bytebuffer.OffHeapByteBuffer;
+import com.cetsoft.imcache.bytebuffer.OffHeapByteBufferStore;
+import com.cetsoft.imcache.bytebuffer.Pointer;
+import com.cetsoft.imcache.cache.AbstractCache;
+import com.cetsoft.imcache.cache.CacheLoader;
+import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.concurrent.lock.StripedReadWriteLock;
-import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBuffer;
-import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBufferStore;
-import com.cetsoft.imcache.offheap.bytebuffer.Pointer;
 import com.cetsoft.imcache.serialization.Serializer;
 
 /**
@@ -225,7 +225,7 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.cetsoft.imcache.Cache#put(java.lang.Object, java.lang.Object)
+	 * @see com.cetsoft.imcache.cache.Cache#put(java.lang.Object, java.lang.Object)
 	 */
 	public void put(K key, V value) {
 		writeLock(key);
@@ -247,7 +247,7 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.cetsoft.imcache.Cache#get(java.lang.Object)
+	 * @see com.cetsoft.imcache.cache.Cache#get(java.lang.Object)
 	 */
 	public V get(K key) {
 		readLock(key);
@@ -276,7 +276,7 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.cetsoft.imcache.Cache#invalidate(java.lang.Object)
+	 * @see com.cetsoft.imcache.cache.Cache#invalidate(java.lang.Object)
 	 */
 	public V invalidate(K key) {
 		writeLock(key);
@@ -297,7 +297,7 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.cetsoft.imcache.Cache#contains(java.lang.Object)
+	 * @see com.cetsoft.imcache.cache.Cache#contains(java.lang.Object)
 	 */
 	public boolean contains(K key) {
 		return pointerMap.containsKey(key);
@@ -306,7 +306,7 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.cetsoft.imcache.Cache#clear()
+	 * @see com.cetsoft.imcache.cache.Cache#clear()
 	 */
 	public void clear() {
 		pointerMap.clear();
@@ -316,7 +316,7 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.cetsoft.imcache.Cache#hitRatio()
+	 * @see com.cetsoft.imcache.cache.Cache#hitRatio()
 	 */
 	public double hitRatio() {
 		return hit.get() / (hit.get() + miss.get());

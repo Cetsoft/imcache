@@ -16,37 +16,37 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Sep 16, 2013
+* Date   : Sep 17, 2013
 */
-package com.cetsoft.imcache.heap;
+package com.cetsoft.imcache.cache.heap;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
-import com.cetsoft.imcache.AbstractCache;
-import com.cetsoft.imcache.CacheLoader;
-import com.cetsoft.imcache.EvictionListener;
+import com.cetsoft.imcache.cache.AbstractCache;
+import com.cetsoft.imcache.cache.CacheLoader;
+import com.cetsoft.imcache.cache.EvictionListener;
+import com.cetsoft.imcache.concurrent.ConcurrentLinkedHashMap;
 
 /**
- * The Class HeapCache.
- * HeapCache uses LRU(Least Recently Used) as eviction 
- * strategy by the help of LinkedHashMap. As a result, 
- * HeapCache discards the least recently used items first
+ * The Class ConcurrentHeapCache.
+ * ConcurrentHeapCache uses LRU(Least Recently Used) as eviction 
+ * strategy by the help of ConcurrentLinkedHashMap. As a result, 
+ * ConcurrentHeapCache discards the least recently used items first
  * when eviction required. Eviction occurs if the size of
- * the cache is equal to the cache capacity in a put 
- * operation
+ * the cache is equal to the cache capacity in a put operation
  *
  * @param <K> the key type
  * @param <V> the value type
  */
-public class HeapCache<K,V> extends AbstractCache<K, V> {
-	
+public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
+
 	/** The hit. */
-	protected long hit;
-	
+	protected AtomicLong hit = new AtomicLong();
+
 	/** The miss. */
-	protected long miss;
-	
+	protected AtomicLong miss = new AtomicLong();
+
 	/** The cache. */
 	protected Map<K,V> cache;
 	
@@ -56,73 +56,73 @@ public class HeapCache<K,V> extends AbstractCache<K, V> {
 	/**
 	 * Instantiates a new heap cache.
 	 */
-	public HeapCache() {
+	public ConcurrentHeapCache() {
 		super();
 		initCache(DEFAULT_CAPACITY);
 	}
 	
 	/**
-	 * Instantiates a new heap cache.
+	 * Instantiates a new concurrent heap cache.
 	 *
 	 * @param cacheLoader the cache loader
 	 */
-	public HeapCache(CacheLoader<K, V> cacheLoader) {
+	public ConcurrentHeapCache(CacheLoader<K, V> cacheLoader) {
 		super(cacheLoader);
 		initCache(DEFAULT_CAPACITY);
 	}
 	
 
 	/**
-	 * Instantiates a new heap cache.
+	 * Instantiates a new concurrent heap cache.
 	 *
 	 * @param cacheLoader the cache loader
 	 * @param capacity the capacity
 	 */
-	public HeapCache(CacheLoader<K, V> cacheLoader,int capacity) {
+	public ConcurrentHeapCache(CacheLoader<K, V> cacheLoader,int capacity) {
 		super(cacheLoader);
 		initCache(capacity);
 	}
 	
 	/**
-	 * Instantiates a new heap cache.
+	 * Instantiates a new concurrent heap cache.
 	 *
 	 * @param evictionListener the eviction listener
 	 */
-	public HeapCache(EvictionListener<K, V> evictionListener) {
+	public ConcurrentHeapCache(EvictionListener<K, V> evictionListener) {
 		super(evictionListener);
 		initCache(DEFAULT_CAPACITY);
 	}
 	
 	/**
-	 * Instantiates a new heap cache.
+	 * Instantiates a new concurrent heap cache.
 	 *
 	 * @param evictionListener the eviction listener
 	 * @param capacity the capacity
 	 */
-	public HeapCache(EvictionListener<K, V> evictionListener, int capacity) {
+	public ConcurrentHeapCache(EvictionListener<K, V> evictionListener, int capacity) {
 		super(evictionListener);
 		initCache(capacity);
 	}
 	
 	/**
-	 * Instantiates a new heap cache.
+	 * Instantiates a new concurrent heap cache.
 	 *
 	 * @param cacheLoader the cache loader
 	 * @param evictionListener the eviction listener
 	 */
-	public HeapCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener) {
+	public ConcurrentHeapCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener) {
 		super(cacheLoader,evictionListener);
 		initCache(DEFAULT_CAPACITY);
 	}
 	
 	/**
-	 * Instantiates a new heap cache.
+	 * Instantiates a new concurrent heap cache.
 	 *
 	 * @param cacheLoader the cache loader
 	 * @param evictionListener the eviction listener
 	 * @param capacity the capacity
 	 */
-	public HeapCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener, int capacity) {
+	public ConcurrentHeapCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener, int capacity) {
 		super(cacheLoader,evictionListener);
 		initCache(capacity);
 	}
@@ -133,39 +133,39 @@ public class HeapCache<K,V> extends AbstractCache<K, V> {
 	 * @param capacity the capacity
 	 */
 	private void initCache(int capacity){
-		cache = new LimitedHashMap(capacity);
+		cache = new ConcurrentLimitedHashMap(capacity);
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.Cache#put(java.lang.Object, java.lang.Object)
+	 * @see com.cetsoft.imcache.cache.Cache#put(java.lang.Object, java.lang.Object)
 	 */
 	public void put(K key, V value) {
 		cache.put(key, value);
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.Cache#get(java.lang.Object)
+	 * @see com.cetsoft.imcache.cache.Cache#get(java.lang.Object)
 	 */
 	public V get(K key) {
 		return cache.get(key);
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.Cache#invalidate(java.lang.Object)
+	 * @see com.cetsoft.imcache.cache.Cache#invalidate(java.lang.Object)
 	 */
 	public V invalidate(K key) {
 		return cache.remove(key);
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.Cache#contains(java.lang.Object)
+	 * @see com.cetsoft.imcache.cache.Cache#contains(java.lang.Object)
 	 */
 	public boolean contains(K key) {
 		return cache.containsKey(key);
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.Cache#clear()
+	 * @see com.cetsoft.imcache.cache.Cache#clear()
 	 */
 	public void clear() {
 		for (K key : cache.keySet()) {
@@ -173,74 +173,54 @@ public class HeapCache<K,V> extends AbstractCache<K, V> {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.Cache#hitRatio()
-	 */
 	public double hitRatio() {
-		return hit/(hit+miss);
+		return hit.get() / (hit.get() + miss.get());
 	}
 	
-	/**
-	 * The Class LimitedHashMap.
-	 */
-	private class LimitedHashMap extends LinkedHashMap<K,V>{
-
-		/** The Constant serialVersionUID. */
-		private static final long serialVersionUID = -831411504252696399L;
+	private class ConcurrentLimitedHashMap extends ConcurrentLinkedHashMap<K, V> implements Map<K,V>{
 		
-		/** The capacity. */
+		private static final long serialVersionUID = -1816555501039461556L;
+		
 		private int capacity;
 		
-		/**
-		 * Instantiates a new limited hash map.
-		 *
-		 * @param capacity the capacity
-		 */
-		public LimitedHashMap(int capacity) {
-			super(capacity, 0.75f, true);
+		public ConcurrentLimitedHashMap(int capacity) {
 			this.capacity = capacity;
 		}
 		
-		/* (non-Javadoc)
-		 * @see java.util.LinkedHashMap#get(java.lang.Object)
-		 */
+		@Override
+		public V put(K key, V value){
+			if(capacity==this.size()){
+				Entry<K,V> entry = this.removeEldestEntry();
+				ConcurrentHeapCache.this.evictionListener.onEviction(entry.getKey(), entry.getValue());
+			}
+			V exValue = super.put(key, value);
+			return exValue;
+		}
+		
 		@Override
 		@SuppressWarnings("unchecked")
 		public V get(Object key){
 			V value = super.get(key);
 			if(value==null){
-				miss++;
-				value = HeapCache.this.cacheLoader.load((K)key);
+				miss.incrementAndGet();
+				value = ConcurrentHeapCache.this.cacheLoader.load((K)key);
 			}
 			else{
-				hit++;
+				hit.incrementAndGet();
 			}
 			return value;
 		}
-		
-		/* (non-Javadoc)
-		 * @see java.util.HashMap#remove(java.lang.Object)
-		 */
+
 		@Override
 		@SuppressWarnings("unchecked")
 		public V remove(Object key){
 			V value = super.remove(key);
 			if(value!=null){
-				HeapCache.this.evictionListener.onEviction((K) key, value);
+				ConcurrentHeapCache.this.evictionListener.onEviction((K) key, value);
 			}
 			return value;
 		}
 		
-		/* (non-Javadoc)
-		 * @see java.util.LinkedHashMap#removeEldestEntry(java.util.Map.Entry)
-		 */
-		@Override
-		protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-			boolean shouldRemove = size() > this.capacity;
-			HeapCache.this.evictionListener.onEviction(eldest.getKey(), eldest.getValue());
-			return shouldRemove;
-		}
-		
 	}
-
+	
 }

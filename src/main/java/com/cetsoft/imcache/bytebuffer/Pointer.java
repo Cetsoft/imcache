@@ -18,7 +18,7 @@
 * Author : Yusuf Aytas
 * Date   : Sep 22, 2013
 */
-package com.cetsoft.imcache.offheap.bytebuffer;
+package com.cetsoft.imcache.bytebuffer;
 
 /**
  * The Class Pointer is a pointer to the stored elements, which keeps
