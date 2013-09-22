@@ -21,6 +21,7 @@
 package com.cetsoft.imcache.offheap.bytebuffer;
 
 import java.nio.BufferOverflowException;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -76,7 +77,7 @@ public class OffHeapByteBufferStore implements OffHeapStore{
 		availableBuffers = new LinkedBlockingQueue<Integer>(bufferSize);
 		for (int i = 0; i < bufferSize; i++) {
 			availableBuffers.add(i);
-			buffers[0] = new OffHeapByteBuffer(capacity, concurrencyLevel);
+			buffers[0] = new OffHeapByteBuffer(i, capacity, concurrencyLevel);
 		}
 	}
 	
@@ -124,7 +125,7 @@ public class OffHeapByteBufferStore implements OffHeapStore{
 		try{
 			return pointer.getOffHeapByteBuffer().update(pointer, payload);
 		}catch(BufferOverflowException exception){
-			return store(payload);
+			return pointer.copy(store(payload));
 		}
 	}
 	
@@ -162,6 +163,25 @@ public class OffHeapByteBufferStore implements OffHeapStore{
 	}
 	
 	/**
+	 * Free.
+	 */
+	public void free(){
+		for (int i = 0; i < bufferSize; i++) {
+			free(i);
+		}
+	}
+	
+	/**
+	 * Free.
+	 *
+	 * @param bufferIndex the buffer index
+	 */
+	public void free(int bufferIndex){
+		buffers[bufferIndex].free();
+		availableBuffers.add(bufferIndex);
+	}
+	
+	/**
 	 * Returns the Current buffer.
 	 *
 	 * @return the off heap byte buffer
@@ -169,20 +189,18 @@ public class OffHeapByteBufferStore implements OffHeapStore{
 	protected OffHeapByteBuffer currentBuffer(){
 		return buffers[currentBuffer.get()];
 	}
-	
+
 	/**
-	 * Frees the specified buffer by bufferIndex.
+	 * Redistributes the pointers to the store.
 	 *
-	 * @param bufferIndex the buffer index
+	 * @param pointersToBeRedistributed the pointers to be redistributed
 	 */
-	public void freeBuffer(int bufferIndex){
-		buffers[bufferIndex].free();
-		availableBuffers.add(bufferIndex);
-	}
-	
-	public void freeAll(){
-		for (int i = 0; i < bufferSize; i++) {
-			freeBuffer(i);
+	public void redistribute(List<Pointer> pointersToBeRedistributed) {
+		for (Pointer pointer : pointersToBeRedistributed) {
+			synchronized (pointer) {
+				byte [] payload = retrieve(pointer);
+				pointer.copy(store(payload));
+			}
 		}
 	}
 	

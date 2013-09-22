@@ -78,4 +78,9 @@ public interface OffHeapStore {
 	 * @return the long
 	 */
 	long freeMemory();
+	
+	/**
+	 * Frees the memory.
+	 */
+	void free();
 }
