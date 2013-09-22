@@ -18,7 +18,7 @@
 * Author : Yusuf Aytas
 * Date   : Sep 22, 2013
 */
-package com.cetsoft.imcache.offheap.bytebuffer;
+package com.cetsoft.imcache.bytebuffer;
 
 import java.nio.BufferOverflowException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -90,7 +90,7 @@ public class OffHeapByteBuffer implements OffHeapStore{
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.OffHeapStore#retrieve(com.cetsoft.imcache.offheap.bytebuffer.Pointer)
+	 * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#retrieve(com.cetsoft.imcache.bytebuffer.Pointer)
 	 */
 	public byte[] retrieve(Pointer pointer) {
 		readWriteLock.readLock(pointer.getPosition());
@@ -108,7 +108,7 @@ public class OffHeapByteBuffer implements OffHeapStore{
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.OffHeapStore#remove(com.cetsoft.imcache.offheap.bytebuffer.Pointer)
+	 * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#remove(com.cetsoft.imcache.bytebuffer.Pointer)
 	 */
 	public byte[] remove(Pointer pointer) {
 		readWriteLock.writeLock(pointer.getPosition());
@@ -122,7 +122,7 @@ public class OffHeapByteBuffer implements OffHeapStore{
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.OffHeapStore#store(byte[])
+	 * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#store(byte[])
 	 */
 	public Pointer store(byte[] payload) {
 		Allocation allocation = allocate(payload);
@@ -147,7 +147,7 @@ public class OffHeapByteBuffer implements OffHeapStore{
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.OffHeapStore#update(com.cetsoft.imcache.offheap.bytebuffer.Pointer, byte[])
+	 * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#update(com.cetsoft.imcache.bytebuffer.Pointer, byte[])
 	 */
 	public Pointer update(Pointer pointer, byte[] payload) {
 		readWriteLock.writeLock(pointer.getPosition());
@@ -239,21 +239,21 @@ public class OffHeapByteBuffer implements OffHeapStore{
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.OffHeapStore#dirtyMemory()
+	 * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#dirtyMemory()
 	 */
 	public long dirtyMemory() {
 		return dirtyMemory.get();
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.OffHeapStore#usedMemory()
+	 * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#usedMemory()
 	 */
 	public long usedMemory() {
 		return usedMemory.get();
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.OffHeapStore#freeMemory()
+	 * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#freeMemory()
 	 */
 	public long freeMemory() {
 		return capacity-(dirtyMemory()+usedMemory());

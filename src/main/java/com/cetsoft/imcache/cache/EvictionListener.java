@@ -16,37 +16,30 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Sep 22, 2013
+* Date   : Sep 15, 2013
 */
-package com.cetsoft.imcache.offheap.bytebuffer;
+package com.cetsoft.imcache.cache;
 
 /**
- * The Interface ByteBuffer.
+ * The listener interface for receiving eviction events.
+ * The class that is interested in processing a eviction
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's <code>addEvictionListener<code> method. When
+ * the eviction event occurs, that object's appropriate
+ * method is invoked.
+ *
+ * @param <K> the key type
+ * @param <V> the value type
+ * @see EvictionEvent
  */
-public interface ByteBuffer {
+public interface EvictionListener<K, V> {
 	
 	/**
-	 * Gets the destination from the specified location.
+	 * Called on eviction.
 	 *
-	 * @param position the position
-	 * @param destination the destination
-	 * @param offset the offset
-	 * @param length the length
+	 * @param key the key
+	 * @param value the value
 	 */
-	void get(int position, byte[] destination, int offset, int length);
-	
-	/**
-	 * Puts source to the specified location of the ByteBuffer.
-	 *
-	 * @param position the position
-	 * @param source the source
-	 * @param offset the offset
-	 * @param length the length
-	 */
-	void put(int position, byte[] source, int offset, int length);
-	
-	/**
-	 * Frees the buffer.
-	 */
-	void free();
+	void onEviction(K key, V value);
 }

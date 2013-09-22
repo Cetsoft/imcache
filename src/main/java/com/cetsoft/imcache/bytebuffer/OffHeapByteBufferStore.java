@@ -18,7 +18,7 @@
 * Author : Yusuf Aytas
 * Date   : Sep 22, 2013
 */
-package com.cetsoft.imcache.offheap.bytebuffer;
+package com.cetsoft.imcache.bytebuffer;
 
 import java.nio.BufferOverflowException;
 import java.util.List;
@@ -82,21 +82,21 @@ public class OffHeapByteBufferStore implements OffHeapStore{
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.OffHeapStore#retrieve(com.cetsoft.imcache.offheap.bytebuffer.Pointer)
+	 * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#retrieve(com.cetsoft.imcache.bytebuffer.Pointer)
 	 */
 	public byte[] retrieve(Pointer pointer) {
 		return pointer.getOffHeapByteBuffer().retrieve(pointer);
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.OffHeapStore#remove(com.cetsoft.imcache.offheap.bytebuffer.Pointer)
+	 * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#remove(com.cetsoft.imcache.bytebuffer.Pointer)
 	 */
 	public byte[] remove(Pointer pointer) {
 		return pointer.getOffHeapByteBuffer().remove(pointer);
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.OffHeapStore#store(byte[])
+	 * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#store(byte[])
 	 */
 	public Pointer store(byte[] payload) {
 		while(true){
@@ -119,7 +119,7 @@ public class OffHeapByteBufferStore implements OffHeapStore{
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.OffHeapStore#update(com.cetsoft.imcache.offheap.bytebuffer.Pointer, byte[])
+	 * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#update(com.cetsoft.imcache.bytebuffer.Pointer, byte[])
 	 */
 	public Pointer update(Pointer pointer, byte[] payload) {
 		try{
@@ -130,7 +130,7 @@ public class OffHeapByteBufferStore implements OffHeapStore{
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.OffHeapStore#dirtyMemory()
+	 * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#dirtyMemory()
 	 */
 	public long dirtyMemory() {
 		long dirtyMemory = 0;
@@ -141,7 +141,7 @@ public class OffHeapByteBufferStore implements OffHeapStore{
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.OffHeapStore#usedMemory()
+	 * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#usedMemory()
 	 */
 	public long usedMemory() {
 		long usedMemory = 0;
@@ -152,7 +152,7 @@ public class OffHeapByteBufferStore implements OffHeapStore{
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.OffHeapStore#freeMemory()
+	 * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#freeMemory()
 	 */
 	public long freeMemory() {
 		long freeMemory = 0;

@@ -18,28 +18,17 @@
 * Author : Yusuf Aytas
 * Date   : Sep 15, 2013
 */
-package com.cetsoft.imcache;
+package com.cetsoft.imcache.cache;
 
 /**
- * The listener interface for receiving eviction events.
- * The class that is interested in processing a eviction
- * event implements this interface, and the object created
- * with that class is registered with a component using the
- * component's <code>addEvictionListener<code> method. When
- * the eviction event occurs, that object's appropriate
- * method is invoked.
- *
- * @param <K> the key type
- * @param <V> the value type
- * @see EvictionEvent
+ * The Enum CachingType.
  */
-public interface EvictionListener<K, V> {
+public enum CachingType {
 	
-	/**
-	 * Called on eviction.
-	 *
-	 * @param key the key
-	 * @param value the value
-	 */
-	void onEviction(K key, V value);
+	/** The heap. */
+	HEAP, 
+	/** The offheap. */
+	OFFHEAP, 
+	/** The distributed. */
+	DISTRIBUTED;
 }

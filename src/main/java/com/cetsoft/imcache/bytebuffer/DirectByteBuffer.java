@@ -18,7 +18,7 @@
 * Author : Yusuf Aytas
 * Date   : Sep 22, 2013
 */
-package com.cetsoft.imcache.offheap.bytebuffer;
+package com.cetsoft.imcache.bytebuffer;
 
 /**
  * The Class DirectByteBuffer.
@@ -59,14 +59,14 @@ public class DirectByteBuffer implements ByteBuffer{
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.ByteBuffer#get(int, byte[], int, int)
+	 * @see com.cetsoft.imcache.bytebuffer.ByteBuffer#get(int, byte[], int, int)
 	 */
 	public void get(int position, byte[] destination, int offset, int length) {
 		copyToArray(getPosition(position), destination, ARRAY_BASE_OFFSET, offset, length);
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.ByteBuffer#put(int, byte[], int, int)
+	 * @see com.cetsoft.imcache.bytebuffer.ByteBuffer#put(int, byte[], int, int)
 	 */
 	public void put(int position, byte[] source, int offset, int length) {
 		copyFromArray(source, ARRAY_BASE_OFFSET, offset, getPosition(position), length);
@@ -129,7 +129,7 @@ public class DirectByteBuffer implements ByteBuffer{
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.offheap.bytebuffer.ByteBuffer#free()
+	 * @see com.cetsoft.imcache.bytebuffer.ByteBuffer#free()
 	 */
 	public void free() {
 		try {

@@ -18,7 +18,7 @@
 * Author : Yusuf Aytas
 * Date   : Sep 15, 2013
 */
-package com.cetsoft.imcache;
+package com.cetsoft.imcache.cache;
 
 /**
  * The Interface Cache.
