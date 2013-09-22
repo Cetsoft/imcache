@@ -112,4 +112,17 @@ public class Pointer {
 	public void setOffHeapByteBuffer(OffHeapByteBuffer offHeapByteBuffer) {
 		this.offHeapByteBuffer = offHeapByteBuffer;
 	}
+
+	/**
+	 * Copies given pointer.
+	 *
+	 * @param pointer the pointer
+	 * @return the pointer
+	 */
+	public Pointer copy(Pointer pointer) {
+		this.accessTime = pointer.accessTime;
+		this.offHeapByteBuffer = pointer.offHeapByteBuffer;
+		this.position = pointer.position;
+		return this;
+	}
 }

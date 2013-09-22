@@ -13,7 +13,7 @@ public class OffHeapByteBufferTest {
 
 	public static void main(String[] args) {
 		int length = 5, x = 4, y = 3;
-		OffHeapByteBuffer buffer = new OffHeapByteBuffer(1000);
+		OffHeapByteBuffer buffer = new OffHeapByteBuffer(0,1000);
 		SimpleObject object = new SimpleObject(x, y);
 		for (int i = 0; i < length; i++) {
 			byte [] payload = serialize(object);

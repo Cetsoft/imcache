@@ -30,6 +30,8 @@ import com.cetsoft.imcache.concurrent.lock.StripedReadWriteLock;
  */
 public class OffHeapByteBuffer implements OffHeapStore{
 	
+	/** The index. */
+	private volatile int index;
 	/** The capacity. */
 	private volatile long capacity;
 	
@@ -66,19 +68,22 @@ public class OffHeapByteBuffer implements OffHeapStore{
 	/**
 	 * Instantiates a new off heap byte buffer.
 	 *
+	 * @param index the index
 	 * @param capacity the capacity
 	 */
-	public OffHeapByteBuffer(int capacity){
-		this(capacity, DEFAULT_CONCURRENCY_LEVEL);
+	public OffHeapByteBuffer(int index, int capacity){
+		this(index, capacity, DEFAULT_CONCURRENCY_LEVEL);
 	}
 	
 	/**
 	 * Instantiates a new off heap byte buffer.
 	 *
+	 * @param index the index
 	 * @param capacity the capacity
 	 * @param concurrencyLevel the concurrency level
 	 */
-	public OffHeapByteBuffer(int capacity, int concurrencyLevel){
+	public OffHeapByteBuffer(int index, int capacity, int concurrencyLevel){
+		this.index = index;
 		this.capacity = capacity;
 		directByteBuffer = new DirectByteBuffer(capacity);
 		readWriteLock = new StripedReadWriteLock(concurrencyLevel);
@@ -293,5 +298,14 @@ public class OffHeapByteBuffer implements OffHeapStore{
 		public int getLength() {
 			return length;
 		}
+	}
+
+	/**
+	 * Gets the index.
+	 *
+	 * @return the index
+	 */
+	public int getIndex() {
+		return index;
 	}
 }
