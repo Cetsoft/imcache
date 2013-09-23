@@ -23,11 +23,8 @@ package com.cetsoft.imcache.cache;
 /**
  * The listener interface for receiving eviction events.
  * The class that is interested in processing a eviction
- * event implements this interface, and the object created
- * with that class is registered with a component using the
- * component's <code>addEvictionListener<code> method. When
- * the eviction event occurs, that object's appropriate
- * method is invoked.
+ * event implements this interface,When the eviction event occurs, 
+ * that object's onEviction method is invoked.
  *
  * @param <K> the key type
  * @param <V> the value type
