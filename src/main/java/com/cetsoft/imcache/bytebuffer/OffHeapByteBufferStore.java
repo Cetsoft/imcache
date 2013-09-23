@@ -77,7 +77,7 @@ public class OffHeapByteBufferStore implements OffHeapStore{
 		availableBuffers = new LinkedBlockingQueue<Integer>(bufferSize);
 		for (int i = 0; i < bufferSize; i++) {
 			availableBuffers.add(i);
-			buffers[0] = new OffHeapByteBuffer(i, capacity, concurrencyLevel);
+			buffers[i] = new OffHeapByteBuffer(i, capacity, concurrencyLevel);
 		}
 	}
 	
@@ -105,12 +105,16 @@ public class OffHeapByteBufferStore implements OffHeapStore{
 			}catch(BufferOverflowException exception){
 				bufferChangeLock.lock();
 				try{
-					Integer currentBuffer = availableBuffers.poll();
-					if(currentBuffer==null){
-						throw new BufferOverflowException();
+					try{
+						return currentBuffer().store(payload);
+					}catch(BufferOverflowException overflowException){
+						Integer currentBuffer = availableBuffers.poll();
+						if(currentBuffer==null){
+							throw new BufferOverflowException();
+						}
+						this.currentBuffer.set(currentBuffer);
+						return store(payload);
 					}
-					this.currentBuffer.set(currentBuffer);
-					return store(payload);
 				}finally{
 					bufferChangeLock.unlock();
 				}
