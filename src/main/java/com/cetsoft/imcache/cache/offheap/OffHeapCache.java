@@ -47,7 +47,12 @@ import com.cetsoft.imcache.concurrent.lock.StripedReadWriteLock;
 import com.cetsoft.imcache.serialization.Serializer;
 
 /**
- * The Class OffHeapCache.
+ * The Class OffHeapCache is a cache that uses offheap byte buffers
+ * to store or retrieve data by serializing items into bytes. To do so,
+ * OffHeapCache uses pointers to point array location of an item.
+ * OffHeapCache clears the buffers periodically to gain free space if
+ * buffers are dirty(unused memory). It also does eviction depending on
+ * access time to the objects.
  * 
  * @param <K> the key type
  * @param <V> the value type
