@@ -63,3 +63,5 @@ is a good choice to start OffHeapCache. Let's see sample OffHeapCache use.
 		}).storage(bufferStore).build();
 	}
 ```
+By default configuration, OffHeapCache will try to clean the places which are not used and marked as 
+dirty periodically. What is more, it will do eviction periodically, too.
