@@ -46,7 +46,7 @@ The Class OffHeapCache is a cache that uses offheap byte buffers to store or ret
 items into bytes. To do so, OffHeapCache uses pointers to point array location of an item. OffHeapCache clears
 the buffers periodically to gain free space if buffers are dirty(unused memory). It also does eviction depending on
 access time to the objects.
-To make offheap cache work to JVM Parameters "-XX:MaxDirectMemorySize=4g" must be set. Buffer capacity of 8 mb 
+To make offheap cache work to JVM Parameters <b>"-XX:MaxDirectMemorySize=4g"</b> must be set. Buffer capacity of 8 mb 
 is a good choice to start OffHeapCache. Let's see sample OffHeapCache use.
 ```java
 	void example(){
@@ -65,3 +65,5 @@ is a good choice to start OffHeapCache. Let's see sample OffHeapCache use.
 ```
 By default configuration, OffHeapCache will try to clean the places which are not used and marked as 
 dirty periodically. What is more, it will do eviction periodically, too.
+
+<i>To learn more about imcache please look at examples provided.</i>
