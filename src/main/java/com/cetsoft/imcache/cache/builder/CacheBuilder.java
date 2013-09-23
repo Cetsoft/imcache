@@ -26,6 +26,8 @@ import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.heap.ConcurrentHeapCache;
 import com.cetsoft.imcache.cache.heap.HeapCache;
+import com.cetsoft.imcache.cache.heap.TransactionalHeapCache;
+import com.cetsoft.imcache.cache.heap.tx.TransactionCommitter;
 import com.cetsoft.imcache.cache.offheap.OffHeapCache;
 import com.cetsoft.imcache.serialization.Serializer;
 
@@ -72,6 +74,15 @@ public abstract class CacheBuilder{
 	 */
 	public static HeapCacheBuilder heapCache(){
 		return new HeapCacheBuilder();
+	}
+	
+	/**
+	 * Transactional Heap cache.
+	 *
+	 * @return the transactional heap cache builder
+	 */
+	public static TransactionalHeapCacheBuilder transactionalHeapCache(){
+		return new TransactionalHeapCacheBuilder();
 	}
 	
 	/**
@@ -363,13 +374,68 @@ public abstract class CacheBuilder{
 		@SuppressWarnings("unchecked")
 		public <K,V> Cache<K, V> build() {
 			if(this.byteBufferStore==null){
-				throw new NullPointerException("ByteBufferStore must be set!");
+				throw new NecessaryArgumentException("ByteBufferStore must be set!");
 			}
 			if(this.serializer==null){
-				throw new NullPointerException("Serializer must be set!");
+				throw new NecessaryArgumentException("Serializer must be set!");
 			}
 			return new OffHeapCache<K, V>((CacheLoader<K, V>)cacheLoader, (EvictionListener<K, V>)evictionListener, byteBufferStore, 
 					(Serializer<V>) serializer, bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
+		}
+	}
+	
+	public static class TransactionalHeapCacheBuilder extends CacheBuilder{
+
+		/** The capacity. */
+		private int capacity = 10000;
+		private TransactionCommitter<Object, Object> transactionCommitter;
+		
+		public TransactionalHeapCacheBuilder(){
+			cacheLoader = CACHE_LOADER;
+			evictionListener = EVICTION_LISTENER;
+		}
+		
+		@SuppressWarnings("unchecked")
+		public <K,V> TransactionalHeapCacheBuilder transactionCommitter(TransactionCommitter<K, V> transactionCommitter){
+			this.transactionCommitter = (TransactionCommitter<Object, Object>) transactionCommitter;
+			return this;
+		}
+		
+		@SuppressWarnings("unchecked")
+		public <K,V> TransactionalHeapCacheBuilder cacheLoader(CacheLoader<K, V> cacheLoader){
+			this.cacheLoader = (CacheLoader<Object, Object>) cacheLoader;
+			return this;
+		}
+		
+		@SuppressWarnings("unchecked")
+		public <K,V> TransactionalHeapCacheBuilder evictionListener(EvictionListener<K, V> evictionListener){
+			this.evictionListener = (EvictionListener<Object, Object>) evictionListener;
+			return this;
+		}
+		
+		public TransactionalHeapCacheBuilder capacity(int capacity){
+			this.capacity = capacity;
+			return this;
+		}
+		
+		@Override
+		@SuppressWarnings("unchecked")
+		public <K, V> Cache<K, V> build() {
+			if(this.transactionCommitter==null){
+				throw new NecessaryArgumentException("TransactionCommitter must be set!");
+			}
+			return new TransactionalHeapCache<K, V>((TransactionCommitter<K, V>)transactionCommitter,
+					(CacheLoader<K, V>)cacheLoader,(EvictionListener<K, V>) evictionListener, capacity);
+		}
+		
+	}
+	
+	public static class NecessaryArgumentException extends RuntimeException{
+
+		private static final long serialVersionUID = -7420658148641484150L;
+
+		public NecessaryArgumentException(String exception){
+			super(exception);
 		}
 	}
 }
