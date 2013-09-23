@@ -20,4 +20,16 @@ Cache interfaces provides general methods that is implemented by all imcache cac
 	  double hitRatio();
   }
 ```
+###The Cache Builder
+Cache Builder is one of the core asset of the imcache. You can create simple heapCaches to complexOffHeapCaches via 
+Cache Builder. Let's see Cache Builder in action below.
+```java
+  void example(){
+  	Cache<Integer,Integer> cache = CacheBuilder.heapCache().cacheLoader(new CacheLoader<Integer, Integer>() {
+		public Integer load(Integer key) {
+			return null;
+		}
+	}).capacity(10000).build(); 
+  }
+```
 
