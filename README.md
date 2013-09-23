@@ -52,7 +52,8 @@ is a good choice to start OffHeapCache. Let's see sample OffHeapCache use.
 	void example(){
 		//8388608 is 8 MB and 10 buffers. 8MB*10 = 80 MB.
   		OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
-		final Cache<Integer,SimpleObject> offHeapCache = CacheBuilder.offHeapCache().serializer(new Serializer<SimpleObject>() {
+		final Cache<Integer,SimpleObject> offHeapCache = CacheBuilder.offHeapCache().
+		serializer(new Serializer<SimpleObject>() {
 			public byte[] serialize(SimpleObject value) {
 				return com.cetsoft.imcache.test.Serializer.serialize(value);
 			}
