@@ -8,15 +8,10 @@ from small applications to large scale applications.
 Cache interfaces provides general methods that is implemented by all imcache caches. See the methods below.
 ```java
   public interface Cache<K, V> {
-
 	  void put(K key, V value);
-
 	  V get(K key);
-
 	  V invalidate(K key);
-
 	  void clear();
-	  
 	  double hitRatio();
   }
 ```
