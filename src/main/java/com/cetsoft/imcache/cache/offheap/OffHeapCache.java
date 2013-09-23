@@ -170,6 +170,9 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 	 */
 	protected void initCache(OffHeapByteBufferStore byteBufferStore, Serializer<V> serializer,
 			long bufferCleanerPeriod, final float bufferCleanerThreshold, int concurrencyLevel, final long evictionPeriod) {
+		if(concurrencyLevel>11||concurrencyLevel<0){
+			throw new IllegalArgumentException("ConcurrencyLevel must be between 0 and 11 inclusive!");
+		}
 		this.serializer = serializer;
 		this.bufferStore = byteBufferStore;
 		this.readWriteLock = new StripedReadWriteLock(concurrencyLevel);
