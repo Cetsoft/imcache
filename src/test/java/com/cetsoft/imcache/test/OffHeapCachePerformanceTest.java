@@ -14,7 +14,7 @@ import com.cetsoft.imcache.serialization.Serializer;
 public class OffHeapCachePerformanceTest {
 
 	public static void main(String [] args) throws InterruptedException{
-		final int NO_OF_THREADS = 10;
+		final int NO_OF_THREADS = 100;
 		final int SIZE = 1000;
 		final AtomicLong totalTimeForOffHeap = new AtomicLong();
 		final AtomicLong totalTimeForMap = new AtomicLong();

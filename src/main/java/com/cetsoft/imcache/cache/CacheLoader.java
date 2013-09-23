@@ -24,8 +24,7 @@ package com.cetsoft.imcache.cache;
  * The CacheLoader interface for loading values with specified keys. 
  * The class that is interested in loading values from a resource 
  * implements this interface, and the object created with that 
- * class is registered with a component using the component's 
- * <code>addCacheLoader<code> method. When the loading is requested, 
+ * class is registered with a component. When the loading is requested, 
  * that object's appropriate method is invoked.
  * 
  * @param <K> the key type
