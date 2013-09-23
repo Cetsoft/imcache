@@ -98,52 +98,6 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 	/** The Constant NO_OF_EVICTORS. */
 	private static final AtomicInteger NO_OF_EVICTORS = new AtomicInteger();
 	
-	
-	/**
-	 * Instantiates a new offheap cache.
-	 *
-	 * @param byteBufferStore the byte buffer store
-	 * @param serializer the serializer
-	 */
-	public OffHeapCache(OffHeapByteBufferStore byteBufferStore, Serializer<V> serializer) {
-		super();
-		initCache(byteBufferStore, serializer, DEFAULT_BUFFER_CLEANER_PERIOD, DEFAULT_BUFFER_CLEANER_THRESHOLD,
-				DEFAULT_CONCURRENCY_LEVEL, DEFAULT_EVICTION_PERIOD);
-	}
-	
-	/**
-	 * Instantiates a new offheap cache.
-	 *
-	 * @param byteBufferStore the byte buffer store
-	 * @param serializer the serializer
-	 * @param bufferCleanerPeriod the buffer cleaner period
-	 * @param bufferCleanerThreshold the buffer cleaner threshold
-	 * @param concurrencyLevel the concurrency level
-	 * @param evictionPeriod the eviction period
-	 */
-	public OffHeapCache(OffHeapByteBufferStore byteBufferStore, Serializer<V> serializer,long bufferCleanerPeriod,
-			final float bufferCleanerThreshold, int concurrencyLevel, final long evictionPeriod) {
-		super();
-		initCache(byteBufferStore, serializer, bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
-	}
-	
-	/**
-	 * Instantiates a new offheap cache.
-	 *
-	 * @param evictionListener the eviction listener
-	 * @param byteBufferStore the byte buffer store
-	 * @param serializer the serializer
-	 * @param bufferCleanerPeriod the buffer cleaner period
-	 * @param bufferCleanerThreshold the buffer cleaner threshold
-	 * @param concurrencyLevel the concurrency level
-	 * @param evictionPeriod the eviction period
-	 */
-	public OffHeapCache(EvictionListener<K, V> evictionListener,OffHeapByteBufferStore byteBufferStore, Serializer<V> serializer,
-			long bufferCleanerPeriod, final float bufferCleanerThreshold, int concurrencyLevel, final long evictionPeriod) {
-		super(evictionListener);
-		initCache(byteBufferStore, serializer, bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
-	}
-	
 	/**
 	 * Instantiates a new offheap cache.
 	 *

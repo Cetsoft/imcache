@@ -34,52 +34,6 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	/** The eviction listener. */
 	protected EvictionListener<K, V> evictionListener;
 	
-	/** The default cache loader. */
-	protected final CacheLoader<K, V> DEFAULT_CACHE_LOADER = new CacheLoader<K, V>() {
-		public V load(K key) {
-			return null;
-		}
-	};
-	
-	/** The default eviction listener. */
-	protected final EvictionListener<K, V> DEFAULT_EVICTION_LISTENER = new EvictionListener<K, V>() {
-		public void onEviction(K key, V value) {}
-	};
-
-	/**
-	 * Instantiates a new abstract cache.
-	 */
-	public AbstractCache() {
-		this.cacheLoader = DEFAULT_CACHE_LOADER;
-		this.evictionListener = DEFAULT_EVICTION_LISTENER;
-	}
-	
-	/**
-	 * Instantiates a new abstract cache.
-	 *
-	 * @param cacheLoader the cache loader
-	 */
-	public AbstractCache(CacheLoader<K, V> cacheLoader) {
-		this.cacheLoader = cacheLoader;
-		this.evictionListener = DEFAULT_EVICTION_LISTENER;
-	}
-	
-	/**
-	 * Instantiates a new abstract cache.
-	 *
-	 * @param evictionListener the eviction listener
-	 */
-	public AbstractCache(EvictionListener<K, V> evictionListener) {
-		this.cacheLoader = DEFAULT_CACHE_LOADER;
-		this.evictionListener = evictionListener;
-	}
-	
-	/**
-	 * Instantiates a new abstract cache.
-	 *
-	 * @param cacheLoader the cache loader
-	 * @param evictionListener the eviction listener
-	 */
 	public AbstractCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener) {
 		this.cacheLoader = cacheLoader;
 		this.evictionListener = evictionListener;
