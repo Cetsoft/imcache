@@ -20,7 +20,8 @@ Cache Builder is one of the core asset of the imcache. You can create simple hea
 Cache Builder. Let's see Cache Builder in action below.
 ```java
   void example(){
-  	Cache<Integer,Integer> cache = CacheBuilder.heapCache().cacheLoader(new CacheLoader<Integer, Integer>() {
+  	Cache<Integer,Integer> cache = CacheBuilder.heapCache().
+  	cacheLoader(new CacheLoader<Integer, Integer>() {
 		public Integer load(Integer key) {
 			return null;
 		}
