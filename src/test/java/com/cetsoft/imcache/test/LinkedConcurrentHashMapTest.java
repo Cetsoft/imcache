@@ -1,4 +1,4 @@
-package com.cetsoft.imcache.heap;
+package com.cetsoft.imcache.test;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.cetsoft.imcache.concurrent.ConcurrentLinkedHashMap;
 
-public class Main {
+public class LinkedConcurrentHashMapTest {
 
 	public static void main(String[] args) throws InterruptedException {
 		int noOfThreads = 30;
