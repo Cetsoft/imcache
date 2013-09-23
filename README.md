@@ -46,5 +46,19 @@ The Class OffHeapCache is a cache that uses offheap byte buffers to store or ret
 items into bytes. To do so, OffHeapCache uses pointers to point array location of an item. OffHeapCache clears
 the buffers periodically to gain free space if buffers are dirty(unused memory). It also does eviction depending on
 access time to the objects.
-To make offheap cache avaialable to be used JVM Parameters "-XX:MaxDirectMemorySize=4g" must be set.
-
+To make offheap cache work to JVM Parameters "-XX:MaxDirectMemorySize=4g" must be set. Buffer capacity of 8 mb 
+is a good choice to start OffHeapCache. Let's see sample OffHeapCache use.
+```java
+	void example(){
+		//8388608 is 8 MB and 10 buffers. 8MB*10 = 80 MB.
+  		OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
+		final Cache<Integer,SimpleObject> offHeapCache = CacheBuilder.offHeapCache().serializer(new Serializer<SimpleObject>() {
+			public byte[] serialize(SimpleObject value) {
+				return com.cetsoft.imcache.test.Serializer.serialize(value);
+			}
+			public SimpleObject deserialize(byte[] payload) {
+				return com.cetsoft.imcache.test.Serializer.deserialize(payload);
+			}
+		}).storage(bufferStore).build();
+	}
+```
