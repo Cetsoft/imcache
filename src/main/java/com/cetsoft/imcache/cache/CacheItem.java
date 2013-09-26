@@ -16,33 +16,21 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Sep 23, 2013
+* Date   : Sep 26, 2013
 */
-package com.cetsoft.imcache.test;
+package com.cetsoft.imcache.cache;
 
-import com.cetsoft.imcache.cache.Cache;
-import com.cetsoft.imcache.cache.CacheLoader;
-import com.cetsoft.imcache.cache.VersionedItem;
-import com.cetsoft.imcache.cache.builder.CacheBuilder;
-
-// TODO: Auto-generated Javadoc
 /**
- * The Class CacheBuilderTest.
+ * The Interface CacheItem is a container for the cached values.
+ *
+ * @param <V> the value type
  */
-public class CacheBuilderTest {
-
+public interface CacheItem<V> {
+	
 	/**
-	 * The main method.
+	 * Gets the value.
 	 *
-	 * @param args the arguments
+	 * @return the value
 	 */
-	public static void main (String [] args){
-		Cache<Integer,Integer> cache = CacheBuilder.heapCache().cacheLoader(new CacheLoader<Integer, Integer>() {
-			public Integer load(Integer key) {
-				return null;
-			}
-		}).capacity(10000).build();
-		cache.get(0);
-		Cache<Integer, VersionedItem<Integer>> verCache = CacheBuilder.versionedOffHeapCache().build();
-	}
+	V getValue();
 }
