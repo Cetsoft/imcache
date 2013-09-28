@@ -21,7 +21,7 @@
 package com.cetsoft.imcache.cache.search;
 
 /**
- * The Interface Criteria.
+ * The Interface Criteria for meeting certain condition.
  */
 public interface Criteria{
 	
