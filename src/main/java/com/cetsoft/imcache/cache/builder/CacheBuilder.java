@@ -20,6 +20,8 @@
 */
 package com.cetsoft.imcache.cache.builder;
 
+import java.util.List;
+
 import com.cetsoft.imcache.bytebuffer.OffHeapByteBufferStore;
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheLoader;
@@ -31,6 +33,9 @@ import com.cetsoft.imcache.cache.heap.TransactionalHeapCache;
 import com.cetsoft.imcache.cache.heap.tx.TransactionCommitter;
 import com.cetsoft.imcache.cache.offheap.OffHeapCache;
 import com.cetsoft.imcache.cache.offheap.VersionedOffHeapCache;
+import com.cetsoft.imcache.cache.search.CacheIndex;
+import com.cetsoft.imcache.cache.search.Query;
+import com.cetsoft.imcache.cache.search.QueryExecuter;
 import com.cetsoft.imcache.serialization.Serializer;
 
 
@@ -49,16 +54,32 @@ public abstract class CacheBuilder{
 		public void onEviction(Object key, Object value) {}
 	}; 
 	
+	/** The Constant QUERY_EXECUTER. */
+	private static final QueryExecuter<Object, Object> QUERY_EXECUTER = new QueryExecuter<Object, Object>() {
+		public void addIndex(CacheIndex index) {}
+		public void remove(Object key, Object value) {}
+		public List<Object> execute(Query query) {return null;}
+		public void clear() {}
+		public void add(Object key, Object value) {}
+	};
+	
 	/** The cache loader. */
 	protected CacheLoader<Object, Object> cacheLoader;
 	
 	/** The eviction listener. */
 	protected EvictionListener<Object, Object> evictionListener;
+	
+	/** The query executer. */
+	protected QueryExecuter<Object, Object> queryExecuter;
 
 	/**
 	 * Instantiates a new cache builder.
 	 */
-	private CacheBuilder(){}
+	private CacheBuilder(){
+		cacheLoader = CACHE_LOADER;
+		evictionListener = EVICTION_LISTENER;
+		queryExecuter = QUERY_EXECUTER;
+	}
 	
 	/**
 	 * Heap cache.
@@ -116,9 +137,8 @@ public abstract class CacheBuilder{
 		/**
 		 * Instantiates a new heap cache builder.
 		 */
-		public HeapCacheBuilder(){
-			cacheLoader = CACHE_LOADER;
-			evictionListener = EVICTION_LISTENER;
+		public HeapCacheBuilder(){	
+			super();
 		}
 		
 		/**
@@ -150,6 +170,20 @@ public abstract class CacheBuilder{
 		}
 		
 		/**
+		 * Query executer.
+		 *
+		 * @param <K> the key type
+		 * @param <V> the value type
+		 * @param queryExecuter the query executer
+		 * @return the heap cache builder
+		 */
+		@SuppressWarnings("unchecked")
+		public <K,V> HeapCacheBuilder queryExecuter(QueryExecuter<K, V> queryExecuter){
+			this.queryExecuter = (QueryExecuter<Object, Object>) queryExecuter;
+			return this;
+		}
+		
+		/**
 		 * Capacity.
 		 *
 		 * @param capacity the capacity
@@ -169,7 +203,8 @@ public abstract class CacheBuilder{
 		 */
 		@SuppressWarnings("unchecked")
 		public <K,V> Cache<K, V> build() {
-			return new HeapCache<K, V>((CacheLoader<K, V>)cacheLoader,(EvictionListener<K, V>) evictionListener, capacity);
+			return new HeapCache<K, V>((CacheLoader<K, V>)cacheLoader,(EvictionListener<K, V>) evictionListener,
+					(QueryExecuter<K, V>) queryExecuter, capacity);
 		}
 	}
 	
@@ -185,8 +220,7 @@ public abstract class CacheBuilder{
 		 * Instantiates a new concurrent heap cache builder.
 		 */
 		public ConcurrentHeapCacheBuilder(){
-			cacheLoader = CACHE_LOADER;
-			evictionListener = EVICTION_LISTENER;
+			super();
 		}
 		
 		/**
@@ -218,6 +252,20 @@ public abstract class CacheBuilder{
 		}
 		
 		/**
+		 * Query executer.
+		 *
+		 * @param <K> the key type
+		 * @param <V> the value type
+		 * @param queryExecuter the query executer
+		 * @return the concurrent heap cache builder
+		 */
+		@SuppressWarnings("unchecked")
+		public <K,V> ConcurrentHeapCacheBuilder queryExecuter(QueryExecuter<K, V> queryExecuter){
+			this.queryExecuter = (QueryExecuter<Object, Object>) queryExecuter;
+			return this;
+		}
+		
+		/**
 		 * Capacity.
 		 *
 		 * @param capacity the capacity
@@ -237,7 +285,8 @@ public abstract class CacheBuilder{
 		 */
 		@SuppressWarnings("unchecked")
 		public <K,V> Cache<K, V> build() {
-			return new ConcurrentHeapCache<K, V>((CacheLoader<K, V>)cacheLoader,(EvictionListener<K, V>) evictionListener, capacity);
+			return new ConcurrentHeapCache<K, V>((CacheLoader<K, V>)cacheLoader,(EvictionListener<K, V>) evictionListener,
+					(QueryExecuter<K, V>) queryExecuter, capacity);
 		}
 	}
 	
@@ -268,8 +317,7 @@ public abstract class CacheBuilder{
 		 * Instantiates a new off heap cache builder.
 		 */
 		public OffHeapCacheBuilder(){
-			cacheLoader = CACHE_LOADER;
-			evictionListener = EVICTION_LISTENER;
+			super();
 			concurrencyLevel = OffHeapCache.DEFAULT_CONCURRENCY_LEVEL;
 			evictionPeriod = OffHeapCache.DEFAULT_EVICTION_PERIOD;
 			bufferCleanerPeriod = OffHeapCache.DEFAULT_BUFFER_CLEANER_PERIOD;
@@ -325,6 +373,20 @@ public abstract class CacheBuilder{
 		@SuppressWarnings("unchecked")
 		public <K,V> OffHeapCacheBuilder evictionListener(EvictionListener<K, V> evictionListener){
 			this.evictionListener = (EvictionListener<Object, Object>) evictionListener;
+			return this;
+		}
+		
+		/**
+		 * Query executer.
+		 *
+		 * @param <K> the key type
+		 * @param <V> the value type
+		 * @param queryExecuter the query executer
+		 * @return the off heap cache builder
+		 */
+		@SuppressWarnings("unchecked")
+		public <K,V> OffHeapCacheBuilder queryExecuter(QueryExecuter<K, V> queryExecuter){
+			this.queryExecuter = (QueryExecuter<Object, Object>) queryExecuter;
 			return this;
 		}
 		
@@ -390,8 +452,8 @@ public abstract class CacheBuilder{
 			if(this.serializer==null){
 				throw new NecessaryArgumentException("Serializer must be set!");
 			}
-			return new OffHeapCache<K, V>((CacheLoader<K, V>)cacheLoader, (EvictionListener<K, V>)evictionListener, byteBufferStore, 
-					(Serializer<V>) serializer, bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
+			return new OffHeapCache<K, V>((CacheLoader<K, V>)cacheLoader, (EvictionListener<K, V>)evictionListener,(QueryExecuter<K, V>)queryExecuter,
+					byteBufferStore, (Serializer<V>) serializer, bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
 		}
 	}
 	
@@ -410,8 +472,7 @@ public abstract class CacheBuilder{
 		 * Instantiates a new transactional heap cache builder.
 		 */
 		public TransactionalHeapCacheBuilder(){
-			cacheLoader = CACHE_LOADER;
-			evictionListener = EVICTION_LISTENER;
+			super();
 		}
 		
 		/**
@@ -457,6 +518,20 @@ public abstract class CacheBuilder{
 		}
 		
 		/**
+		 * Query executer.
+		 *
+		 * @param <K> the key type
+		 * @param <V> the value type
+		 * @param queryExecuter the query executer
+		 * @return the transactional heap cache builder
+		 */
+		@SuppressWarnings("unchecked")
+		public <K,V> TransactionalHeapCacheBuilder queryExecuter(QueryExecuter<K, V> queryExecuter){
+			this.queryExecuter = (QueryExecuter<Object, Object>) queryExecuter;
+			return this;
+		}
+		
+		/**
 		 * Capacity.
 		 *
 		 * @param capacity the capacity
@@ -480,7 +555,7 @@ public abstract class CacheBuilder{
 				throw new NecessaryArgumentException("TransactionCommitter must be set!");
 			}
 			return new TransactionalHeapCache<K, V>((TransactionCommitter<K, V>)transactionCommitter,
-					(CacheLoader<K, V>)cacheLoader,(EvictionListener<K, V>) evictionListener, capacity);
+					(CacheLoader<K, V>)cacheLoader,(EvictionListener<K, V>) evictionListener,(QueryExecuter<K, V>)queryExecuter, capacity);
 		}
 		
 	}
@@ -512,8 +587,7 @@ public abstract class CacheBuilder{
 		 * Instantiates a new off heap cache builder.
 		 */
 		public VersionedOffHeapCacheBuilder(){
-			cacheLoader = CACHE_LOADER;
-			evictionListener = EVICTION_LISTENER;
+			super();
 			concurrencyLevel = OffHeapCache.DEFAULT_CONCURRENCY_LEVEL;
 			evictionPeriod = OffHeapCache.DEFAULT_EVICTION_PERIOD;
 			bufferCleanerPeriod = OffHeapCache.DEFAULT_BUFFER_CLEANER_PERIOD;
@@ -569,6 +643,20 @@ public abstract class CacheBuilder{
 		@SuppressWarnings("unchecked")
 		public <K,V> VersionedOffHeapCacheBuilder evictionListener(EvictionListener<K, V> evictionListener){
 			this.evictionListener = (EvictionListener<Object, Object>) evictionListener;
+			return this;
+		}
+		
+		/**
+		 * Query executer.
+		 *
+		 * @param <K> the key type
+		 * @param <V> the value type
+		 * @param queryExecuter the query executer
+		 * @return the versioned off heap cache builder
+		 */
+		@SuppressWarnings("unchecked")
+		public <K,V> VersionedOffHeapCacheBuilder queryExecuter(QueryExecuter<K, V> queryExecuter){
+			this.queryExecuter = (QueryExecuter<Object, Object>) queryExecuter;
 			return this;
 		}
 		
@@ -635,7 +723,7 @@ public abstract class CacheBuilder{
 				throw new NecessaryArgumentException("Serializer must be set!");
 			}
 			return new VersionedOffHeapCache<K, V>(byteBufferStore,(Serializer<V>)serializer, (CacheLoader<K, V>)cacheLoader,
-					(EvictionListener<K, V>)evictionListener, bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
+					(EvictionListener<K, V>)evictionListener, (QueryExecuter<K, V>)queryExecuter,bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
 		}
 	}
 	

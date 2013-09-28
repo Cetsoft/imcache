@@ -43,6 +43,7 @@ import com.cetsoft.imcache.bytebuffer.Pointer;
 import com.cetsoft.imcache.cache.AbstractCache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
+import com.cetsoft.imcache.cache.search.QueryExecuter;
 import com.cetsoft.imcache.concurrent.lock.StripedReadWriteLock;
 import com.cetsoft.imcache.serialization.Serializer;
 
@@ -103,6 +104,7 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 	 *
 	 * @param cacheLoader the cache loader
 	 * @param evictionListener the eviction listener
+	 * @param queryExecuter the query executer
 	 * @param byteBufferStore the byte buffer store
 	 * @param serializer the serializer
 	 * @param bufferCleanerPeriod the buffer cleaner period
@@ -110,10 +112,10 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 	 * @param concurrencyLevel the concurrency level
 	 * @param evictionPeriod the eviction period
 	 */
-	public OffHeapCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,
+	public OffHeapCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,QueryExecuter<K, V> queryExecuter,
 			OffHeapByteBufferStore byteBufferStore, Serializer<V> serializer,long bufferCleanerPeriod, 
 			final float bufferCleanerThreshold, int concurrencyLevel, final long evictionPeriod) {
-		super(cacheLoader,evictionListener);
+		super(cacheLoader,evictionListener,queryExecuter);
 		initCache(byteBufferStore, serializer, bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
 	}
 	
