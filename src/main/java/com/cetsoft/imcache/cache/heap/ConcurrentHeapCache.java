@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import com.cetsoft.imcache.cache.AbstractCache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
+import com.cetsoft.imcache.cache.search.QueryExecuter;
 import com.cetsoft.imcache.concurrent.ConcurrentLinkedHashMap;
 
 /**
@@ -55,10 +56,12 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 	 *
 	 * @param cacheLoader the cache loader
 	 * @param evictionListener the eviction listener
+	 * @param queryExecuter the query executer
 	 * @param capacity the capacity
 	 */
-	public ConcurrentHeapCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener, int capacity) {
-		super(cacheLoader,evictionListener);
+	public ConcurrentHeapCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener, 
+			QueryExecuter<K, V> queryExecuter,int capacity) {
+		super(cacheLoader,evictionListener,queryExecuter);
 		initCache(capacity);
 	}
 	
@@ -106,22 +109,39 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 		for (K key : cache.keySet()) {
 			cache.remove(key);
 		}
+		this.queryExecuter.clear();
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.cetsoft.imcache.cache.Cache#hitRatio()
+	 */
 	public double hitRatio() {
 		return hit.get() / (hit.get() + miss.get());
 	}
 	
+	/**
+	 * The Class ConcurrentLimitedHashMap.
+	 */
 	private class ConcurrentLimitedHashMap extends ConcurrentLinkedHashMap<K, V> implements Map<K,V>{
 		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = -1816555501039461556L;
 		
+		/** The capacity. */
 		private int capacity;
 		
+		/**
+		 * Instantiates a new concurrent limited hash map.
+		 *
+		 * @param capacity the capacity
+		 */
 		public ConcurrentLimitedHashMap(int capacity) {
 			this.capacity = capacity;
 		}
 		
+		/* (non-Javadoc)
+		 * @see com.cetsoft.imcache.concurrent.ConcurrentLinkedHashMap#put(java.lang.Object, java.lang.Object)
+		 */
 		@Override
 		public V put(K key, V value){
 			if(capacity==this.size()){
@@ -129,9 +149,13 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 				ConcurrentHeapCache.this.evictionListener.onEviction(entry.getKey(), entry.getValue());
 			}
 			V exValue = super.put(key, value);
+			ConcurrentHeapCache.this.queryExecuter.add(key, exValue);
 			return exValue;
 		}
 		
+		/* (non-Javadoc)
+		 * @see com.cetsoft.imcache.concurrent.ConcurrentLinkedHashMap#get(java.lang.Object)
+		 */
 		@Override
 		@SuppressWarnings("unchecked")
 		public V get(Object key){
@@ -146,12 +170,16 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 			return value;
 		}
 
+		/* (non-Javadoc)
+		 * @see com.cetsoft.imcache.concurrent.ConcurrentLinkedHashMap#remove(java.lang.Object)
+		 */
 		@Override
 		@SuppressWarnings("unchecked")
 		public V remove(Object key){
 			V value = super.remove(key);
 			if(value!=null){
 				ConcurrentHeapCache.this.evictionListener.onEviction((K) key, value);
+				ConcurrentHeapCache.this.queryExecuter.remove((K) key, value);
 			}
 			return value;
 		}

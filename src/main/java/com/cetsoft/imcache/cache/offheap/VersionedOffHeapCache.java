@@ -20,12 +20,17 @@
 */
 package com.cetsoft.imcache.cache.offheap;
 
+import java.util.List;
+
 import com.cetsoft.imcache.bytebuffer.OffHeapByteBufferStore;
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.SimpleItem;
 import com.cetsoft.imcache.cache.VersionedItem;
+import com.cetsoft.imcache.cache.search.CacheIndex;
+import com.cetsoft.imcache.cache.search.Query;
+import com.cetsoft.imcache.cache.search.QueryExecuter;
 import com.cetsoft.imcache.serialization.Serializer;
 
 /**
@@ -47,6 +52,7 @@ public class VersionedOffHeapCache<K, V> implements Cache<K, VersionedItem<V>>{
 	 * @param byteBufferStore the byte buffer store
 	 * @param cacheLoader the cache loader
 	 * @param evictionListener the eviction listener
+	 * @param queryExecuter the query executer
 	 * @param bufferCleanerPeriod the buffer cleaner period
 	 * @param bufferCleanerThreshold the buffer cleaner threshold
 	 * @param concurrencyLevel the concurrency level
@@ -54,27 +60,30 @@ public class VersionedOffHeapCache<K, V> implements Cache<K, VersionedItem<V>>{
 	 */
 	public VersionedOffHeapCache(Serializer<VersionedItem<V>> serializer, OffHeapByteBufferStore byteBufferStore, 
 			CacheLoader<K, VersionedItem<V>> cacheLoader, EvictionListener<K, VersionedItem<V>> evictionListener,
-			long bufferCleanerPeriod, float bufferCleanerThreshold, int concurrencyLevel, long evictionPeriod) {
-		offHeapCache = new OffHeapCache<K, VersionedItem<V>>(cacheLoader, evictionListener, byteBufferStore, serializer, 
+			QueryExecuter<K, VersionedItem<V>> queryExecuter,long bufferCleanerPeriod, float bufferCleanerThreshold, int concurrencyLevel, 
+			long evictionPeriod) {
+		offHeapCache = new OffHeapCache<K, VersionedItem<V>>(cacheLoader, evictionListener, queryExecuter,byteBufferStore, serializer, 
 				bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
 	}
 //	
 	/**
-	 * Instantiates a new versioned off heap cache.
-	 *
-	 * @param byteBufferStore the byte buffer store
-	 * @param serializer the serializer
-	 * @param cacheLoader the cache loader
-	 * @param evictionListener the eviction listener
-	 * @param bufferCleanerPeriod the buffer cleaner period
-	 * @param bufferCleanerThreshold the buffer cleaner threshold
-	 * @param concurrencyLevel the concurrency level
-	 * @param evictionPeriod the eviction period
-	 */
+ * Instantiates a new versioned off heap cache.
+ *
+ * @param byteBufferStore the byte buffer store
+ * @param serializer the serializer
+ * @param cacheLoader the cache loader
+ * @param evictionListener the eviction listener
+ * @param queryExecuter the query executer
+ * @param bufferCleanerPeriod the buffer cleaner period
+ * @param bufferCleanerThreshold the buffer cleaner threshold
+ * @param concurrencyLevel the concurrency level
+ * @param evictionPeriod the eviction period
+ */
 	public VersionedOffHeapCache(OffHeapByteBufferStore byteBufferStore, Serializer<V> serializer,CacheLoader<K,V> cacheLoader, 
-			EvictionListener<K, V> evictionListener,long bufferCleanerPeriod,float bufferCleanerThreshold, int concurrencyLevel, long evictionPeriod) {
+			EvictionListener<K, V> evictionListener, QueryExecuter<K, V> queryExecuter,long bufferCleanerPeriod,float bufferCleanerThreshold, int concurrencyLevel, long evictionPeriod) {
 		this(new CacheItemSerializer<K, V>(serializer),byteBufferStore,new CacheItemCacheLoader<K, V>(cacheLoader),
-				new CacheItemEvictionListener<K, V>(evictionListener),bufferCleanerPeriod,bufferCleanerThreshold,concurrencyLevel, evictionPeriod);
+				new CacheItemEvictionListener<K, V>(evictionListener),new CacheItemQueryExecuter<K,V>(queryExecuter),bufferCleanerPeriod,
+				bufferCleanerThreshold,concurrencyLevel, evictionPeriod);
 	}
 	
 	/* (non-Javadoc)
@@ -266,6 +275,63 @@ public class VersionedOffHeapCache<K, V> implements Cache<K, VersionedItem<V>>{
 		        value += (version[i] & 0x000000FF) << shift;
 		    }
 		    return value;
+		}
+		
+	}
+	
+	/**
+	 * The Class CacheItemQueryExecuter.
+	 *
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 */
+	private static class CacheItemQueryExecuter<K,V> implements QueryExecuter<K,VersionedItem<V>>{
+		
+		/** The query executer. */
+		QueryExecuter<K, V> queryExecuter;
+
+		/**
+		 * Instantiates a new cache item query executer.
+		 *
+		 * @param queryExecuter the query executer
+		 */
+		public CacheItemQueryExecuter(QueryExecuter<K, V> queryExecuter) {
+			this.queryExecuter = queryExecuter;
+		}
+
+		/* (non-Javadoc)
+		 * @see com.cetsoft.imcache.cache.search.Indexable#addIndex(com.cetsoft.imcache.cache.search.CacheIndex)
+		 */
+		public void addIndex(CacheIndex index) {
+			queryExecuter.addIndex(index);
+		}
+
+		/* (non-Javadoc)
+		 * @see com.cetsoft.imcache.cache.search.QueryExecuter#add(java.lang.Object, java.lang.Object)
+		 */
+		public void add(K key, VersionedItem<V> value) {
+			this.queryExecuter.add(key, value.getValue());
+		}
+
+		/* (non-Javadoc)
+		 * @see com.cetsoft.imcache.cache.search.QueryExecuter#remove(java.lang.Object, java.lang.Object)
+		 */
+		public void remove(K key, VersionedItem<V> value) {
+			this.queryExecuter.remove(key, value.getValue());
+		}
+
+		/* (non-Javadoc)
+		 * @see com.cetsoft.imcache.cache.search.QueryExecuter#clear()
+		 */
+		public void clear() {
+			this.queryExecuter.clear();
+		}
+
+		/* (non-Javadoc)
+		 * @see com.cetsoft.imcache.cache.search.QueryExecuter#execute(com.cetsoft.imcache.cache.search.Query)
+		 */
+		public List<K> execute(Query query) {
+			return queryExecuter.execute(query);
 		}
 		
 	}

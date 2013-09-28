@@ -20,13 +20,19 @@
 */
 package com.cetsoft.imcache.cache;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.cetsoft.imcache.cache.search.Query;
+import com.cetsoft.imcache.cache.search.QueryExecuter;
+
 /**
  * The Class AbstractCache.
  *
  * @param <K> the key type
  * @param <V> the value type
  */
-public abstract class AbstractCache<K, V> implements Cache<K, V> {
+public abstract class AbstractCache<K, V> implements SearchableCache<K, V> {
 
 	/** The cache loader. */
 	protected CacheLoader<K, V> cacheLoader;
@@ -34,9 +40,35 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	/** The eviction listener. */
 	protected EvictionListener<K, V> evictionListener;
 	
-	public AbstractCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener) {
+	/** The Query Executer.*/
+	protected QueryExecuter<K, V> queryExecuter;
+	
+	/**
+	 * Instantiates a new abstract cache.
+	 *
+	 * @param cacheLoader the cache loader
+	 * @param evictionListener the eviction listener
+	 * @param queryExecuter the query executer
+	 */
+	public AbstractCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,QueryExecuter<K, V> queryExecuter) {
 		this.cacheLoader = cacheLoader;
 		this.evictionListener = evictionListener;
+		this.queryExecuter = queryExecuter;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.cetsoft.imcache.cache.SearchableCache#get(com.cetsoft.imcache.cache.search.Query)
+	 */
+	public List<V> get(Query query){
+		List<K> keys = queryExecuter.execute(query);
+		List<V> values = new ArrayList<V>(keys.size());
+		for (K key : keys) {
+			V value = get(key);
+			if(value!=null){
+				values.add(value);
+			}
+		}
+		return values;
 	}
 
 	/**
@@ -73,6 +105,24 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	 */
 	public void setEvictionListener(EvictionListener<K, V> evictionListener) {
 		this.evictionListener = evictionListener;
+	}
+
+	/**
+	 * Gets the query executer.
+	 *
+	 * @return the query executer
+	 */
+	public QueryExecuter<K, V> getQueryExecuter() {
+		return queryExecuter;
+	}
+
+	/**
+	 * Sets the query executer.
+	 *
+	 * @param queryExecuter the query executer
+	 */
+	public void setQueryExecuter(QueryExecuter<K, V> queryExecuter) {
+		this.queryExecuter = queryExecuter;
 	}
 
 }

@@ -26,6 +26,7 @@ import com.cetsoft.imcache.cache.heap.tx.CacheTransaction;
 import com.cetsoft.imcache.cache.heap.tx.TransactionCommitter;
 import com.cetsoft.imcache.cache.heap.tx.TransactionException;
 import com.cetsoft.imcache.cache.heap.tx.TransactionLog;
+import com.cetsoft.imcache.cache.search.QueryExecuter;
 
 /**
  * The Class TransactionalHeapCache provides caching items transactionally
@@ -46,11 +47,12 @@ public class TransactionalHeapCache<K, V> extends HeapCache<K, V> {
 	 * @param committer the committer
 	 * @param cacheLoader the cache loader
 	 * @param evictionListener the eviction listener
+	 * @param queryExecuter the query executer
 	 * @param capacity the capacity
 	 */
 	public TransactionalHeapCache(TransactionCommitter<K, V> committer,CacheLoader<K, V> cacheLoader, 
-			EvictionListener<K, V> evictionListener, int capacity) {
-		super(cacheLoader, evictionListener, capacity);
+			EvictionListener<K, V> evictionListener,QueryExecuter<K, V> queryExecuter, int capacity) {
+		super(cacheLoader, evictionListener,queryExecuter, capacity);
 		this.committer = committer;
 	}
 
@@ -64,13 +66,6 @@ public class TransactionalHeapCache<K, V> extends HeapCache<K, V> {
 		CacheTransaction.addLog(log);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.cache.heap.HeapCache#hitRatio()
-	 */
-	public double hitRatio() {
-		return super.hitRatio();
-	}
-	
 	/**
 	 * The Class PutTransactionLog.
 	 *
