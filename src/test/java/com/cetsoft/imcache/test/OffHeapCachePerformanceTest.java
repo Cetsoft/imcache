@@ -95,11 +95,13 @@ public class OffHeapCachePerformanceTest {
 	/**
 	 * The Class SimpleObject.
 	 */
+	@SuppressWarnings("unused")
 	private static class SimpleObject implements Serializable{
 		
+		private static final long serialVersionUID = 196026337851914850L;
 		/** The y. */
 		protected int x =3,y=4; 
- /** The str. */
- String str = "";
+		/** The str. */
+		protected String str = "";
 	}
 }

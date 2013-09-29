@@ -22,10 +22,13 @@ package com.cetsoft.imcache.test;
 
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheLoader;
+import com.cetsoft.imcache.cache.SearchableCache;
 import com.cetsoft.imcache.cache.VersionedItem;
 import com.cetsoft.imcache.cache.builder.CacheBuilder;
+import com.cetsoft.imcache.cache.search.CacheQuery;
+import com.cetsoft.imcache.cache.search.criteria.EqualsToCriteria;
+import com.cetsoft.imcache.cache.search.index.IndexType;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CacheBuilderTest.
  */
@@ -43,6 +46,8 @@ public class CacheBuilderTest {
 			}
 		}).capacity(10000).build();
 		cache.get(0);
-		Cache<Integer, VersionedItem<Integer>> verCache = CacheBuilder.versionedOffHeapCache().build();
+		SearchableCache<Integer, VersionedItem<Integer>> searchableCache = CacheBuilder.
+				versionedOffHeapCache().addIndex("ada", IndexType.UNIQUE_HASH).build();
+		searchableCache.execute(CacheQuery.newInstance().addCriteria(new EqualsToCriteria("ada", 24)));
 	}
 }
