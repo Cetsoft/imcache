@@ -23,9 +23,9 @@ package com.cetsoft.imcache.cache.offheap;
 import java.util.List;
 
 import com.cetsoft.imcache.bytebuffer.OffHeapByteBufferStore;
-import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
+import com.cetsoft.imcache.cache.SearchableCache;
 import com.cetsoft.imcache.cache.SimpleItem;
 import com.cetsoft.imcache.cache.VersionedItem;
 import com.cetsoft.imcache.cache.search.Query;
@@ -40,7 +40,7 @@ import com.cetsoft.imcache.serialization.Serializer;
  * @param <K> the key type
  * @param <V> the value type
  */
-public class VersionedOffHeapCache<K, V> implements Cache<K, VersionedItem<V>>{
+public class VersionedOffHeapCache<K, V> implements SearchableCache<K, VersionedItem<V>>{
 
 	/** The off heap cache. */
 	protected OffHeapCache<K, VersionedItem<V>> offHeapCache;
@@ -138,6 +138,10 @@ public class VersionedOffHeapCache<K, V> implements Cache<K, VersionedItem<V>>{
 	 */
 	public double hitRatio() {
 		return offHeapCache.hitRatio();
+	}
+	
+	public List<VersionedItem<V>> execute(Query query) {
+		return offHeapCache.execute(query);
 	}
 
 	/**

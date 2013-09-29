@@ -39,5 +39,5 @@ public interface SearchableCache<K,V> extends Cache<K,V>{
 	 * @param query the query
 	 * @return the list
 	 */
-	List<V> get(Query query);
+	List<V> execute(Query query);
 }
