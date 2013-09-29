@@ -59,7 +59,7 @@ public abstract class AbstractCache<K, V> implements SearchableCache<K, V> {
 	/* (non-Javadoc)
 	 * @see com.cetsoft.imcache.cache.SearchableCache#get(com.cetsoft.imcache.cache.search.Query)
 	 */
-	public List<V> get(Query query){
+	public List<V> execute(Query query){
 		List<K> keys = queryExecuter.execute(query);
 		List<V> values = new ArrayList<V>(keys.size());
 		for (K key : keys) {

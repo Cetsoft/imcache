@@ -26,6 +26,7 @@ import com.cetsoft.imcache.bytebuffer.OffHeapByteBufferStore;
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
+import com.cetsoft.imcache.cache.SearchableCache;
 import com.cetsoft.imcache.cache.VersionedItem;
 import com.cetsoft.imcache.cache.heap.ConcurrentHeapCache;
 import com.cetsoft.imcache.cache.heap.HeapCache;
@@ -33,6 +34,7 @@ import com.cetsoft.imcache.cache.heap.TransactionalHeapCache;
 import com.cetsoft.imcache.cache.heap.tx.TransactionCommitter;
 import com.cetsoft.imcache.cache.offheap.OffHeapCache;
 import com.cetsoft.imcache.cache.offheap.VersionedOffHeapCache;
+import com.cetsoft.imcache.cache.search.ConcurrentQueryExecuter;
 import com.cetsoft.imcache.cache.search.Query;
 import com.cetsoft.imcache.cache.search.QueryExecuter;
 import com.cetsoft.imcache.cache.search.index.IndexType;
@@ -43,6 +45,9 @@ import com.cetsoft.imcache.serialization.Serializer;
  * The Class CacheBuilder.
  */
 public abstract class CacheBuilder{
+	
+	/** The is searchable. */
+	private boolean isSearchable = false; 
 	
 	/** The Constant CACHE_LOADER. */
 	private static final CacheLoader<Object, Object> CACHE_LOADER = new CacheLoader<Object, Object>() {
@@ -71,6 +76,15 @@ public abstract class CacheBuilder{
 	
 	/** The query executer. */
 	protected QueryExecuter<Object, Object> queryExecuter;
+	
+	/**
+	 * Searchable.
+	 */
+	protected void searchable(){
+		if(!isSearchable){
+			queryExecuter = new ConcurrentQueryExecuter<Object, Object>();
+		}
+	}
 
 	/**
 	 * Instantiates a new cache builder.
@@ -195,14 +209,27 @@ public abstract class CacheBuilder{
 		}
 		
 		/**
-		 * Builds the.
+		 * Adds the index.
+		 *
+		 * @param attributeName the attribute name
+		 * @param indexType the index type
+		 * @return the heap cache builder
+		 */
+		public HeapCacheBuilder addIndex(String attributeName, IndexType indexType){
+			searchable();
+			queryExecuter.addIndex(attributeName, indexType);
+			return this;
+		}
+		
+		/**
+		 * Builds the cache.
 		 *
 		 * @param <K> the key type
 		 * @param <V> the value type
 		 * @return the cache
 		 */
 		@SuppressWarnings("unchecked")
-		public <K,V> Cache<K, V> build() {
+		public <K,V> SearchableCache<K, V> build() {
 			return new HeapCache<K, V>((CacheLoader<K, V>)cacheLoader,(EvictionListener<K, V>) evictionListener,
 					(QueryExecuter<K, V>) queryExecuter, capacity);
 		}
@@ -277,14 +304,27 @@ public abstract class CacheBuilder{
 		}
 		
 		/**
-		 * Builds the.
+		 * Adds the index.
+		 *
+		 * @param attributeName the attribute name
+		 * @param indexType the index type
+		 * @return the concurrent heap cache builder
+		 */
+		public ConcurrentHeapCacheBuilder addIndex(String attributeName, IndexType indexType){
+			searchable();
+			queryExecuter.addIndex(attributeName, indexType);
+			return this;
+		}
+		
+		/**
+		 * Builds the cache.
 		 *
 		 * @param <K> the key type
 		 * @param <V> the value type
 		 * @return the cache
 		 */
 		@SuppressWarnings("unchecked")
-		public <K,V> Cache<K, V> build() {
+		public <K,V> SearchableCache<K, V> build() {
 			return new ConcurrentHeapCache<K, V>((CacheLoader<K, V>)cacheLoader,(EvictionListener<K, V>) evictionListener,
 					(QueryExecuter<K, V>) queryExecuter, capacity);
 		}
@@ -438,7 +478,20 @@ public abstract class CacheBuilder{
 		}
 		
 		/**
-		 * Builds the.
+		 * Adds the index.
+		 *
+		 * @param attributeName the attribute name
+		 * @param indexType the index type
+		 * @return the off heap cache builder
+		 */
+		public OffHeapCacheBuilder addIndex(String attributeName, IndexType indexType){
+			searchable();
+			queryExecuter.addIndex(attributeName, indexType);
+			return this;
+		}
+		
+		/**
+		 * Builds the cache.
 		 *
 		 * @param <K> the key type
 		 * @param <V> the value type
@@ -543,14 +596,27 @@ public abstract class CacheBuilder{
 		}
 		
 		/**
-		 * Builds the.
+		 * Adds the index.
+		 *
+		 * @param attributeName the attribute name
+		 * @param indexType the index type
+		 * @return the transactional heap cache builder
+		 */
+		public TransactionalHeapCacheBuilder addIndex(String attributeName, IndexType indexType){
+			searchable();
+			queryExecuter.addIndex(attributeName, indexType);
+			return this;
+		}
+		
+		/**
+		 * Builds the cache.
 		 *
 		 * @param <K> the key type
 		 * @param <V> the value type
 		 * @return the cache
 		 */
 		@SuppressWarnings("unchecked")
-		public <K, V> Cache<K, V> build() {
+		public <K, V> SearchableCache<K, V> build() {
 			if(this.transactionCommitter==null){
 				throw new NecessaryArgumentException("TransactionCommitter must be set!");
 			}
@@ -708,14 +774,27 @@ public abstract class CacheBuilder{
 		}
 		
 		/**
-		 * Builds the.
+		 * Adds the index.
+		 *
+		 * @param attributeName the attribute name
+		 * @param indexType the index type
+		 * @return the versioned off heap cache builder
+		 */
+		public VersionedOffHeapCacheBuilder addIndex(String attributeName, IndexType indexType){
+			searchable();
+			queryExecuter.addIndex(attributeName, indexType);
+			return this;
+		}
+		
+		/**
+		 * Builds the cache.
 		 *
 		 * @param <K> the key type
 		 * @param <V> the value type
 		 * @return the cache
 		 */
 		@SuppressWarnings("unchecked")
-		public <K,V> Cache<K, VersionedItem<V>> build() {
+		public <K,V> SearchableCache<K, VersionedItem<V>> build() {
 			if(this.byteBufferStore==null){
 				throw new NecessaryArgumentException("ByteBufferStore must be set!");
 			}
