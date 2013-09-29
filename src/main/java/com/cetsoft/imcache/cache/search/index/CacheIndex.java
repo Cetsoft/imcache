@@ -16,10 +16,11 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Sep 28, 2013
+* Date   : Sep 29, 2013
 */
-package com.cetsoft.imcache.cache.search;
+package com.cetsoft.imcache.cache.search.index;
 
+import java.util.List;
 
 /**
  * The Interface CacheIndex is a data structure that improves the speed of 
@@ -30,9 +31,27 @@ package com.cetsoft.imcache.cache.search;
 public interface CacheIndex{
 	
 	/**
-	 * Gets the index.
+	 * Puts index on indexedKey.
 	 *
-	 * @return the index
+	 * @param indexedKey the indexed key
+	 * @param key the key
 	 */
-	Attribute getIndex();
+	void put(Object indexedKey, Object key);
+	
+	/**
+	 * Removes the index from indexedKey.
+	 *
+	 * @param indexedKey the indexed key
+	 * @param key the key
+	 */
+	void remove(Object indexedKey, Object key);
+	
+	/**
+	 * Equals to.
+	 *
+	 * @param expectedValue the expected value
+	 * @return the list
+	 */
+	List<Object> equalsTo(Object expectedValue);
+	
 }

@@ -20,8 +20,9 @@
 */
 package com.cetsoft.imcache.cache.search;
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.cetsoft.imcache.cache.search.index.CacheIndex;
 
 /**
  * The Class ConcurrentQueryExecuter.
@@ -35,13 +36,7 @@ public class ConcurrentQueryExecuter<K,V> extends SimpleQueryExecuter<K, V>{
 	 * Instantiates a new concurrent query executer.
 	 */
 	public ConcurrentQueryExecuter() {
-		indexes = new ConcurrentHashMap<Attribute, Map<Object,K>>();
+		indexes = new ConcurrentHashMap<String, CacheIndex>();
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.cache.search.SimpleQueryExecuter#addIndex(com.cetsoft.imcache.cache.search.CacheIndex)
-	 */
-	public void addIndex(CacheIndex index) {
-		indexes.put(index.getIndex(), new ConcurrentHashMap<Object, K>());
-	}
 }

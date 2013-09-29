@@ -28,9 +28,9 @@ import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.SimpleItem;
 import com.cetsoft.imcache.cache.VersionedItem;
-import com.cetsoft.imcache.cache.search.CacheIndex;
 import com.cetsoft.imcache.cache.search.Query;
 import com.cetsoft.imcache.cache.search.QueryExecuter;
+import com.cetsoft.imcache.cache.search.index.IndexType;
 import com.cetsoft.imcache.serialization.Serializer;
 
 /**
@@ -302,8 +302,8 @@ public class VersionedOffHeapCache<K, V> implements Cache<K, VersionedItem<V>>{
 		/* (non-Javadoc)
 		 * @see com.cetsoft.imcache.cache.search.Indexable#addIndex(com.cetsoft.imcache.cache.search.CacheIndex)
 		 */
-		public void addIndex(CacheIndex index) {
-			queryExecuter.addIndex(index);
+		public void addIndex(String attributeName, IndexType type) {
+			queryExecuter.addIndex(attributeName,type);
 		}
 
 		/* (non-Javadoc)

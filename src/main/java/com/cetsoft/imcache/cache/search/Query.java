@@ -22,6 +22,8 @@ package com.cetsoft.imcache.cache.search;
 
 import java.util.List;
 
+import com.cetsoft.imcache.cache.search.criteria.Criteria;
+
 /**
  * The Interface Query is a piece of code (a query) that is sent to
  * a cache in order to get information back from the cache.
