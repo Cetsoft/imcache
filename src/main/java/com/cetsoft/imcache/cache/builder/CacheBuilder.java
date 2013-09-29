@@ -33,9 +33,9 @@ import com.cetsoft.imcache.cache.heap.TransactionalHeapCache;
 import com.cetsoft.imcache.cache.heap.tx.TransactionCommitter;
 import com.cetsoft.imcache.cache.offheap.OffHeapCache;
 import com.cetsoft.imcache.cache.offheap.VersionedOffHeapCache;
-import com.cetsoft.imcache.cache.search.CacheIndex;
 import com.cetsoft.imcache.cache.search.Query;
 import com.cetsoft.imcache.cache.search.QueryExecuter;
+import com.cetsoft.imcache.cache.search.index.IndexType;
 import com.cetsoft.imcache.serialization.Serializer;
 
 
@@ -56,7 +56,7 @@ public abstract class CacheBuilder{
 	
 	/** The Constant QUERY_EXECUTER. */
 	private static final QueryExecuter<Object, Object> QUERY_EXECUTER = new QueryExecuter<Object, Object>() {
-		public void addIndex(CacheIndex index) {}
+		public void addIndex(String attributeName, IndexType type) {}
 		public void remove(Object key, Object value) {}
 		public List<Object> execute(Query query) {return null;}
 		public void clear() {}

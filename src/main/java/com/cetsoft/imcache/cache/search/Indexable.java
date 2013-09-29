@@ -20,6 +20,8 @@
 */
 package com.cetsoft.imcache.cache.search;
 
+import com.cetsoft.imcache.cache.search.index.IndexType;
+
 /**
  * The Interface Indexable for receiving indexes. The class that is 
  * interested in processing indexes implements this interface. When an 
@@ -31,7 +33,8 @@ public interface Indexable{
 	/**
 	 * Adds the index.
 	 *
-	 * @param index the index
+	 * @param attributeName the attribute name
+	 * @param type the type
 	 */
-	void addIndex(CacheIndex index);
+	void addIndex(String attributeName, IndexType type);
 }

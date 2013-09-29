@@ -16,9 +16,13 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Sep 28, 2013
+* Date   : Sep 29, 2013
 */
-package com.cetsoft.imcache.cache.search;
+package com.cetsoft.imcache.cache.search.criteria;
+
+import java.util.List;
+
+import com.cetsoft.imcache.cache.search.index.CacheIndex;
 
 /**
  * The Interface Criteria for meeting certain condition.
@@ -26,10 +30,17 @@ package com.cetsoft.imcache.cache.search;
 public interface Criteria{
 	
 	/**
+	 * Gets the attribute name.
+	 *
+	 * @return the attribute name
+	 */
+	String getAttributeName();
+	
+	/**
 	 * Meets.
 	 *
-	 * @param value the value
-	 * @return true, if successful
+	 * @param cacheIndex the cache index
+	 * @return the list
 	 */
-	boolean meets(Object value);
+	List<Object> meets(CacheIndex cacheIndex);
 }

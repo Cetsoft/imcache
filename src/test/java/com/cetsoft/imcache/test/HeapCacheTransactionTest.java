@@ -28,9 +28,9 @@ import com.cetsoft.imcache.cache.heap.TransactionalHeapCache;
 import com.cetsoft.imcache.cache.heap.tx.CacheTransaction;
 import com.cetsoft.imcache.cache.heap.tx.Transaction;
 import com.cetsoft.imcache.cache.heap.tx.TransactionCommitter;
-import com.cetsoft.imcache.cache.search.CacheIndex;
 import com.cetsoft.imcache.cache.search.Query;
 import com.cetsoft.imcache.cache.search.QueryExecuter;
+import com.cetsoft.imcache.cache.search.index.IndexType;
 
 /**
  * The Class HeapCacheTransactionTest.
@@ -50,7 +50,7 @@ public class HeapCacheTransactionTest {
 		}, new CacheLoader<Integer, Integer>() {public Integer load(Integer key) {return null;}}, 
 		   new EvictionListener<Integer, Integer>() {public void onEviction(Integer key, Integer value) {}},new QueryExecuter<Integer, Integer>() {
 
-			public void addIndex(CacheIndex index) {
+			public void addIndex(String attributeName, IndexType type) {
 				// TODO Auto-generated method stub
 				
 			}

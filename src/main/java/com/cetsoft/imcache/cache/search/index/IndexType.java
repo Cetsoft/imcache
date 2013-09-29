@@ -16,20 +16,18 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Sep 28, 2013
+* Date   : Sep 29, 2013
 */
-package com.cetsoft.imcache.cache.search;
+package com.cetsoft.imcache.cache.search.index;
 
 /**
- * The Interface Attribute represents attributes of any
- * class that is used for caching purposes.
+ * The Enum IndexType.
  */
-public interface Attribute {
+public enum IndexType {
 	
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	String getName();
+	/** The unique hash. */
+	UNIQUE_HASH,
+	
+	/** The non unique hash. */
+	NON_UNIQUE_HASH
 }

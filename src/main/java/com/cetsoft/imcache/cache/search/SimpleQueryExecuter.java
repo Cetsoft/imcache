@@ -21,9 +21,16 @@
 package com.cetsoft.imcache.cache.search;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.cetsoft.imcache.cache.search.criteria.Criteria;
+import com.cetsoft.imcache.cache.search.index.CacheIndex;
+import com.cetsoft.imcache.cache.search.index.IndexType;
+import com.cetsoft.imcache.cache.search.index.NonUniqueHashIndex;
+import com.cetsoft.imcache.cache.search.index.UniqueHashIndex;
 
 /**
  * The Class SimpleQueryExecuter implements basic query execution.
@@ -34,32 +41,37 @@ import java.util.Map;
 public class SimpleQueryExecuter<K,V> implements QueryExecuter<K, V>{
 	
 	/** The indexes. */
-	protected Map<Attribute, Map<Object, K>> indexes;
+	protected Map<String, CacheIndex> indexes;
 	
 	/**
 	 * Instantiates a new simple query executer.
 	 */
 	public SimpleQueryExecuter() {
-		indexes = new HashMap<Attribute, Map<Object,K>>();
+		indexes = new HashMap<String, CacheIndex>();
 	}
 
 	/* (non-Javadoc)
 	 * @see com.cetsoft.imcache.cache.search.Indexable#addIndex(com.cetsoft.imcache.cache.search.CacheIndex)
 	 */
-	public void addIndex(CacheIndex index) {
-		indexes.put(index.getIndex(), new HashMap<Object, K>());
+	public void addIndex(String attributeName, IndexType type) {
+		if(type==IndexType.UNIQUE_HASH){
+			indexes.put(attributeName, new UniqueHashIndex());
+		}
+		else if(type==IndexType.NON_UNIQUE_HASH){
+			indexes.put(attributeName, new NonUniqueHashIndex());
+		}
 	}
 
 	/* (non-Javadoc)
 	 * @see com.cetsoft.imcache.cache.search.QueryExecuter#add(java.lang.Object, java.lang.Object)
 	 */
 	public void add(K key, V value) {
-		for(Attribute attribute:indexes.keySet()){
-			Object indexedKey = getIndexedKey(attribute,value);
+		for(String attributeName:indexes.keySet()){
+			Object indexedKey = getIndexedKey(attributeName,value);
 			if(indexedKey==null){
 				throw new NullPointerException();
 			}
-			indexes.get(attribute).put(indexedKey, key);
+			indexes.get(attributeName).put(indexedKey, key);
 		}
 	}
 
@@ -67,12 +79,12 @@ public class SimpleQueryExecuter<K,V> implements QueryExecuter<K, V>{
 	 * @see com.cetsoft.imcache.cache.search.QueryExecuter#remove(java.lang.Object, java.lang.Object)
 	 */
 	public void remove(K key, V value) {
-		for(Attribute attribute:indexes.keySet()){
-			Object indexedKey = getIndexedKey(attribute,value);
+		for(String attributeName:indexes.keySet()){
+			Object indexedKey = getIndexedKey(attributeName,value);
 			if(indexedKey==null){
 				throw new NullPointerException();
 			}
-			indexes.get(attribute).remove(indexedKey);
+			indexes.get(attributeName).remove(indexedKey,key);
 		}
 	}
 
@@ -86,9 +98,13 @@ public class SimpleQueryExecuter<K,V> implements QueryExecuter<K, V>{
 	/* (non-Javadoc)
 	 * @see com.cetsoft.imcache.cache.search.QueryExecuter#execute(com.cetsoft.imcache.cache.search.Query)
 	 */
+	@SuppressWarnings("unchecked")
 	public List<K> execute(Query query) {
-		
-		return null;
+		List<K> result = new ArrayList<K>();
+		for (Criteria criteria : query.criterias()) {
+			result= (List<K>) criteria.meets(indexes.get(criteria.getAttributeName()));
+		}
+		return result;
 	}
 	
 	/**
@@ -98,9 +114,9 @@ public class SimpleQueryExecuter<K,V> implements QueryExecuter<K, V>{
 	 * @param value the value
 	 * @return the indexed key
 	 */
-	private Object getIndexedKey(Attribute attribute, V value) {
+	private Object getIndexedKey(String attributeName, V value) {
 		try {
-			Field field = value.getClass().getDeclaredField(attribute.getName());
+			Field field = value.getClass().getDeclaredField(attributeName);
 			field.setAccessible(true);
 			return field.get(value);
 		} catch (Exception e) {
