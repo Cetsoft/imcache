@@ -29,5 +29,8 @@ public enum IndexType {
 	UNIQUE_HASH,
 	
 	/** The non unique hash. */
-	NON_UNIQUE_HASH
+	NON_UNIQUE_HASH,
+	
+	/** The range index. */
+	RANGE_INDEX
 }

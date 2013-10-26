@@ -54,4 +54,45 @@ public interface CacheIndex{
 	 */
 	List<Object> equalsTo(Object expectedValue);
 	
+	/**
+	 * Less than.
+	 *
+	 * @param value the value
+	 * @return the list
+	 */
+	List<Object> lessThan(Object value);
+	
+	/**
+	 * Less than or equals to.
+	 *
+	 * @param value the value
+	 * @return the list
+	 */
+	List<Object> lessThanOrEqualsTo(Object value);
+	
+	/**
+	 * Greater than.
+	 *
+	 * @param value the value
+	 * @return the list
+	 */
+	List<Object> greaterThan(Object value);
+	
+	/**
+	 * Greater than or equals to.
+	 *
+	 * @param value the value
+	 * @return the list
+	 */
+	List<Object> greaterThanOrEqualsTo(Object value);
+	
+	/**
+	 * Between.
+	 *
+	 * @param lowerBound the lower bound
+	 * @param higherBound the higher bound
+	 * @return the list
+	 */
+	List<Object> between(Object lowerBound, Object higherBound);
+	
 }
