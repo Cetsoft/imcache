@@ -43,7 +43,7 @@ public class CacheQuery implements Query{
 	 *
 	 * @return the query
 	 */
-	public static Query newInstance(){
+	public static Query newQuery(){
 		return new CacheQuery();
 	}
 

@@ -48,6 +48,6 @@ public class CacheBuilderTest {
 		cache.get(0);
 		SearchableCache<Integer, VersionedItem<Integer>> searchableCache = CacheBuilder.
 				versionedOffHeapCache().addIndex("ada", IndexType.UNIQUE_HASH).build();
-		searchableCache.execute(CacheQuery.newInstance().addCriteria(new EqualsToCriteria("ada", 24)));
+		searchableCache.execute(CacheQuery.newQuery().addCriteria(new EqualsToCriteria("ada", 24)));
 	}
 }
