@@ -14,7 +14,7 @@ public class QuerySearchTest {
 		SearchableCache<Integer, SimpleObject> cache = CacheBuilder.heapCache().addIndex("j", IndexType.UNIQUE_HASH).build();
 		cache.put(0, createObject(0, 1));
 		cache.put(1, createObject(1, 2));
-		List<SimpleObject> objects = cache.execute(CacheQuery.newInstance().addCriteria(new EqualsToCriteria("j",2)));
+		List<SimpleObject> objects = cache.execute(CacheQuery.newQuery().addCriteria(new EqualsToCriteria("j",2)));
 		for (SimpleObject simpleObject : objects) {
 			System.out.println(simpleObject);
 		}
