@@ -26,7 +26,7 @@ import com.cetsoft.imcache.cache.SearchableCache;
 import com.cetsoft.imcache.cache.VersionedItem;
 import com.cetsoft.imcache.cache.builder.CacheBuilder;
 import com.cetsoft.imcache.cache.search.CacheQuery;
-import com.cetsoft.imcache.cache.search.criteria.EqualsToCriteria;
+import com.cetsoft.imcache.cache.search.criteria.ETCriteria;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 
 /**
@@ -48,6 +48,6 @@ public class CacheBuilderTest {
 		cache.get(0);
 		SearchableCache<Integer, VersionedItem<Integer>> searchableCache = CacheBuilder.
 				versionedOffHeapCache().addIndex("ada", IndexType.UNIQUE_HASH).build();
-		searchableCache.execute(CacheQuery.newQuery().addCriteria(new EqualsToCriteria("ada", 24)));
+		searchableCache.execute(CacheQuery.newQuery().addCriteria(new ETCriteria("ada", 24)));
 	}
 }
