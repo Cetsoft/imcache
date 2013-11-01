@@ -30,7 +30,7 @@ import com.cetsoft.imcache.cache.search.index.CacheIndex;
  * @param <K> the key type
  * @param <V> the value type
  */
-public class ConcurrentQueryExecuter<K,V> extends SimpleQueryExecuter<K, V>{
+public class ConcurrentQueryExecuter<K,V> extends DefaultQueryExecuter<K, V>{
 
 	/**
 	 * Instantiates a new concurrent query executer.

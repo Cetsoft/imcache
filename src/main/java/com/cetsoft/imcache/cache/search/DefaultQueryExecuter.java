@@ -35,12 +35,12 @@ import com.cetsoft.imcache.cache.search.index.RangeIndex;
 import com.cetsoft.imcache.cache.search.index.UniqueHashIndex;
 
 /**
- * The Class SimpleQueryExecuter implements basic query execution.
+ * The Class DefaultQueryExecuter implements basic query execution.
  *
  * @param <K> the key type
  * @param <V> the value type
  */
-public class SimpleQueryExecuter<K,V> implements QueryExecuter<K, V>{
+public class DefaultQueryExecuter<K,V> implements QueryExecuter<K, V>{
 	
 	/** The indexes. */
 	protected Map<String, CacheIndex> indexes;
@@ -48,7 +48,7 @@ public class SimpleQueryExecuter<K,V> implements QueryExecuter<K, V>{
 	/**
 	 * Instantiates a new simple query executer.
 	 */
-	public SimpleQueryExecuter() {
+	public DefaultQueryExecuter() {
 		indexes = new HashMap<String, CacheIndex>();
 	}
 
