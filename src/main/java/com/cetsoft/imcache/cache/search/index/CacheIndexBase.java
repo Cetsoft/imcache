@@ -66,7 +66,7 @@ public abstract class CacheIndexBase implements CacheIndex{
 	/* (non-Javadoc)
 	 * @see com.cetsoft.imcache.cache.search.index.CacheIndex#between(java.lang.Object, java.lang.Object)
 	 */
-	public List<Object> between(Object lowerBound, Object higherBound) {
+	public List<Object> between(Object lowerBound, Object upperBound) {
 		throw new UnsupportedOperationException();
 	}
 

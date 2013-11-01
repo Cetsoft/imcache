@@ -30,6 +30,7 @@ import com.cetsoft.imcache.cache.search.criteria.Criteria;
 import com.cetsoft.imcache.cache.search.index.CacheIndex;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 import com.cetsoft.imcache.cache.search.index.NonUniqueHashIndex;
+import com.cetsoft.imcache.cache.search.index.RangeIndex;
 import com.cetsoft.imcache.cache.search.index.UniqueHashIndex;
 
 /**
@@ -59,6 +60,9 @@ public class SimpleQueryExecuter<K,V> implements QueryExecuter<K, V>{
 		}
 		else if(type==IndexType.NON_UNIQUE_HASH){
 			indexes.put(attributeName, new NonUniqueHashIndex());
+		}
+		else if(type==IndexType.RANGE_INDEX){
+			indexes.put(attributeName, new RangeIndex());
 		}
 	}
 
