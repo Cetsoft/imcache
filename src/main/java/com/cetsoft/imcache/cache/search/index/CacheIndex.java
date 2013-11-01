@@ -90,9 +90,9 @@ public interface CacheIndex{
 	 * Between.
 	 *
 	 * @param lowerBound the lower bound
-	 * @param higherBound the higher bound
+	 * @param upperBound the upper bound
 	 * @return the list
 	 */
-	List<Object> between(Object lowerBound, Object higherBound);
+	List<Object> between(Object lowerBound, Object upperBound);
 	
 }

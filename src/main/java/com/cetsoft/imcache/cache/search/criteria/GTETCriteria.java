@@ -16,7 +16,7 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Sep 29, 2013
+* Date   : Nov 1, 2013
 */
 package com.cetsoft.imcache.cache.search.criteria;
 
@@ -25,39 +25,26 @@ import java.util.List;
 import com.cetsoft.imcache.cache.search.index.CacheIndex;
 
 /**
- * The Class EqualsToCriteria.
+ * The Class GTETCriteria is used to retrieve items
+ * greater than equals to the given value.
  */
-public class EqualsToCriteria implements Criteria{
-	
-	/** The attribute name. */
-	private String attributeName;
-	
-	/** The expected value. */
-	private Object expectedValue;
-	
+public class GTETCriteria extends CriteriaBase {
+
 	/**
-	 * Instantiates a new equals to criteria.
+	 * Instantiates a new gTET criteria.
 	 *
 	 * @param attributeName the attribute name
 	 * @param expectedValue the expected value
 	 */
-	public EqualsToCriteria(String attributeName, Object expectedValue){
-		this.attributeName = attributeName;
-		this.expectedValue = expectedValue;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.cache.search.criteria.Criteria#getAttributeName()
-	 */
-	public String getAttributeName() {
-		return attributeName;
+	public GTETCriteria(String attributeName, Object value) {
+		super(attributeName, value);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.cetsoft.imcache.cache.search.criteria.Criteria#meets(com.cetsoft.imcache.cache.search.index.CacheIndex)
 	 */
 	public List<Object> meets(CacheIndex cacheIndex) {
-		return cacheIndex.equalsTo(expectedValue);
+		return cacheIndex.greaterThanOrEqualsTo(value);
 	}
 
 }
