@@ -28,6 +28,7 @@ import java.util.Map;
 
 import com.cetsoft.imcache.cache.search.criteria.Criteria;
 import com.cetsoft.imcache.cache.search.index.CacheIndex;
+import com.cetsoft.imcache.cache.search.index.IndexNotFoundException;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 import com.cetsoft.imcache.cache.search.index.NonUniqueHashIndex;
 import com.cetsoft.imcache.cache.search.index.RangeIndex;
@@ -106,7 +107,11 @@ public class SimpleQueryExecuter<K,V> implements QueryExecuter<K, V>{
 	public List<K> execute(Query query) {
 		List<K> result = new ArrayList<K>();
 		for (Criteria criteria : query.criterias()) {
-			result= (List<K>) criteria.meets(indexes.get(criteria.getAttributeName()));
+			CacheIndex index = indexes.get(criteria.getAttributeName());
+			if(index==null){
+				throw new IndexNotFoundException();
+			}
+			result= (List<K>) criteria.meets(index);
 		}
 		return result;
 	}
