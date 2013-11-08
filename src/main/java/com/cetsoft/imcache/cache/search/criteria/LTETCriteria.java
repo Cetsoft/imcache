@@ -16,7 +16,7 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Nov 1, 2013
+* Date   : Nov 8, 2013
 */
 package com.cetsoft.imcache.cache.search.criteria;
 
@@ -34,7 +34,7 @@ public class LTETCriteria extends ArithmeticCriteria {
 	 * Instantiates a new lTET criteria.
 	 *
 	 * @param attributeName the attribute name
-	 * @param expectedValue the expected value
+	 * @param value the value
 	 */
 	public LTETCriteria(String attributeName, Object value) {
 		super(attributeName, value);
