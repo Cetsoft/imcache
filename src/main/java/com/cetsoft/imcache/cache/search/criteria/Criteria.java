@@ -20,27 +20,11 @@
 */
 package com.cetsoft.imcache.cache.search.criteria;
 
-import java.util.List;
-
-import com.cetsoft.imcache.cache.search.index.CacheIndex;
-
 /**
  * The Interface Criteria for meeting certain condition.
  */
 public interface Criteria{
-	
-	/**
-	 * Gets the attribute name.
-	 *
-	 * @return the attribute name
-	 */
-	String getAttributeName();
-	
-	/**
-	 * Meets.
-	 *
-	 * @param cacheIndex the cache index
-	 * @return the list
-	 */
-	List<Object> meets(CacheIndex cacheIndex);
+	Criteria and(Criteria criteria);
+	Criteria or(Criteria criteria);
+	Criteria diff(Criteria criteria);
 }

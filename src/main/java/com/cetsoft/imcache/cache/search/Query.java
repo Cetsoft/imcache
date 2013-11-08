@@ -20,8 +20,6 @@
 */
 package com.cetsoft.imcache.cache.search;
 
-import java.util.List;
-
 import com.cetsoft.imcache.cache.search.criteria.Criteria;
 
 /**
@@ -37,12 +35,12 @@ public interface Query{
 	 * @param criteria the criteria
 	 * @return the query
 	 */
-	Query addCriteria(Criteria criteria);
+	Query setCriteria(Criteria criteria);
 	
 	/**
 	 * Returns list of Criterias.
 	 *
 	 * @return the list
 	 */
-	List<Criteria> criterias();
+	Criteria getCriteria();
 }

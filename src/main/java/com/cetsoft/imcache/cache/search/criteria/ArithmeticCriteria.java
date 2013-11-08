@@ -20,10 +20,15 @@
 */
 package com.cetsoft.imcache.cache.search.criteria;
 
+import java.util.List;
+
+import com.cetsoft.imcache.cache.search.index.CacheIndex;
+
+
 /**
- * The Class CriteriaBase.
+ * The Class ArithmeticCriteria.
  */
-public abstract class CriteriaBase implements Criteria{
+public abstract class ArithmeticCriteria extends LogicalCriteria{
 
 	/** The attribute name. */
 	private String attributeName;
@@ -37,15 +42,21 @@ public abstract class CriteriaBase implements Criteria{
 	 * @param attributeName the attribute name
 	 * @param value the expected value
 	 */
-	public CriteriaBase(String attributeName, Object value){
+	public ArithmeticCriteria(String attributeName, Object value){
 		this.attributeName = attributeName;
 		this.value = value;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.cache.search.criteria.Criteria#getAttributeName()
-	 */
 	public String getAttributeName() {
 		return attributeName;
 	}
+	
+	/**
+	 * Meets.
+	 *
+	 * @param cacheIndex the cache index
+	 * @return the list
+	 */
+	public abstract List<Object> meets(CacheIndex cacheIndex);
+
 }

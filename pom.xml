@@ -4,9 +4,9 @@
 	<groupId>com.cetsoft</groupId>
 	<version>0.0.1</version>
 	<name>imcache</name>
-	<description>Imcache is a java caching library.</description>
+	<description>Imcache is a Java Caching Library. It supports various kinds of caching models that have been applied so far. Imcache intends to speed up applications by providing a means to manage cached data. It offers solutions ranging from small applications to large scale applications.</description>
 	<properties>
-	    <javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
+		<javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
 	</properties>
 	<licenses>
 		<license>
@@ -19,6 +19,7 @@
 	<scm>
 		<url>http://github.com/Cetsoft/imcache/</url>
 		<connection>http://github.com/Cetsoft/imcache.git</connection>
+		<developerConnection>http://github.com/Cetsoft/imcache.git</developerConnection>
 	</scm>
 	<developers>
 		<developer>
@@ -29,7 +30,6 @@
 			<url>http://www.yusufaytas.com</url>
 			<roles>
 				<role>Software Engineer</role>
-				<role>Computer Scientist</role>
 			</roles>
 		</developer>
 	</developers>
@@ -62,4 +62,5 @@
 		</plugins>
 	</build>
 	<artifactId>imcache</artifactId>
+	<url>http://github.com/Cetsoft/imcache</url>
 </project>

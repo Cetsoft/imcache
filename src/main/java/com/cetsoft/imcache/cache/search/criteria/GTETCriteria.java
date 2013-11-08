@@ -28,7 +28,7 @@ import com.cetsoft.imcache.cache.search.index.CacheIndex;
  * The Class GTETCriteria is used to retrieve items
  * greater than equals to the given value.
  */
-public class GTETCriteria extends CriteriaBase {
+public class GTETCriteria extends ArithmeticCriteria {
 
 	/**
 	 * Instantiates a new gTET criteria.
