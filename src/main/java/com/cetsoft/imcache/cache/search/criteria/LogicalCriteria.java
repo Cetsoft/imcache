@@ -21,7 +21,7 @@
 package com.cetsoft.imcache.cache.search.criteria;
 
 /**
- * The Class LogicalCriteria.
+ * The Class LogicalCriteria is used for logical operations.
  */
 public abstract class LogicalCriteria implements Criteria{
 
