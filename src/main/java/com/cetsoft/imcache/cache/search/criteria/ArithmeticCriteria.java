@@ -56,7 +56,7 @@ public abstract class ArithmeticCriteria extends LogicalCriteria{
 	}
 	
 	/**
-	 * Meets.
+	 * Meets the given criteria.
 	 *
 	 * @param cacheIndex the cache index
 	 * @return the list
