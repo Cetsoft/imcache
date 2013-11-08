@@ -41,12 +41,12 @@ import com.cetsoft.imcache.cache.search.index.RangeIndex;
 import com.cetsoft.imcache.cache.search.index.UniqueHashIndex;
 
 /**
- * The Class DefaultQueryExecuter implements basic query execution.
+ * The Class DefaultIndexHandler implements basic query execution.
  *
  * @param <K> the key type
  * @param <V> the value type
  */
-public class DefaultQueryExecuter<K,V> implements QueryExecuter<K, V>{
+public class DefaultIndexHandler<K,V> implements IndexHandler<K, V>{
 	
 	/** The indexes. */
 	protected Map<String, CacheIndex> indexes;
@@ -54,7 +54,7 @@ public class DefaultQueryExecuter<K,V> implements QueryExecuter<K, V>{
 	/**
 	 * Instantiates a new simple query executer.
 	 */
-	public DefaultQueryExecuter() {
+	public DefaultIndexHandler() {
 		indexes = new HashMap<String, CacheIndex>();
 	}
 
@@ -74,7 +74,7 @@ public class DefaultQueryExecuter<K,V> implements QueryExecuter<K, V>{
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.cache.search.QueryExecuter#add(java.lang.Object, java.lang.Object)
+	 * @see com.cetsoft.imcache.cache.search.IndexHandler#add(java.lang.Object, java.lang.Object)
 	 */
 	public void add(K key, V value) {
 		for(String attributeName:indexes.keySet()){
@@ -87,7 +87,7 @@ public class DefaultQueryExecuter<K,V> implements QueryExecuter<K, V>{
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.cache.search.QueryExecuter#remove(java.lang.Object, java.lang.Object)
+	 * @see com.cetsoft.imcache.cache.search.IndexHandler#remove(java.lang.Object, java.lang.Object)
 	 */
 	public void remove(K key, V value) {
 		for(String attributeName:indexes.keySet()){
@@ -100,44 +100,44 @@ public class DefaultQueryExecuter<K,V> implements QueryExecuter<K, V>{
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.cache.search.QueryExecuter#clear()
+	 * @see com.cetsoft.imcache.cache.search.IndexHandler#clear()
 	 */
 	public void clear() {
 		indexes.clear();
 	}
 
 	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.cache.search.QueryExecuter#execute(com.cetsoft.imcache.cache.search.Query)
+	 * @see com.cetsoft.imcache.cache.search.IndexHandler#execute(com.cetsoft.imcache.cache.search.Query)
 	 */
+	@SuppressWarnings("unchecked")
 	public List<K> execute(Query query) {
-		List<K> results = execute(query.getCriteria());
-		return results;
+		List<Object> results = execute(query.getCriteria());
+		return (List<K>) results;
 	}
 	
-	@SuppressWarnings("unchecked")
-	protected List<K> execute(Criteria criteria){
+	protected List<Object> execute(Criteria criteria){
 		if(criteria instanceof ArithmeticCriteria){
 			ArithmeticCriteria arithmeticCriteria = ((ArithmeticCriteria)criteria);
 			CacheIndex cacheIndex = indexes.get(arithmeticCriteria.getAttributeName());
 			if(cacheIndex==null){
 				throw new IndexNotFoundException();
 			}
-			return (List<K>) arithmeticCriteria.meets(cacheIndex);
+			return arithmeticCriteria.meets(cacheIndex);
 		}
 		else{
 			if(criteria instanceof AndCriteria){
 				AndCriteria andCriteria = (AndCriteria)criteria;
-				List<K> results = new ArrayList<K>();
+				List<Object> results = new ArrayList<Object>();
 				for (Criteria innerCriteria : andCriteria.getCriterias()) {
-					List<K> result = execute(innerCriteria);
+					List<Object> result = execute(innerCriteria);
 					if(results.size()==0){
 						results.addAll(result);
 					}
 					else{
-						List<K> mergedResults = new ArrayList<K>(results.size());
-						for (K k : result) {
-							if(results.contains(k)){
-								mergedResults.add(k);
+						List<Object> mergedResults = new ArrayList<Object>(results.size());
+						for (Object object : result) {
+							if(results.contains(object)){
+								mergedResults.add(object);
 							}
 						}
 						results = mergedResults;
@@ -146,20 +146,20 @@ public class DefaultQueryExecuter<K,V> implements QueryExecuter<K, V>{
 				return results;
 			}
 			else if(criteria instanceof OrCriteria){
-				Set<K> results = new HashSet<K>();
+				Set<Object> results = new HashSet<Object>();
 				OrCriteria orCriteria = (OrCriteria)criteria;
 				for (Criteria innerCriteria : orCriteria.getCriterias()) {
-					List<K> result = execute(innerCriteria);
+					List<Object> result = execute(innerCriteria);
 					results.addAll(result);
 				}
-				return new ArrayList<K>(results);
+				return new ArrayList<Object>(results);
 			}
 			else{
 				DiffCriteria diffCriteria = (DiffCriteria)criteria;
-				List<K> leftResult = execute(diffCriteria.getLeftCriteria());
-				List<K> rightResult = execute(diffCriteria.getRightCriteria());
-				for (K k : rightResult) {
-					leftResult.remove(k);
+				List<Object> leftResult = execute(diffCriteria.getLeftCriteria());
+				List<Object> rightResult = execute(diffCriteria.getRightCriteria());
+				for (Object object : rightResult) {
+					leftResult.remove(object);
 				}
 				return leftResult;
 			}
@@ -180,24 +180,6 @@ public class DefaultQueryExecuter<K,V> implements QueryExecuter<K, V>{
 			return field.get(value);
 		} catch (Exception e) {
 			throw new AttributeException(e);
-		}
-	}
-	
-	/**
-	 * The Class AttributeException.
-	 */
-	private static class AttributeException extends RuntimeException{
-
-		/** The Constant serialVersionUID. */
-		private static final long serialVersionUID = 8883617514611224481L;
-
-		/**
-		 * Instantiates a new attribute exception.
-		 *
-		 * @param exception the exception
-		 */
-		public AttributeException(Exception exception){
-			super(exception);
 		}
 	}
 

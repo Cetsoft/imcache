@@ -21,6 +21,7 @@
 package com.cetsoft.imcache.cache.search;
 
 import com.cetsoft.imcache.cache.search.criteria.Criteria;
+import com.cetsoft.imcache.cache.search.filter.Filter;
 
 /**
  * The Class CacheQuery is a base class for creating cache queries.
@@ -29,6 +30,8 @@ public class CacheQuery implements Query{
 	
 	/** The criterias. */
 	private Criteria criteria;
+	
+	private Filter filter;
 	
 	/**
 	 * Instantiates a new cache query.
@@ -51,6 +54,15 @@ public class CacheQuery implements Query{
 
 	public Criteria getCriteria() {
 		return this.criteria;
+	}
+
+	public Query setFilter(Filter filter) {
+		this.filter = filter;
+		return this;
+	}
+
+	public Filter getFilter() {
+		return this.filter;
 	}
 
 

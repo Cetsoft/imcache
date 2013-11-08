@@ -29,7 +29,7 @@ import com.cetsoft.imcache.cache.SearchableCache;
 import com.cetsoft.imcache.cache.SimpleItem;
 import com.cetsoft.imcache.cache.VersionedItem;
 import com.cetsoft.imcache.cache.search.Query;
-import com.cetsoft.imcache.cache.search.QueryExecuter;
+import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 import com.cetsoft.imcache.serialization.Serializer;
 
@@ -52,7 +52,7 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 	 * @param byteBufferStore the byte buffer store
 	 * @param cacheLoader the cache loader
 	 * @param evictionListener the eviction listener
-	 * @param queryExecuter the query executer
+	 * @param indexHandler the query executer
 	 * @param bufferCleanerPeriod the buffer cleaner period
 	 * @param bufferCleanerThreshold the buffer cleaner threshold
 	 * @param concurrencyLevel the concurrency level
@@ -60,9 +60,9 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 	 */
 	public VersionedOffHeapCache(Serializer<VersionedItem<V>> serializer, OffHeapByteBufferStore byteBufferStore, 
 			CacheLoader<K, VersionedItem<V>> cacheLoader, EvictionListener<K, VersionedItem<V>> evictionListener,
-			QueryExecuter<K, VersionedItem<V>> queryExecuter,long bufferCleanerPeriod, float bufferCleanerThreshold, int concurrencyLevel, 
+			IndexHandler<K, VersionedItem<V>> indexHandler,long bufferCleanerPeriod, float bufferCleanerThreshold, int concurrencyLevel, 
 			long evictionPeriod) {
-		offHeapCache = new OffHeapCache<K, VersionedItem<V>>(cacheLoader, evictionListener, queryExecuter,byteBufferStore, serializer, 
+		offHeapCache = new OffHeapCache<K, VersionedItem<V>>(cacheLoader, evictionListener, indexHandler,byteBufferStore, serializer, 
 				bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
 	}
 //	
@@ -73,16 +73,16 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
  * @param serializer the serializer
  * @param cacheLoader the cache loader
  * @param evictionListener the eviction listener
- * @param queryExecuter the query executer
+ * @param indexHandler the query executer
  * @param bufferCleanerPeriod the buffer cleaner period
  * @param bufferCleanerThreshold the buffer cleaner threshold
  * @param concurrencyLevel the concurrency level
  * @param evictionPeriod the eviction period
  */
 	public VersionedOffHeapCache(OffHeapByteBufferStore byteBufferStore, Serializer<V> serializer,CacheLoader<K,V> cacheLoader, 
-			EvictionListener<K, V> evictionListener, QueryExecuter<K, V> queryExecuter,long bufferCleanerPeriod,float bufferCleanerThreshold, int concurrencyLevel, long evictionPeriod) {
+			EvictionListener<K, V> evictionListener, IndexHandler<K, V> indexHandler,long bufferCleanerPeriod,float bufferCleanerThreshold, int concurrencyLevel, long evictionPeriod) {
 		this(new CacheItemSerializer<K, V>(serializer),byteBufferStore,new CacheItemCacheLoader<K, V>(cacheLoader),
-				new CacheItemEvictionListener<K, V>(evictionListener),new CacheItemQueryExecuter<K,V>(queryExecuter),bufferCleanerPeriod,
+				new CacheItemEvictionListener<K, V>(evictionListener),new CacheItemIndexHandler<K,V>(indexHandler),bufferCleanerPeriod,
 				bufferCleanerThreshold,concurrencyLevel, evictionPeriod);
 	}
 	
@@ -284,58 +284,58 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 	}
 	
 	/**
-	 * The Class CacheItemQueryExecuter.
+	 * The Class CacheItemIndexHandler.
 	 *
 	 * @param <K> the key type
 	 * @param <V> the value type
 	 */
-	private static class CacheItemQueryExecuter<K,V> implements QueryExecuter<K,VersionedItem<V>>{
+	private static class CacheItemIndexHandler<K,V> implements IndexHandler<K,VersionedItem<V>>{
 		
 		/** The query executer. */
-		QueryExecuter<K, V> queryExecuter;
+		IndexHandler<K, V> indexHandler;
 
 		/**
 		 * Instantiates a new cache item query executer.
 		 *
-		 * @param queryExecuter the query executer
+		 * @param indexHandler the query executer
 		 */
-		public CacheItemQueryExecuter(QueryExecuter<K, V> queryExecuter) {
-			this.queryExecuter = queryExecuter;
+		public CacheItemIndexHandler(IndexHandler<K, V> indexHandler) {
+			this.indexHandler = indexHandler;
 		}
 
 		/* (non-Javadoc)
 		 * @see com.cetsoft.imcache.cache.search.Indexable#addIndex(com.cetsoft.imcache.cache.search.CacheIndex)
 		 */
 		public void addIndex(String attributeName, IndexType type) {
-			queryExecuter.addIndex(attributeName,type);
+			indexHandler.addIndex(attributeName,type);
 		}
 
 		/* (non-Javadoc)
-		 * @see com.cetsoft.imcache.cache.search.QueryExecuter#add(java.lang.Object, java.lang.Object)
+		 * @see com.cetsoft.imcache.cache.search.IndexHandler#add(java.lang.Object, java.lang.Object)
 		 */
 		public void add(K key, VersionedItem<V> value) {
-			this.queryExecuter.add(key, value.getValue());
+			this.indexHandler.add(key, value.getValue());
 		}
 
 		/* (non-Javadoc)
-		 * @see com.cetsoft.imcache.cache.search.QueryExecuter#remove(java.lang.Object, java.lang.Object)
+		 * @see com.cetsoft.imcache.cache.search.IndexHandler#remove(java.lang.Object, java.lang.Object)
 		 */
 		public void remove(K key, VersionedItem<V> value) {
-			this.queryExecuter.remove(key, value.getValue());
+			this.indexHandler.remove(key, value.getValue());
 		}
 
 		/* (non-Javadoc)
-		 * @see com.cetsoft.imcache.cache.search.QueryExecuter#clear()
+		 * @see com.cetsoft.imcache.cache.search.IndexHandler#clear()
 		 */
 		public void clear() {
-			this.queryExecuter.clear();
+			this.indexHandler.clear();
 		}
 
 		/* (non-Javadoc)
-		 * @see com.cetsoft.imcache.cache.search.QueryExecuter#execute(com.cetsoft.imcache.cache.search.Query)
+		 * @see com.cetsoft.imcache.cache.search.IndexHandler#execute(com.cetsoft.imcache.cache.search.Query)
 		 */
 		public List<K> execute(Query query) {
-			return queryExecuter.execute(query);
+			return indexHandler.execute(query);
 		}
 		
 	}

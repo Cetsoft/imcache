@@ -26,7 +26,7 @@ import java.util.Map;
 import com.cetsoft.imcache.cache.AbstractCache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
-import com.cetsoft.imcache.cache.search.QueryExecuter;
+import com.cetsoft.imcache.cache.search.IndexHandler;
 
 /**
  * The Class HeapCache.
@@ -56,11 +56,11 @@ public class HeapCache<K,V> extends AbstractCache<K, V>{
 	 *
 	 * @param cacheLoader the cache loader
 	 * @param evictionListener the eviction listener
-	 * @param queryExecuter the query executer
+	 * @param indexHandler the query executer
 	 * @param capacity the capacity
 	 */
-	public HeapCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,QueryExecuter<K, V> queryExecuter,int capacity) {
-		super(cacheLoader,evictionListener,queryExecuter);
+	public HeapCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,IndexHandler<K, V> indexHandler,int capacity) {
+		super(cacheLoader,evictionListener,indexHandler);
 		initCache(capacity);
 	}
 	
@@ -78,7 +78,7 @@ public class HeapCache<K,V> extends AbstractCache<K, V>{
 	 */
 	public void put(K key, V value) {
 		cache.put(key, value);
-		queryExecuter.add(key, value);
+		indexHandler.add(key, value);
 	}
 
 	/* (non-Javadoc)
@@ -93,7 +93,7 @@ public class HeapCache<K,V> extends AbstractCache<K, V>{
 	 */
 	public V invalidate(K key) {
 		V value = cache.remove(key);
-		queryExecuter.remove(key, value);
+		indexHandler.remove(key, value);
 		return value;
 	}
 
@@ -111,7 +111,7 @@ public class HeapCache<K,V> extends AbstractCache<K, V>{
 		for (K key : cache.keySet()) {
 			cache.remove(key);
 		}
-		queryExecuter.clear();
+		indexHandler.clear();
 	}
 	
 	/* (non-Javadoc)
