@@ -28,8 +28,8 @@ import com.cetsoft.imcache.cache.heap.TransactionalHeapCache;
 import com.cetsoft.imcache.cache.heap.tx.CacheTransaction;
 import com.cetsoft.imcache.cache.heap.tx.Transaction;
 import com.cetsoft.imcache.cache.heap.tx.TransactionCommitter;
+import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.Query;
-import com.cetsoft.imcache.cache.search.QueryExecuter;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 
 /**
@@ -48,7 +48,7 @@ public class HeapCacheTransactionTest {
 				System.out.println("key["+key+"],"+"value["+value+"]");
 			}
 		}, new CacheLoader<Integer, Integer>() {public Integer load(Integer key) {return null;}}, 
-		   new EvictionListener<Integer, Integer>() {public void onEviction(Integer key, Integer value) {}},new QueryExecuter<Integer, Integer>() {
+		   new EvictionListener<Integer, Integer>() {public void onEviction(Integer key, Integer value) {}},new IndexHandler<Integer, Integer>() {
 
 			public void addIndex(String attributeName, IndexType type) {
 				// TODO Auto-generated method stub
