@@ -20,7 +20,7 @@
 	<scm>
 		<connection>scm:git:git@github.com:Cetsoft/imcache.git</connection>
 		<developerConnection>scm:git:git@github.com:juven/imcache.git</developerConnection>
-		<url>scm:git:git@github.com:Cetsoft/imcache.git</url>
+		<url>>https://github.com/Cetsoft/imcache.git</url>
 	</scm>
 	<developers>
 		<developer>
