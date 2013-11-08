@@ -25,7 +25,7 @@ import java.util.List;
 import com.cetsoft.imcache.cache.search.index.CacheIndex;
 
 /**
- * The Class ArithmeticCriteria.
+ * The Class ArithmeticCriteria is used for arithmetic operations.
  */
 public abstract class ArithmeticCriteria extends LogicalCriteria{
 
