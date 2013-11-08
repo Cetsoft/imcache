@@ -28,7 +28,7 @@ import com.cetsoft.imcache.cache.search.index.CacheIndex;
  * The Class BetweenCriteria is used to retrieve items
  * greater than lowerBound and less than upperBound.
  */
-public class BetweenCriteria extends CriteriaBase{
+public class BetweenCriteria extends ArithmeticCriteria{
 
 	/** The upper bound. */
 	private Object upperBound;

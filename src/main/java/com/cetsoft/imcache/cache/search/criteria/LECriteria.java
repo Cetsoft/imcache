@@ -28,7 +28,7 @@ import com.cetsoft.imcache.cache.search.index.CacheIndex;
  * The Class LECriteria is used to retrieve items
  * less than given value.
  */
-public class LECriteria extends CriteriaBase{
+public class LECriteria extends ArithmeticCriteria{
 
 	/**
 	 * Instantiates a new lE criteria.

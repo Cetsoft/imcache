@@ -22,7 +22,7 @@ public class QuerySearchTest {
 		cache.put(0, createObject(1, 1));
 		cache.put(1, createObject(2, 2));
 		cache.put(2, createObject(3, 3));
-		List<SimpleObject> objects = cache.execute(CacheQuery.newQuery().addCriteria(new BetweenCriteria("j",1,3)));
+		List<SimpleObject> objects = cache.execute(CacheQuery.newQuery().setCriteria(new BetweenCriteria("j",1,3)));
 		for (SimpleObject simpleObject : objects) {
 			System.out.println(simpleObject);
 		}

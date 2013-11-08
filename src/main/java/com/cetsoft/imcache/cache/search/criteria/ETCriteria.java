@@ -28,7 +28,7 @@ import com.cetsoft.imcache.cache.search.index.CacheIndex;
  * The Class ETCriteria is used to retrieve items
  * equals to the given value.
  */
-public class ETCriteria extends CriteriaBase{
+public class ETCriteria extends ArithmeticCriteria{
 	
 	/**
 	 * Instantiates a new eT criteria.

@@ -23,10 +23,16 @@ package com.cetsoft.imcache.cache.search;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import com.cetsoft.imcache.cache.search.criteria.AndCriteria;
+import com.cetsoft.imcache.cache.search.criteria.ArithmeticCriteria;
 import com.cetsoft.imcache.cache.search.criteria.Criteria;
+import com.cetsoft.imcache.cache.search.criteria.DiffCriteria;
+import com.cetsoft.imcache.cache.search.criteria.OrCriteria;
 import com.cetsoft.imcache.cache.search.index.CacheIndex;
 import com.cetsoft.imcache.cache.search.index.IndexNotFoundException;
 import com.cetsoft.imcache.cache.search.index.IndexType;
@@ -103,17 +109,61 @@ public class DefaultQueryExecuter<K,V> implements QueryExecuter<K, V>{
 	/* (non-Javadoc)
 	 * @see com.cetsoft.imcache.cache.search.QueryExecuter#execute(com.cetsoft.imcache.cache.search.Query)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<K> execute(Query query) {
-		List<K> result = new ArrayList<K>();
-		for (Criteria criteria : query.criterias()) {
-			CacheIndex index = indexes.get(criteria.getAttributeName());
-			if(index==null){
+		List<K> results = execute(query.getCriteria());
+		return results;
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected List<K> execute(Criteria criteria){
+		if(criteria instanceof ArithmeticCriteria){
+			ArithmeticCriteria arithmeticCriteria = ((ArithmeticCriteria)criteria);
+			CacheIndex cacheIndex = indexes.get(arithmeticCriteria.getAttributeName());
+			if(cacheIndex==null){
 				throw new IndexNotFoundException();
 			}
-			result= (List<K>) criteria.meets(index);
+			return (List<K>) arithmeticCriteria.meets(cacheIndex);
 		}
-		return result;
+		else{
+			if(criteria instanceof AndCriteria){
+				AndCriteria andCriteria = (AndCriteria)criteria;
+				List<K> results = new ArrayList<K>();
+				for (Criteria innerCriteria : andCriteria.getCriterias()) {
+					List<K> result = execute(innerCriteria);
+					if(results.size()==0){
+						results.addAll(result);
+					}
+					else{
+						List<K> mergedResults = new ArrayList<K>(results.size());
+						for (K k : result) {
+							if(results.contains(k)){
+								mergedResults.add(k);
+							}
+						}
+						results = mergedResults;
+					}
+				}
+				return results;
+			}
+			else if(criteria instanceof OrCriteria){
+				Set<K> results = new HashSet<K>();
+				OrCriteria orCriteria = (OrCriteria)criteria;
+				for (Criteria innerCriteria : orCriteria.getCriterias()) {
+					List<K> result = execute(innerCriteria);
+					results.addAll(result);
+				}
+				return new ArrayList<K>(results);
+			}
+			else{
+				DiffCriteria diffCriteria = (DiffCriteria)criteria;
+				List<K> leftResult = execute(diffCriteria.getLeftCriteria());
+				List<K> rightResult = execute(diffCriteria.getRightCriteria());
+				for (K k : rightResult) {
+					leftResult.remove(k);
+				}
+				return leftResult;
+			}
+		}
 	}
 	
 	/**

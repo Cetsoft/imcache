@@ -20,9 +20,6 @@
 */
 package com.cetsoft.imcache.cache.search;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.cetsoft.imcache.cache.search.criteria.Criteria;
 
 /**
@@ -31,7 +28,7 @@ import com.cetsoft.imcache.cache.search.criteria.Criteria;
 public class CacheQuery implements Query{
 	
 	/** The criterias. */
-	List<Criteria> criterias = new ArrayList<Criteria>(1);
+	private Criteria criteria;
 	
 	/**
 	 * Instantiates a new cache query.
@@ -47,19 +44,14 @@ public class CacheQuery implements Query{
 		return new CacheQuery();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.cache.search.Query#addCriteria(com.cetsoft.imcache.cache.search.criteria.Criteria)
-	 */
-	public Query addCriteria(Criteria criteria) {
-		criterias.add(criteria);
+	public Query setCriteria(Criteria criteria) {
+		this.criteria = criteria;
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.cache.search.Query#criterias()
-	 */
-	public List<Criteria> criterias() {
-		return criterias;
+	public Criteria getCriteria() {
+		return this.criteria;
 	}
+
 
 }
