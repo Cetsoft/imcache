@@ -16,14 +16,13 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Nov 1, 2013
+* Date   : Nov 8, 2013
 */
 package com.cetsoft.imcache.cache.search.criteria;
 
 import java.util.List;
 
 import com.cetsoft.imcache.cache.search.index.CacheIndex;
-
 
 /**
  * The Class ArithmeticCriteria.
@@ -47,6 +46,11 @@ public abstract class ArithmeticCriteria extends LogicalCriteria{
 		this.value = value;
 	}
 	
+	/**
+	 * Gets the attribute name.
+	 *
+	 * @return the attribute name
+	 */
 	public String getAttributeName() {
 		return attributeName;
 	}

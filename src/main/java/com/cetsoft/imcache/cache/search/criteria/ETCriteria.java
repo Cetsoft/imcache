@@ -16,7 +16,7 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Nov 1, 2013
+* Date   : Nov 8, 2013
 */
 package com.cetsoft.imcache.cache.search.criteria;
 

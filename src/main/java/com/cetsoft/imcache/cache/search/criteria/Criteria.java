@@ -16,7 +16,7 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Sep 29, 2013
+* Date   : Nov 8, 2013
 */
 package com.cetsoft.imcache.cache.search.criteria;
 
@@ -24,7 +24,28 @@ package com.cetsoft.imcache.cache.search.criteria;
  * The Interface Criteria for meeting certain condition.
  */
 public interface Criteria{
+	
+	/**
+	 * And.
+	 *
+	 * @param criteria the criteria
+	 * @return the criteria
+	 */
 	Criteria and(Criteria criteria);
+	
+	/**
+	 * Or.
+	 *
+	 * @param criteria the criteria
+	 * @return the criteria
+	 */
 	Criteria or(Criteria criteria);
+	
+	/**
+	 * Diff.
+	 *
+	 * @param criteria the criteria
+	 * @return the criteria
+	 */
 	Criteria diff(Criteria criteria);
 }
