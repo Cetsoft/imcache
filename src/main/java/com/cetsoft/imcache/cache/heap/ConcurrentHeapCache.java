@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import com.cetsoft.imcache.cache.AbstractCache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
-import com.cetsoft.imcache.cache.search.QueryExecuter;
+import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.concurrent.ConcurrentLinkedHashMap;
 
 /**
@@ -56,12 +56,12 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 	 *
 	 * @param cacheLoader the cache loader
 	 * @param evictionListener the eviction listener
-	 * @param queryExecuter the query executer
+	 * @param indexHandler the query executer
 	 * @param capacity the capacity
 	 */
 	public ConcurrentHeapCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener, 
-			QueryExecuter<K, V> queryExecuter,int capacity) {
-		super(cacheLoader,evictionListener,queryExecuter);
+			IndexHandler<K, V> indexHandler,int capacity) {
+		super(cacheLoader,evictionListener,indexHandler);
 		initCache(capacity);
 	}
 	
@@ -109,7 +109,7 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 		for (K key : cache.keySet()) {
 			cache.remove(key);
 		}
-		this.queryExecuter.clear();
+		this.indexHandler.clear();
 	}
 	
 	/* (non-Javadoc)
@@ -149,7 +149,7 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 				ConcurrentHeapCache.this.evictionListener.onEviction(entry.getKey(), entry.getValue());
 			}
 			V exValue = super.put(key, value);
-			ConcurrentHeapCache.this.queryExecuter.add(key, exValue);
+			ConcurrentHeapCache.this.indexHandler.add(key, exValue);
 			return exValue;
 		}
 		
@@ -179,7 +179,7 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 			V value = super.remove(key);
 			if(value!=null){
 				ConcurrentHeapCache.this.evictionListener.onEviction((K) key, value);
-				ConcurrentHeapCache.this.queryExecuter.remove((K) key, value);
+				ConcurrentHeapCache.this.indexHandler.remove((K) key, value);
 			}
 			return value;
 		}

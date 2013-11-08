@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.cetsoft.imcache.cache.search.Query;
-import com.cetsoft.imcache.cache.search.QueryExecuter;
+import com.cetsoft.imcache.cache.search.IndexHandler;
 
 /**
  * The Class AbstractCache.
@@ -41,32 +41,36 @@ public abstract class AbstractCache<K, V> implements SearchableCache<K, V> {
 	protected EvictionListener<K, V> evictionListener;
 	
 	/** The Query Executer.*/
-	protected QueryExecuter<K, V> queryExecuter;
+	protected IndexHandler<K, V> indexHandler;
 	
 	/**
 	 * Instantiates a new abstract cache.
 	 *
 	 * @param cacheLoader the cache loader
 	 * @param evictionListener the eviction listener
-	 * @param queryExecuter the query executer
+	 * @param indexHandler the query executer
 	 */
-	public AbstractCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,QueryExecuter<K, V> queryExecuter) {
+	public AbstractCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,IndexHandler<K, V> indexHandler) {
 		this.cacheLoader = cacheLoader;
 		this.evictionListener = evictionListener;
-		this.queryExecuter = queryExecuter;
+		this.indexHandler = indexHandler;
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.cetsoft.imcache.cache.SearchableCache#get(com.cetsoft.imcache.cache.search.Query)
 	 */
+	@SuppressWarnings("unchecked")
 	public List<V> execute(Query query){
-		List<K> keys = queryExecuter.execute(query);
+		List<K> keys = indexHandler.execute(query);
 		List<V> values = new ArrayList<V>(keys.size());
 		for (K key : keys) {
 			V value = get(key);
 			if(value!=null){
 				values.add(value);
 			}
+		}
+		if(query.getFilter()!=null){
+			values = (List<V>) query.getFilter().filter((List<Object>) values);
 		}
 		return values;
 	}
@@ -112,17 +116,17 @@ public abstract class AbstractCache<K, V> implements SearchableCache<K, V> {
 	 *
 	 * @return the query executer
 	 */
-	public QueryExecuter<K, V> getQueryExecuter() {
-		return queryExecuter;
+	public IndexHandler<K, V> getIndexHandler() {
+		return indexHandler;
 	}
 
 	/**
 	 * Sets the query executer.
 	 *
-	 * @param queryExecuter the query executer
+	 * @param indexHandler the query executer
 	 */
-	public void setQueryExecuter(QueryExecuter<K, V> queryExecuter) {
-		this.queryExecuter = queryExecuter;
+	public void setIndexHandler(IndexHandler<K, V> indexHandler) {
+		this.indexHandler = indexHandler;
 	}
 
 }

@@ -34,9 +34,9 @@ import com.cetsoft.imcache.cache.heap.TransactionalHeapCache;
 import com.cetsoft.imcache.cache.heap.tx.TransactionCommitter;
 import com.cetsoft.imcache.cache.offheap.OffHeapCache;
 import com.cetsoft.imcache.cache.offheap.VersionedOffHeapCache;
-import com.cetsoft.imcache.cache.search.ConcurrentQueryExecuter;
+import com.cetsoft.imcache.cache.search.ConcurrentIndexHandler;
 import com.cetsoft.imcache.cache.search.Query;
-import com.cetsoft.imcache.cache.search.QueryExecuter;
+import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 import com.cetsoft.imcache.serialization.Serializer;
 
@@ -60,7 +60,7 @@ public abstract class CacheBuilder{
 	}; 
 	
 	/** The Constant QUERY_EXECUTER. */
-	private static final QueryExecuter<Object, Object> QUERY_EXECUTER = new QueryExecuter<Object, Object>() {
+	private static final IndexHandler<Object, Object> QUERY_EXECUTER = new IndexHandler<Object, Object>() {
 		public void addIndex(String attributeName, IndexType type) {}
 		public void remove(Object key, Object value) {}
 		public List<Object> execute(Query query) {return null;}
@@ -75,14 +75,14 @@ public abstract class CacheBuilder{
 	protected EvictionListener<Object, Object> evictionListener;
 	
 	/** The query executer. */
-	protected QueryExecuter<Object, Object> queryExecuter;
+	protected IndexHandler<Object, Object> indexHandler;
 	
 	/**
 	 * Searchable.
 	 */
 	protected void searchable(){
 		if(!isSearchable){
-			queryExecuter = new ConcurrentQueryExecuter<Object, Object>();
+			indexHandler = new ConcurrentIndexHandler<Object, Object>();
 		}
 	}
 
@@ -92,7 +92,7 @@ public abstract class CacheBuilder{
 	private CacheBuilder(){
 		cacheLoader = CACHE_LOADER;
 		evictionListener = EVICTION_LISTENER;
-		queryExecuter = QUERY_EXECUTER;
+		indexHandler = QUERY_EXECUTER;
 	}
 	
 	/**
@@ -188,12 +188,12 @@ public abstract class CacheBuilder{
 		 *
 		 * @param <K> the key type
 		 * @param <V> the value type
-		 * @param queryExecuter the query executer
+		 * @param indexHandler the query executer
 		 * @return the heap cache builder
 		 */
 		@SuppressWarnings("unchecked")
-		public <K,V> HeapCacheBuilder queryExecuter(QueryExecuter<K, V> queryExecuter){
-			this.queryExecuter = (QueryExecuter<Object, Object>) queryExecuter;
+		public <K,V> HeapCacheBuilder indexHandler(IndexHandler<K, V> indexHandler){
+			this.indexHandler = (IndexHandler<Object, Object>) indexHandler;
 			return this;
 		}
 		
@@ -217,7 +217,7 @@ public abstract class CacheBuilder{
 		 */
 		public HeapCacheBuilder addIndex(String attributeName, IndexType indexType){
 			searchable();
-			queryExecuter.addIndex(attributeName, indexType);
+			indexHandler.addIndex(attributeName, indexType);
 			return this;
 		}
 		
@@ -231,7 +231,7 @@ public abstract class CacheBuilder{
 		@SuppressWarnings("unchecked")
 		public <K,V> SearchableCache<K, V> build() {
 			return new HeapCache<K, V>((CacheLoader<K, V>)cacheLoader,(EvictionListener<K, V>) evictionListener,
-					(QueryExecuter<K, V>) queryExecuter, capacity);
+					(IndexHandler<K, V>) indexHandler, capacity);
 		}
 	}
 	
@@ -283,12 +283,12 @@ public abstract class CacheBuilder{
 		 *
 		 * @param <K> the key type
 		 * @param <V> the value type
-		 * @param queryExecuter the query executer
+		 * @param indexHandler the query executer
 		 * @return the concurrent heap cache builder
 		 */
 		@SuppressWarnings("unchecked")
-		public <K,V> ConcurrentHeapCacheBuilder queryExecuter(QueryExecuter<K, V> queryExecuter){
-			this.queryExecuter = (QueryExecuter<Object, Object>) queryExecuter;
+		public <K,V> ConcurrentHeapCacheBuilder indexHandler(IndexHandler<K, V> indexHandler){
+			this.indexHandler = (IndexHandler<Object, Object>) indexHandler;
 			return this;
 		}
 		
@@ -312,7 +312,7 @@ public abstract class CacheBuilder{
 		 */
 		public ConcurrentHeapCacheBuilder addIndex(String attributeName, IndexType indexType){
 			searchable();
-			queryExecuter.addIndex(attributeName, indexType);
+			indexHandler.addIndex(attributeName, indexType);
 			return this;
 		}
 		
@@ -326,7 +326,7 @@ public abstract class CacheBuilder{
 		@SuppressWarnings("unchecked")
 		public <K,V> SearchableCache<K, V> build() {
 			return new ConcurrentHeapCache<K, V>((CacheLoader<K, V>)cacheLoader,(EvictionListener<K, V>) evictionListener,
-					(QueryExecuter<K, V>) queryExecuter, capacity);
+					(IndexHandler<K, V>) indexHandler, capacity);
 		}
 	}
 	
@@ -421,12 +421,12 @@ public abstract class CacheBuilder{
 		 *
 		 * @param <K> the key type
 		 * @param <V> the value type
-		 * @param queryExecuter the query executer
+		 * @param indexHandler the query executer
 		 * @return the off heap cache builder
 		 */
 		@SuppressWarnings("unchecked")
-		public <K,V> OffHeapCacheBuilder queryExecuter(QueryExecuter<K, V> queryExecuter){
-			this.queryExecuter = (QueryExecuter<Object, Object>) queryExecuter;
+		public <K,V> OffHeapCacheBuilder indexHandler(IndexHandler<K, V> indexHandler){
+			this.indexHandler = (IndexHandler<Object, Object>) indexHandler;
 			return this;
 		}
 		
@@ -486,7 +486,7 @@ public abstract class CacheBuilder{
 		 */
 		public OffHeapCacheBuilder addIndex(String attributeName, IndexType indexType){
 			searchable();
-			queryExecuter.addIndex(attributeName, indexType);
+			indexHandler.addIndex(attributeName, indexType);
 			return this;
 		}
 		
@@ -505,7 +505,7 @@ public abstract class CacheBuilder{
 			if(this.serializer==null){
 				throw new NecessaryArgumentException("Serializer must be set!");
 			}
-			return new OffHeapCache<K, V>((CacheLoader<K, V>)cacheLoader, (EvictionListener<K, V>)evictionListener,(QueryExecuter<K, V>)queryExecuter,
+			return new OffHeapCache<K, V>((CacheLoader<K, V>)cacheLoader, (EvictionListener<K, V>)evictionListener,(IndexHandler<K, V>)indexHandler,
 					byteBufferStore, (Serializer<V>) serializer, bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
 		}
 	}
@@ -575,12 +575,12 @@ public abstract class CacheBuilder{
 		 *
 		 * @param <K> the key type
 		 * @param <V> the value type
-		 * @param queryExecuter the query executer
+		 * @param indexHandler the query executer
 		 * @return the transactional heap cache builder
 		 */
 		@SuppressWarnings("unchecked")
-		public <K,V> TransactionalHeapCacheBuilder queryExecuter(QueryExecuter<K, V> queryExecuter){
-			this.queryExecuter = (QueryExecuter<Object, Object>) queryExecuter;
+		public <K,V> TransactionalHeapCacheBuilder indexHandler(IndexHandler<K, V> indexHandler){
+			this.indexHandler = (IndexHandler<Object, Object>) indexHandler;
 			return this;
 		}
 		
@@ -604,7 +604,7 @@ public abstract class CacheBuilder{
 		 */
 		public TransactionalHeapCacheBuilder addIndex(String attributeName, IndexType indexType){
 			searchable();
-			queryExecuter.addIndex(attributeName, indexType);
+			indexHandler.addIndex(attributeName, indexType);
 			return this;
 		}
 		
@@ -621,7 +621,7 @@ public abstract class CacheBuilder{
 				throw new NecessaryArgumentException("TransactionCommitter must be set!");
 			}
 			return new TransactionalHeapCache<K, V>((TransactionCommitter<K, V>)transactionCommitter,
-					(CacheLoader<K, V>)cacheLoader,(EvictionListener<K, V>) evictionListener,(QueryExecuter<K, V>)queryExecuter, capacity);
+					(CacheLoader<K, V>)cacheLoader,(EvictionListener<K, V>) evictionListener,(IndexHandler<K, V>)indexHandler, capacity);
 		}
 		
 	}
@@ -717,12 +717,12 @@ public abstract class CacheBuilder{
 		 *
 		 * @param <K> the key type
 		 * @param <V> the value type
-		 * @param queryExecuter the query executer
+		 * @param indexHandler the query executer
 		 * @return the versioned off heap cache builder
 		 */
 		@SuppressWarnings("unchecked")
-		public <K,V> VersionedOffHeapCacheBuilder queryExecuter(QueryExecuter<K, V> queryExecuter){
-			this.queryExecuter = (QueryExecuter<Object, Object>) queryExecuter;
+		public <K,V> VersionedOffHeapCacheBuilder indexHandler(IndexHandler<K, V> indexHandler){
+			this.indexHandler = (IndexHandler<Object, Object>) indexHandler;
 			return this;
 		}
 		
@@ -782,7 +782,7 @@ public abstract class CacheBuilder{
 		 */
 		public VersionedOffHeapCacheBuilder addIndex(String attributeName, IndexType indexType){
 			searchable();
-			queryExecuter.addIndex(attributeName, indexType);
+			indexHandler.addIndex(attributeName, indexType);
 			return this;
 		}
 		
@@ -802,7 +802,7 @@ public abstract class CacheBuilder{
 				throw new NecessaryArgumentException("Serializer must be set!");
 			}
 			return new VersionedOffHeapCache<K, V>(byteBufferStore,(Serializer<V>)serializer, (CacheLoader<K, V>)cacheLoader,
-					(EvictionListener<K, V>)evictionListener, (QueryExecuter<K, V>)queryExecuter,bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
+					(EvictionListener<K, V>)evictionListener, (IndexHandler<K, V>)indexHandler,bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
 		}
 	}
 	

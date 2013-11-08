@@ -25,17 +25,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.cetsoft.imcache.cache.search.index.CacheIndex;
 
 /**
- * The Class ConcurrentQueryExecuter.
+ * The Class ConcurrentIndexHandler.
  *
  * @param <K> the key type
  * @param <V> the value type
  */
-public class ConcurrentQueryExecuter<K,V> extends DefaultQueryExecuter<K, V>{
+public class ConcurrentIndexHandler<K,V> extends DefaultIndexHandler<K, V>{
 
 	/**
 	 * Instantiates a new concurrent query executer.
 	 */
-	public ConcurrentQueryExecuter() {
+	public ConcurrentIndexHandler() {
 		indexes = new ConcurrentHashMap<String, CacheIndex>();
 	}
 	

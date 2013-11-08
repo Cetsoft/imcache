@@ -21,6 +21,7 @@
 package com.cetsoft.imcache.cache.search;
 
 import com.cetsoft.imcache.cache.search.criteria.Criteria;
+import com.cetsoft.imcache.cache.search.filter.Filter;
 
 /**
  * The Interface Query is a piece of code (a query) that is sent to
@@ -43,4 +44,8 @@ public interface Query{
 	 * @return the list
 	 */
 	Criteria getCriteria();
+	
+	Query setFilter(Filter filter);
+	
+	Filter getFilter();
 }

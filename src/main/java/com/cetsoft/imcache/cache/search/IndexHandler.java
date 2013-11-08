@@ -23,14 +23,14 @@ package com.cetsoft.imcache.cache.search;
 import java.util.List;
 
 /**
- * The Interface QueryExecuter is for executing queries as
+ * The Interface IndexHandler is for executing queries as
  * well as adding and removing data while making sure that
  * they provide certain indexes.
  *
  * @param <K> the key type
  * @param <V> the value type
  */
-public interface QueryExecuter<K,V> extends Indexable{
+public interface IndexHandler<K,V> extends Indexable{
 
 	/**
 	 * Adds the key and value to be indexed.
