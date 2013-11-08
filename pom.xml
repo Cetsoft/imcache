@@ -2,8 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cetsoft</groupId>
-	<version>0.0.1</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<name>imcache</name>
+	<artifactId>imcache</artifactId>
+	<url>http://github.com/Cetsoft/imcache</url>
 	<description>Imcache is a Java Caching Library. It supports various kinds of caching models that have been applied so far. Imcache intends to speed up applications by providing a means to manage cached data. It offers solutions ranging from small applications to large scale applications.</description>
 	<properties>
 		<javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
@@ -17,9 +19,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<url>http://github.com/Cetsoft/imcache/</url>
-		<connection>http://github.com/Cetsoft/imcache.git</connection>
-		<developerConnection>http://github.com/Cetsoft/imcache.git</developerConnection>
+		<connection>scm:git:git@github.com:Cetsoft/imcache.git</connection>
+		<developerConnection>scm:git:git@github.com:juven/imcache.git</developerConnection>
+		<url>scm:git:git@github.com:Cetsoft/imcache.git</url>
 	</scm>
 	<developers>
 		<developer>
@@ -61,6 +63,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<artifactId>imcache</artifactId>
-	<url>http://github.com/Cetsoft/imcache</url>
 </project>
