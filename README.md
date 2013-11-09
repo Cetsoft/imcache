@@ -67,4 +67,25 @@ is a good choice to start OffHeapCache. Let's see sample OffHeapCache use.
 By default configuration, OffHeapCache will try to clean the places which are not used and marked as 
 dirty periodically. What is more, it will do eviction periodically, too.
 
+###The Versioned Off Heap Cache
+The Class VersionedOffHeapCache is a type of offheap cache where cache items have versions that are incremented for each update.
+To make versioned off heap cache work to JVM Parameters <b>"-XX:MaxDirectMemorySize=4g"</b> must be set. Buffer capacity of 8 mb 
+is a good choice to start VersionedOffHeapCache. Let's see sample VersionedOffHeapCache use.
+```java
+	void example(){
+		//8388608 is 8 MB and 10 buffers. 8MB*10 = 80 MB.
+  		OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
+		final Cache<Integer,VersionedItem<SimpleObject>> offHeapCache = CacheBuilder.
+		versionedOffHeapCache().
+		serializer(new com.cetsoft.imcache.serialization.Serializer<SimpleObject>() {
+			public byte[] serialize(SimpleObject value) {
+				return com.cetsoft.imcache.test.Serializer.serialize(value);
+			}
+			public SimpleObject deserialize(byte[] payload) {
+				return com.cetsoft.imcache.test.Serializer.deserialize(payload);
+			}
+		}).storage(bufferStore).build();
+		VersionedItem<SimpleObject> versionedItem = offHeapCache.get(12);
+	}
+```
 <i>To learn more about imcache please look at examples provided.</i>
