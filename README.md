@@ -97,9 +97,9 @@ is an example use for queries.
 	void example(){
 		SearchableCache<Integer, SimpleObject> cache = CacheBuilder.heapCache().
 		addIndex("j", IndexType.RANGE_INDEX).build();
-		cache.put(0, createObject(1, 1));
-		cache.put(1, createObject(2, 2));
-		cache.put(2, createObject(3, 3));
+		cache.put(0, createObject());
+		cache.put(1, createObject());
+		cache.put(2, createObject());
 		List<SimpleObject> objects = cache.execute(CacheQuery.newQuery().
 		setCriteria(new BetweenCriteria("j",1,3).or(new ETCriteria("j", 3))).
 		setFilter(new LEFilter("k", 3)));
