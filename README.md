@@ -75,8 +75,8 @@ is a good choice to start VersionedOffHeapCache. Let's see sample VersionedOffHe
 	void example(){
 		//8388608 is 8 MB and 10 buffers. 8MB*10 = 80 MB.
   		OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
-		final Cache<Integer,VersionedItem<SimpleObject>> offHeapCache = CacheBuilder.
-		versionedOffHeapCache().
+		final Cache<Integer,VersionedItem<SimpleObject>> offHeapCache = 
+		CacheBuilder.versionedOffHeapCache().
 		serializer(new com.cetsoft.imcache.serialization.Serializer<SimpleObject>() {
 			public byte[] serialize(SimpleObject value) {
 				return com.cetsoft.imcache.test.Serializer.serialize(value);
@@ -88,4 +88,25 @@ is a good choice to start VersionedOffHeapCache. Let's see sample VersionedOffHe
 		VersionedItem<SimpleObject> versionedItem = offHeapCache.get(12);
 	}
 ```
+
+###Searching, Indexing and Query Execution
+imcache provides searching for all the caches by default. Searching is done by execute method of SearchableCache.
+Execute method takes a Query as an input and returns results as list. A query consists of criteria and filter. Here
+is an example use for queries.
+```java
+	void example(){
+		SearchableCache<Integer, SimpleObject> cache = CacheBuilder.heapCache().
+		addIndex("j", IndexType.RANGE_INDEX).build();
+		cache.put(0, createObject(1, 1));
+		cache.put(1, createObject(2, 2));
+		cache.put(2, createObject(3, 3));
+		List<SimpleObject> objects = cache.execute(CacheQuery.newQuery().
+		setCriteria(new BetweenCriteria("j",1,3).or(new ETCriteria("j", 3))).
+		setFilter(new LEFilter("k", 3)));
+		for (SimpleObject simpleObject : objects) {
+			System.out.println(simpleObject);
+		}
+	}
+```
+
 <i>To learn more about imcache please look at examples provided.</i>
