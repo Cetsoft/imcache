@@ -58,7 +58,7 @@ public class OffHeapByteBufferTest {
 	/**
 	 * The Class SimpleObject.
 	 */
-	private static class SimpleObject implements Serializable{
+	public static class SimpleObject implements Serializable{
 		
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = -4857889076136732189L;
