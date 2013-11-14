@@ -1,4 +1,4 @@
-package com.cetsoft.imcache.test;
+package com.cetsoft.imcache.examples;
 
 import java.util.List;
 
@@ -10,16 +10,9 @@ import com.cetsoft.imcache.cache.search.criteria.ETCriteria;
 import com.cetsoft.imcache.cache.search.filter.LEFilter;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 
-public class QuerySearchTest {
+public class QuerySearchExample {
 
 	public static void main(String []args){
-//		SearchableCache<Integer, SimpleObject> cache = CacheBuilder.heapCache().addIndex("j", IndexType.UNIQUE_HASH).build();
-//		cache.put(0, createObject(0, 1));
-//		cache.put(1, createObject(1, 2));
-//		List<SimpleObject> objects = cache.execute(CacheQuery.newQuery().addCriteria(new EqualsToCriteria("j",2)));
-//		for (SimpleObject simpleObject : objects) {
-//			System.out.println(simpleObject);
-//		}
 		SearchableCache<Integer, SimpleObject> cache = CacheBuilder.heapCache().addIndex("j", IndexType.RANGE_INDEX).build();
 		cache.put(0, createObject(1, 1));
 		cache.put(1, createObject(2, 2));

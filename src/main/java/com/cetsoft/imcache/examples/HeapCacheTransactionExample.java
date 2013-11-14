@@ -18,36 +18,34 @@
 * Author : Yusuf Aytas
 * Date   : Sep 23, 2013
 */
-package com.cetsoft.imcache.test;
+package com.cetsoft.imcache.examples;
 
 import com.cetsoft.imcache.cache.Cache;
-import com.cetsoft.imcache.cache.CacheLoader;
-import com.cetsoft.imcache.cache.SearchableCache;
-import com.cetsoft.imcache.cache.VersionedItem;
 import com.cetsoft.imcache.cache.builder.CacheBuilder;
-import com.cetsoft.imcache.cache.search.CacheQuery;
-import com.cetsoft.imcache.cache.search.criteria.ETCriteria;
-import com.cetsoft.imcache.cache.search.index.IndexType;
+import com.cetsoft.imcache.cache.heap.tx.CacheTransaction;
+import com.cetsoft.imcache.cache.heap.tx.Transaction;
+import com.cetsoft.imcache.cache.heap.tx.TransactionCommitter;
 
 /**
- * The Class CacheBuilderTest.
+ * The Class HeapCacheTransactionTest.
  */
-public class CacheBuilderTest {
+public class HeapCacheTransactionExample {
 
 	/**
 	 * The main method.
 	 *
 	 * @param args the arguments
 	 */
-	public static void main (String [] args){
-		Cache<Integer,Integer> cache = CacheBuilder.heapCache().cacheLoader(new CacheLoader<Integer, Integer>() {
-			public Integer load(Integer key) {
-				return null;
+	public static void main(String []args) {
+		Cache<Integer, Integer> cache = CacheBuilder.transactionalHeapCache().transactionCommitter(new TransactionCommitter<Integer, Integer>() {
+			public void doPut(Integer key, Integer value) {
+				System.out.println("key["+key+"],"+"value["+value+"]");
 			}
-		}).capacity(10000).build();
-		cache.get(0);
-		SearchableCache<Integer, VersionedItem<Integer>> searchableCache = CacheBuilder.
-				versionedOffHeapCache().addIndex("ada", IndexType.UNIQUE_HASH).build();
-		searchableCache.execute(CacheQuery.newQuery().setCriteria(new ETCriteria("ada", 24)));
+		}).build();
+		Transaction transaction = CacheTransaction.get();
+		transaction.begin();
+		cache.put(3, 5);
+		cache.put(10, 14);
+		transaction.commit();
 	}
 }

@@ -1,11 +1,11 @@
-package com.cetsoft.imcache.test;
+package com.cetsoft.imcache.examples;
 
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.builder.CacheBuilder;
 
-public class MultiLevelCacheTest {
+public class MultiLevelCacheExample {
 	
 	@SuppressWarnings("null")
 	public static void main(String [] args){
