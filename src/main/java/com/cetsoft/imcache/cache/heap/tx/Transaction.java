@@ -41,10 +41,16 @@ public interface Transaction {
 	 */
 	void rollback();
 	
+	
+	/**
+	 * Close the transaction.
+	 */
+	void close();
+	
 	/**
 	 * Gets the status.
 	 *
 	 * @return the status
 	 */
-	int getStatus();
+	TransactionStatus getStatus();
 }

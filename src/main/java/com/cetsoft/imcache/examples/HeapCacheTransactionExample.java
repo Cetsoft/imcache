@@ -58,6 +58,8 @@ public class HeapCacheTransactionExample {
 			transaction1.commit();
 		} catch(TransactionException exception) {
 			transaction1.rollback();
+		} finally{
+			transaction1.close();
 		}
 		System.out.println("Value for the key 3 is "+cache.get(3));
 		System.out.println("Value for the key 10 is "+cache.get(10));
@@ -66,9 +68,11 @@ public class HeapCacheTransactionExample {
 		try {
 			cache.put(1, 10);
 			cache.put(10, 13);
-			transaction1.commit();
+			transaction2.commit();
 		} catch(TransactionException exception) {
 			transaction2.rollback();
+		} finally{
+			transaction2.close();
 		}
 		System.out.println("Value for the key 1 is "+cache.get(1));
 		System.out.println("Value for the key 10 is "+cache.get(10));
