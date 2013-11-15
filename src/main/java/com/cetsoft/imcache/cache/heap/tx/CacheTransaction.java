@@ -78,9 +78,7 @@ public class CacheTransaction implements Transaction{
 	 * @see com.cetsoft.imcache.cache.heap.tx.Transaction#begin()
 	 */
 	public void begin() {
-		if(transactionThreadLocal.get()==null){
-			transactionThreadLocal.set(new Stack<TransactionLog>());
-		}
+		transactionThreadLocal.set(new Stack<TransactionLog>());
 	}
 
 	/* (non-Javadoc)
@@ -88,8 +86,8 @@ public class CacheTransaction implements Transaction{
 	 */
 	public void commit() {
 		Stack<TransactionLog> logs = transactionThreadLocal.get();
-		while (!logs.isEmpty()) {
-			logs.pop().apply();
+		for (TransactionLog log : logs) {
+			log.apply();
 		}
 		cacheTransaction.set(null);
 		transactionThreadLocal.set(null);

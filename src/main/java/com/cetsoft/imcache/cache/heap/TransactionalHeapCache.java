@@ -20,6 +20,8 @@
 */
 package com.cetsoft.imcache.cache.heap;
 
+import java.util.Map;
+
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.heap.tx.CacheTransaction;
@@ -62,7 +64,7 @@ public class TransactionalHeapCache<K, V> extends HeapCache<K, V> {
 	public void put(K key, V value) {
 		V exValue = super.get(key);
 		super.put(key, value);
-		TransactionLog log = new PutTransactionLog<K, V>(this, committer, key, value, exValue);
+		TransactionLog log = new PutTransactionLog<K, V>(cache, committer, key, value, exValue);
 		CacheTransaction.addLog(log);
 	}
 
@@ -84,7 +86,7 @@ public class TransactionalHeapCache<K, V> extends HeapCache<K, V> {
 		private V exValue;
 		
 		/** The cache. */
-		private TransactionalHeapCache<K,V> cache;
+		private Map<K,V> cache;
 		
 		/** The committer. */
 		private TransactionCommitter<K, V> committer;
@@ -98,7 +100,7 @@ public class TransactionalHeapCache<K, V> extends HeapCache<K, V> {
 		 * @param value the value
 		 * @param exValue the ex value
 		 */
-		public PutTransactionLog(TransactionalHeapCache<K,V> cache,TransactionCommitter<K, V> committer, 
+		public PutTransactionLog(Map<K,V> cache,TransactionCommitter<K, V> committer, 
 				K key, V value, V exValue){
 			this.key = key;
 			this.cache = cache;
