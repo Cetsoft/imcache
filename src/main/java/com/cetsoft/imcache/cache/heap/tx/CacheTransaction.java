@@ -22,6 +22,7 @@ package com.cetsoft.imcache.cache.heap.tx;
 
 import java.util.Stack;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class CacheTransaction.
  */
@@ -32,6 +33,9 @@ public class CacheTransaction implements Transaction{
 	
 	/** The transaction counter. */
 	private static int transactionCounter;
+	
+	/** The transaction status. */
+	private TransactionStatus transactionStatus;
 	
 	/** The cache transaction. */
 	private static ThreadLocal<CacheTransaction> cacheTransaction = new ThreadLocal<CacheTransaction>();
@@ -46,6 +50,7 @@ public class CacheTransaction implements Transaction{
 	 */
 	public CacheTransaction(int transactionId) {
 		this.transactionId = transactionId;
+		this.transactionStatus = TransactionStatus.ACTIVE;
 	}
 	
 	/**
@@ -66,6 +71,9 @@ public class CacheTransaction implements Transaction{
 	 * @param log the log
 	 */
 	public static void addLog(TransactionLog log){
+		if(get().getStatus()!=TransactionStatus.BEGAN){
+			throw new TransactionException("Transaction either did not begin or aldready committed.");
+		}
 		if(transactionThreadLocal.get()!=null){
 			transactionThreadLocal.get().push(log);
 		}
@@ -78,36 +86,66 @@ public class CacheTransaction implements Transaction{
 	 * @see com.cetsoft.imcache.cache.heap.tx.Transaction#begin()
 	 */
 	public void begin() {
+		if(this.transactionStatus!=TransactionStatus.ACTIVE){
+			throw new TransactionException("Transaction began already or is beginning.");
+		}
+		this.transactionStatus = TransactionStatus.BEGINNING;
 		transactionThreadLocal.set(new Stack<TransactionLog>());
+		this.transactionStatus = TransactionStatus.BEGAN;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.cetsoft.imcache.cache.heap.tx.Transaction#commit()
 	 */
 	public void commit() {
+		if(this.transactionStatus==TransactionStatus.ACTIVE){
+			throw new TransactionException("Transaction did not begin.");
+		}
+		else if(this.transactionStatus!=TransactionStatus.BEGAN){
+			throw new TransactionException("Transaction is either committing or committed already.");
+		}
+		this.transactionStatus = TransactionStatus.COMMITTING;
 		Stack<TransactionLog> logs = transactionThreadLocal.get();
 		for (TransactionLog log : logs) {
-			log.apply();
+			try{
+				log.apply();
+			}catch(Exception exception){
+				this.transactionStatus = TransactionStatus.COMMIT_FAILED;
+				throw new TransactionException(exception);
+			}
 		}
-		cacheTransaction.set(null);
+		this.transactionStatus = TransactionStatus.COMMITTED;
 		transactionThreadLocal.set(null);
+		cacheTransaction.set(null);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.cetsoft.imcache.cache.heap.tx.Transaction#rollback()
 	 */
 	public void rollback() {
+		if(this.transactionStatus!=TransactionStatus.COMMIT_FAILED){
+			throw new TransactionException("Transaction does not need to rollback or already rolled back.");
+		}
+		this.transactionStatus = TransactionStatus.ROLLING_BACK;
 		Stack<TransactionLog> logs = transactionThreadLocal.get();
 		while (!logs.isEmpty()) {
 			logs.pop().rollback();
 		}
+		this.transactionStatus = TransactionStatus.ROLLED_BACK;
 	}
 
 	/* (non-Javadoc)
+	 * @see com.cetsoft.imcache.cache.heap.tx.Transaction#close()
+	 */
+	public void close() {
+		this.transactionStatus = TransactionStatus.COMPLETED;
+	}
+	
+	/* (non-Javadoc)
 	 * @see com.cetsoft.imcache.cache.heap.tx.Transaction#getStatus()
 	 */
-	public int getStatus() {
-		return 0;
+	public TransactionStatus getStatus() {
+		return transactionStatus;
 	}
 
 	/**
@@ -118,5 +156,6 @@ public class CacheTransaction implements Transaction{
 	public int getTransactionId() {
 		return transactionId;
 	}
+
 
 }
