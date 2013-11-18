@@ -51,14 +51,7 @@ public class OffHeapCachePerformanceTest {
 		final CountDownLatch offHeapLatch = new CountDownLatch(NO_OF_THREADS);
 		final CountDownLatch mapLatch = new CountDownLatch(NO_OF_THREADS);
 		OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(100000, 10);
-		final Cache<Integer,SimpleObject> offHeapCache = CacheBuilder.offHeapCache().serializer(new Serializer<SimpleObject>() {
-			public byte[] serialize(SimpleObject value) {
-				return com.cetsoft.imcache.examples.Serializer.serialize(value);
-			}
-			public SimpleObject deserialize(byte[] payload) {
-				return com.cetsoft.imcache.examples.Serializer.deserialize(payload);
-			}
-		}).storage(bufferStore).build();
+		final Cache<Integer,SimpleObject> offHeapCache = CacheBuilder.offHeapCache().storage(bufferStore).build();
 		for (int i = 0; i < NO_OF_THREADS; i++) {
 			new Thread(new Runnable() {
 				public void run() {
