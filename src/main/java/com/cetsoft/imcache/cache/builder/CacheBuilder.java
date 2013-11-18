@@ -20,6 +20,13 @@
 */
 package com.cetsoft.imcache.cache.builder;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 import com.cetsoft.imcache.bytebuffer.OffHeapByteBufferStore;
@@ -66,6 +73,39 @@ public abstract class CacheBuilder{
 		public List<Object> execute(Query query) {return null;}
 		public void clear() {}
 		public void add(Object key, Object value) {}
+	};
+	
+	private static final Serializer<Object> SERIALIZER = new Serializer<Object>() {
+		public byte[] serialize(Object object){
+			byte[] objectBytes = null;
+			ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
+			try {
+				ObjectOutput out = new ObjectOutputStream(bos);  
+				out.writeObject(object);
+				objectBytes = bos.toByteArray();
+				out.close();
+				bos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return objectBytes;
+		}
+		public Object deserialize(byte [] bytes){
+			Object object = null;
+			ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+			try {
+				ObjectInput in = new ObjectInputStream(bis);
+				object = in.readObject(); 
+				bis.close();
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			catch(ClassNotFoundException e){
+				e.printStackTrace();
+			}
+			return object;
+		}
 	};
 	
 	/** The cache loader. */
@@ -362,6 +402,7 @@ public abstract class CacheBuilder{
 			evictionPeriod = OffHeapCache.DEFAULT_EVICTION_PERIOD;
 			bufferCleanerPeriod = OffHeapCache.DEFAULT_BUFFER_CLEANER_PERIOD;
 			bufferCleanerThreshold = OffHeapCache.DEFAULT_BUFFER_CLEANER_THRESHOLD;
+			serializer = SERIALIZER;
 		}
 		
 		/**
@@ -501,9 +542,6 @@ public abstract class CacheBuilder{
 		public <K,V> Cache<K, V> build() {
 			if(this.byteBufferStore==null){
 				throw new NecessaryArgumentException("ByteBufferStore must be set!");
-			}
-			if(this.serializer==null){
-				throw new NecessaryArgumentException("Serializer must be set!");
 			}
 			return new OffHeapCache<K, V>((CacheLoader<K, V>)cacheLoader, (EvictionListener<K, V>)evictionListener,(IndexHandler<K, V>)indexHandler,
 					byteBufferStore, (Serializer<V>) serializer, bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
@@ -658,6 +696,7 @@ public abstract class CacheBuilder{
 			evictionPeriod = OffHeapCache.DEFAULT_EVICTION_PERIOD;
 			bufferCleanerPeriod = OffHeapCache.DEFAULT_BUFFER_CLEANER_PERIOD;
 			bufferCleanerThreshold = OffHeapCache.DEFAULT_BUFFER_CLEANER_THRESHOLD;
+			serializer = SERIALIZER;
 		}
 		
 		/**
@@ -797,9 +836,6 @@ public abstract class CacheBuilder{
 		public <K,V> SearchableCache<K, VersionedItem<V>> build() {
 			if(this.byteBufferStore==null){
 				throw new NecessaryArgumentException("ByteBufferStore must be set!");
-			}
-			if(this.serializer==null){
-				throw new NecessaryArgumentException("Serializer must be set!");
 			}
 			return new VersionedOffHeapCache<K, V>(byteBufferStore,(Serializer<V>)serializer, (CacheLoader<K, V>)cacheLoader,
 					(EvictionListener<K, V>)evictionListener, (IndexHandler<K, V>)indexHandler,bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
