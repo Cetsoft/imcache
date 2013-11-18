@@ -53,10 +53,10 @@ public class OffHeapCachePerformanceTest {
 		OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(100000, 10);
 		final Cache<Integer,SimpleObject> offHeapCache = CacheBuilder.offHeapCache().serializer(new Serializer<SimpleObject>() {
 			public byte[] serialize(SimpleObject value) {
-				return com.cetsoft.imcache.test.Serializer.serialize(value);
+				return com.cetsoft.imcache.examples.Serializer.serialize(value);
 			}
 			public SimpleObject deserialize(byte[] payload) {
-				return com.cetsoft.imcache.test.Serializer.deserialize(payload);
+				return com.cetsoft.imcache.examples.Serializer.deserialize(payload);
 			}
 		}).storage(bufferStore).build();
 		for (int i = 0; i < NO_OF_THREADS; i++) {

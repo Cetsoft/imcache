@@ -18,7 +18,7 @@
 * Author : Yusuf Aytas
 * Date   : Sep 23, 2013
 */
-package com.cetsoft.imcache.test;
+package com.cetsoft.imcache.examples;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

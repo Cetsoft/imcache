@@ -42,4 +42,11 @@ public interface VersionedItem<V> extends CacheItem<V>{
 	 * @return the int
 	 */
 	int setVersion(int version);
+	
+	/**
+	 * Updates the current value.
+	 *
+	 * @param value the value
+	 */
+	void update(V value);
 }
