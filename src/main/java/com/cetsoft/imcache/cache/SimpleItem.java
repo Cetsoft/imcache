@@ -72,9 +72,15 @@ public class SimpleItem<V> implements VersionedItem<V>{
 	 * @see com.cetsoft.imcache.cache.VersionedCacheItem#setVersion(int)
 	 */
 	public int setVersion(int version) {
-		int exVersion = getVersion();
 		this.version = version;
-		return exVersion;
+		return version;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.cetsoft.imcache.cache.VersionedItem#update(java.lang.Object)
+	 */
+	public void update(V value) {
+		this.value = value;
 	}
 	
 }

@@ -214,26 +214,25 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 	 * @see com.cetsoft.imcache.cache.Cache#get(java.lang.Object)
 	 */
 	public V get(K key) {
-		readLock(key);
-		try {
-			Pointer pointer = pointerMap.get(key);
-			if (pointer != null) {
+		Pointer pointer = pointerMap.get(key);
+		if (pointer != null) {
+			readLock(key);
+			try {
 				hit.incrementAndGet();
 				synchronized (pointer) {
 					byte[] payload = bufferStore.retrieve(pointer);
 					return serializer.deserialize(payload);
 				}
-
-			} else {
-				miss.incrementAndGet();
-				V value = cacheLoader.load(key);
-				if (value != null) {
-					put(key, value);
-				}
-				return value;
+			} finally {
+				readUnlock(key);
 			}
-		} finally {
-			readUnlock(key);
+		} else {
+			miss.incrementAndGet();
+			V value = cacheLoader.load(key);
+			if (value != null) {
+				put(key, value);
+			}
+			return value;
 		}
 	}
 

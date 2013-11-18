@@ -24,6 +24,7 @@ import java.io.Serializable;
 
 import com.cetsoft.imcache.bytebuffer.OffHeapByteBuffer;
 import com.cetsoft.imcache.bytebuffer.Pointer;
+import com.cetsoft.imcache.examples.Serializer;
 
 /**
  * The Class OffHeapByteBufferTest.

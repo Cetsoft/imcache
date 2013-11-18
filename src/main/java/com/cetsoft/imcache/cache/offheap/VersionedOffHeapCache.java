@@ -92,13 +92,13 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 	public void put(K key, VersionedItem<V> value) {
 		int version = value.getVersion();
 		VersionedItem<V> exValue =  get(key);
-		if(version!=exValue.getVersion()){
-			throw new StaleItemException();
+		if(exValue!=null&&version!=exValue.getVersion()){
+			throw new StaleItemException(version,exValue.getVersion());
 		}
 		version++;
 		synchronized (value) {
 			if(value.getVersion()==version){
-				throw new StaleItemException();
+				throw new StaleItemException(version,exValue.getVersion());
 			}
 			value.setVersion(version);
 		}
@@ -202,7 +202,11 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 		 * @see com.cetsoft.imcache.cache.CacheLoader#load(java.lang.Object)
 		 */
 		public VersionedItem<V> load(K key) {
-			return new SimpleItem<V>(cacheLoader.load(key));
+			V value = cacheLoader.load(key);
+			if(value==null){
+				return null;
+			}
+			return new SimpleItem<V>(value);
 		}
 		
 	}
@@ -244,8 +248,8 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 		public VersionedItem<V> deserialize(byte[] payload) {
 			byte[] newPayload = new byte[payload.length-4];
 			byte[] version = new byte[4];
-			System.arraycopy(newPayload, 0, payload, 0, payload.length-4);
-			System.arraycopy(version, 0, payload, payload.length-4,4);
+			System.arraycopy(payload, 0, newPayload, 0, payload.length-4);
+			System.arraycopy(payload, payload.length-4, version, 0,4);
 			SimpleItem<V> cacheItem = new SimpleItem<V>(serializer.deserialize(newPayload));
 			cacheItem.setVersion(deserializeVersion(version));
 			return cacheItem;
@@ -259,10 +263,10 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 		 */
 		private byte[] serializeVersion(int version){
 			byte[] ret = new byte[4];
-		    ret[0] = (byte) (version & 0xFF);   
-		    ret[1] = (byte) ((version >> 8) & 0xFF);   
-		    ret[2] = (byte) ((version >> 16) & 0xFF);   
-		    ret[3] = (byte) ((version >> 24) & 0xFF);
+		    ret[3] = (byte) (version & 0xFF);   
+		    ret[2] = (byte) ((version >> 8) & 0xFF);   
+		    ret[1] = (byte) ((version >> 16) & 0xFF);   
+		    ret[0] = (byte) ((version >> 24) & 0xFF);
 		    return ret;
 		}
 		
