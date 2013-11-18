@@ -28,12 +28,15 @@ public class VersionedOffHeapCacheExample {
 					while(true){
 						try{
 							VersionedItem<String> value = cache.get("apple");
+							String newValue = getRandomString();
 							if(value==null){
-								cache.put("apple", new SimpleItem<String>("apple"));
+								cache.put("apple", new SimpleItem<String>(newValue));
 							}
 							else{
+								value.update(newValue);
 								cache.put("apple", value);
 							}
+							System.out.println(value.getValue());
 							break;
 						}catch(StaleItemException ex){
 							ex.printStackTrace();
@@ -44,5 +47,13 @@ public class VersionedOffHeapCacheExample {
 				}
 			});
 		}
+	}
+	
+	private static String getRandomString(){
+		char[] chars = new char[5];
+		for (int i = 0; i < chars.length; i++) {
+			chars[i] = (char) (Math.random()*25+65);
+		}
+		return new String(chars);
 	}
 }
