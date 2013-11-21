@@ -4,6 +4,14 @@ imcache
 Imcache is a Java Caching Library. It supports various kinds of caching models that have been applied so far. 
 Imcache intends to speed up applications by providing a means to manage cached data. It offers solutions ranging 
 from small applications to large scale applications.
+###Pom Reference
+```xml
+<dependency>
+  <groupId>com.cetsoft</groupId>
+  <artifactId>imcache</artifactId>
+  <version>0.0.5</version><!--Can be updated for later versions-->
+</dependency>
+```
 ###The Cache Interface
 Cache interfaces provides general methods that is implemented by all imcache caches. See the methods below.
 ```java
