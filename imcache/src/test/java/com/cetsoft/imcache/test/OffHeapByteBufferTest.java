@@ -20,11 +20,17 @@
 */
 package com.cetsoft.imcache.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import com.cetsoft.imcache.bytebuffer.OffHeapByteBuffer;
 import com.cetsoft.imcache.bytebuffer.Pointer;
-import com.cetsoft.imcache.examples.Serializer;
 
 /**
  * The Class OffHeapByteBufferTest.
@@ -41,9 +47,9 @@ public class OffHeapByteBufferTest {
 		OffHeapByteBuffer buffer = new OffHeapByteBuffer(0,1000);
 		SimpleObject object = new SimpleObject(x, y);
 		for (int i = 0; i < length; i++) {
-			byte [] payload = Serializer.serialize(object);
+			byte [] payload = serialize(object);
 			Pointer pointer = buffer.store(payload);
-			SimpleObject simpleObject = Serializer.deserialize(buffer.retrieve(pointer));
+			SimpleObject simpleObject = deserialize(buffer.retrieve(pointer));
 			if(object.getX()!=simpleObject.getX()&&object.getY()!=simpleObject.getY()){
 				System.err.println("Problem");
 			}
@@ -95,6 +101,52 @@ public class OffHeapByteBufferTest {
 		public int getY() {
 			return y;
 		}
+	}
+	
+	/**
+	 * Serialize.
+	 *
+	 * @param object the object
+	 * @return the byte[]
+	 */
+	private static byte[] serialize(Object object){
+		byte[] objectBytes = null;
+		ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
+		try {
+			ObjectOutput out = new ObjectOutputStream(bos);  
+			out.writeObject(object);
+			objectBytes = bos.toByteArray();
+			out.close();
+			bos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return objectBytes;
+	}
+	
+	/**
+	 * Deserialize.
+	 *
+	 * @param <C> the generic type
+	 * @param bytes the bytes
+	 * @return the c
+	 */
+	@SuppressWarnings("unchecked")
+	private static <C> C deserialize(byte [] bytes){
+		Object object = null;
+		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+		try {
+			ObjectInput in = new ObjectInputStream(bis);
+			object = in.readObject(); 
+			bis.close();
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		catch(ClassNotFoundException e){
+			e.printStackTrace();
+		}
+		return (C)object;
 	}
 	
 }
