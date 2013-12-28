@@ -9,6 +9,7 @@
 	<description>Imcache is a Java Caching Library. It supports various kinds of caching models that have been applied so far. Imcache intends to speed up applications by providing a means to manage cached data. It offers solutions ranging from small applications to large scale applications.</description>
 	<modules>
 		<module>imcache</module>
+		<module>imcache-examples</module>
 	</modules>
 	<properties>
 		<javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
