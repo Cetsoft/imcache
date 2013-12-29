@@ -20,6 +20,7 @@
 */
 package com.cetsoft.imcache.cache;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Interface Cache.
  *
@@ -27,7 +28,7 @@ package com.cetsoft.imcache.cache;
  * @param <V> the value type
  */
 public interface Cache<K, V> {
-
+	
 	/**
 	 * Puts the value with the specified key.
 	 *
@@ -71,4 +72,11 @@ public interface Cache<K, V> {
 	 * @return the double
 	 */
 	double hitRatio();
+	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+	String getName();
 }

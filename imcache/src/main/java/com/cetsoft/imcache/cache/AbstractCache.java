@@ -128,5 +128,9 @@ public abstract class AbstractCache<K, V> implements SearchableCache<K, V> {
 	public void setIndexHandler(IndexHandler<K, V> indexHandler) {
 		this.indexHandler = indexHandler;
 	}
+	
+	public String getName(){
+		return "";
+	}
 
 }
