@@ -14,7 +14,7 @@ public class VersionedOffHeapCacheExample {
 	
 	public static void main(String [] args){
 		OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(10000,10); 
-		final Cache<String, VersionedItem<String>> cache =CacheBuilder.versionedOffHeapCache().
+		final Cache<String, VersionedItem<String>> cache = CacheBuilder.versionedOffHeapCache().
 		storage(bufferStore).build();
 		ExecutorService service = Executors.newFixedThreadPool(3);
 		for (int i = 0; i < 100000; i++) {

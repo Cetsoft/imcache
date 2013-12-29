@@ -344,4 +344,8 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 		
 	}
 
+	public String getName() {
+		return null;
+	}
+
 }
