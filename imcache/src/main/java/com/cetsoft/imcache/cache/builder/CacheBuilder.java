@@ -108,6 +108,9 @@ public abstract class CacheBuilder{
 		}
 	};
 	
+	@SuppressWarnings("unchecked")
+	public abstract <K,V> SearchableCache<K, V> build();
+	
 	/** The cache loader. */
 	protected CacheLoader<Object, Object> cacheLoader;
 	
@@ -539,7 +542,7 @@ public abstract class CacheBuilder{
 		 * @return the cache
 		 */
 		@SuppressWarnings("unchecked")
-		public <K,V> Cache<K, V> build() {
+		public <K,V> SearchableCache<K, V> build() {
 			if(this.byteBufferStore==null){
 				throw new NecessaryArgumentException("ByteBufferStore must be set!");
 			}
@@ -833,13 +836,14 @@ public abstract class CacheBuilder{
 		 * @return the cache
 		 */
 		@SuppressWarnings("unchecked")
-		public <K,V> SearchableCache<K, VersionedItem<V>> build() {
+		public <K,V> SearchableCache<K, V> build() {
 			if(this.byteBufferStore==null){
 				throw new NecessaryArgumentException("ByteBufferStore must be set!");
 			}
-			return new VersionedOffHeapCache<K, V>(byteBufferStore,(Serializer<V>)serializer, (CacheLoader<K, V>)cacheLoader,
+			return (SearchableCache<K, V>) new VersionedOffHeapCache<K, V>(byteBufferStore,(Serializer<V>)serializer, (CacheLoader<K, V>)cacheLoader,
 					(EvictionListener<K, V>)evictionListener, (IndexHandler<K, V>)indexHandler,bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
 		}
+		
 	}
 	
 	/**
