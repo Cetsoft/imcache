@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cetsoft</groupId>
 	<version>0.0.6-SNAPSHOT</version>
@@ -7,6 +8,7 @@
 	<artifactId>imcache-parent</artifactId>
 	<url>http://github.com/Cetsoft/imcache</url>
 	<description>Imcache is a Java Caching Library. It supports various kinds of caching models that have been applied so far. Imcache intends to speed up applications by providing a means to manage cached data. It offers solutions ranging from small applications to large scale applications.</description>
+
 	<modules>
 		<module>imcache</module>
 		<module>imcache-examples</module>
@@ -14,6 +16,8 @@
 	</modules>
 	<properties>
 		<javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
+		<!--<org.springframework.version>2.5.6</org.springframework.version> -->
+		<org.springframework.version>4.0.0.RELEASE</org.springframework.version>
 	</properties>
 	<licenses>
 		<license>
@@ -55,18 +59,18 @@
 					</execution>
 				</executions>
 			</plugin>
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.apache.maven.plugins</groupId> -->
-<!-- 				<artifactId>maven-javadoc-plugin</artifactId> -->
-<!-- 				<executions> -->
-<!-- 					<execution> -->
-<!-- 						<id>attach-javadocs</id> -->
-<!-- 						<goals> -->
-<!-- 							<goal>jar</goal> -->
-<!-- 						</goals> -->
-<!-- 					</execution> -->
-<!-- 				</executions> -->
-<!-- 			</plugin> -->
+			<!-- <plugin> -->
+			<!-- <groupId>org.apache.maven.plugins</groupId> -->
+			<!-- <artifactId>maven-javadoc-plugin</artifactId> -->
+			<!-- <executions> -->
+			<!-- <execution> -->
+			<!-- <id>attach-javadocs</id> -->
+			<!-- <goals> -->
+			<!-- <goal>jar</goal> -->
+			<!-- </goals> -->
+			<!-- </execution> -->
+			<!-- </executions> -->
+			<!-- </plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
@@ -79,22 +83,10 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-			<!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			-->
-			<!-- -Darguments=-Dgpg.passphrase=thephrase  -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-gpg-plugin</artifactId> 
+				<executions> <execution> <id>sign-artifacts</id> <phase>verify</phase> <goals> 
+				<goal>sign</goal> </goals> </execution> </executions> </plugin> -->
+			<!-- -Darguments=-Dgpg.passphrase=thephrase -->
 		</plugins>
 	</build>
 	<organization>
@@ -112,4 +104,43 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-tx</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cetsoft</groupId>
+				<artifactId>imcache</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cetsoft</groupId>
+				<artifactId>imcache-examples</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cetsoft</groupId>
+				<artifactId>imcache-spring</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>
