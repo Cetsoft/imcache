@@ -17,6 +17,6 @@
 	<context:component-scan base-package="com.cetsoft.imcache.examples" />
 	<tx:annotation-driven />
 
-	<bean id="cacheManager" class="com.cetsoft.imcache.test.ImcacheCacheManager.java" p:cache-manager="imcache"/>
+	<bean id="cacheManager" class="com.cetsoft.imcache.spring.ImcacheCacheManager.java" p:cache-manager="imcache"/>
 	
 </beans>
