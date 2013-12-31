@@ -21,6 +21,7 @@
 package com.cetsoft.imcache.spring;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -74,7 +75,7 @@ public class ImcacheCacheManager implements CacheManager, InitializingBean {
 	 * @see org.springframework.cache.CacheManager#getCacheNames()
 	 */
 	public Collection<String> getCacheNames() {
-		return caches.keySet();
+		return Collections.unmodifiableCollection(caches.keySet());
 	}
 
 	/* (non-Javadoc)
