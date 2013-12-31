@@ -15,8 +15,8 @@
         http://www.springframework.org/schema/cache/spring-cache.xsd">
 
 	<context:component-scan base-package="com.cetsoft.imcache.examples" />
-	<tx:annotation-driven />
+	<cache:annotation-driven />
 
-	<bean id="cacheManager" class="com.cetsoft.imcache.spring.ImcacheCacheManager" p:cache-manager="imcache"/>
+	<bean id="cacheManager" class="com.cetsoft.imcache.spring.ImcacheCacheManager"/>
 	
 </beans>

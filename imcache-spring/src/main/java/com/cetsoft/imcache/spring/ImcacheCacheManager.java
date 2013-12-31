@@ -69,6 +69,9 @@ public class ImcacheCacheManager implements CacheManager, InitializingBean {
 			if (exCache != null) {
 				cache = exCache;
 			}
+			else{
+				cache = newCache;
+			}
 		}
 		return cache;
 	}
