@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2013 Cetsoft, http://www.cetsoft.com
+* Copyright (C) 2013 Yusuf Aytas, http://www.yusufaytas.com
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Library General Public
@@ -16,66 +16,24 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Sep 15, 2013
+* Date   : Jan 4, 2014
 */
 package com.cetsoft.imcache.cache;
 
+import java.util.List;
+
 /**
- * The Interface Cache.
+ * The Interface CachePopulator.
  *
  * @param <K> the key type
  * @param <V> the value type
  */
-public interface Cache<K, V> {
+public interface CachePopulator<K,V> {
 	
 	/**
-	 * Puts the value with the specified key.
-	 *
-	 * @param key the key
-	 * @param value the value
+	 * Pupulates the given cache with the cache items.
 	 */
-	void put(K key, V value);
-
-	/**
-	 * Gets the value with the specified key.
-	 *
-	 * @param key the key
-	 * @return the value
-	 */
-	V get(K key);
-
-	/**
-	 * Invalidate the value with the specified key.
-	 *
-	 * @param key the key
-	 * @return the value
-	 */
-	V invalidate(K key);
+	void pupulate();
 	
-	/**
-	 * Check if Cache contains the specified key.
-	 *
-	 * @param key the key
-	 * @return true, if successful
-	 */
-	boolean contains(K key);
-
-	/**
-	 * Clear the cache.
-	 */
-	void clear();
-	
-	/**
-	 * Calculates the Hit ratio.
-	 *
-	 * @return the double
-	 */
-	double hitRatio();
-	
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	String getName();
+	List<CacheEntry<K,V>> loadEntries();
 }
