@@ -139,7 +139,7 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 		this.readWriteLock = new StripedReadWriteLock(concurrencyLevel);
 		ScheduledExecutorService cleanerService = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
 			public Thread newThread(Runnable runnable) {
-				return new Thread(runnable, "imcache:bufferCleaner("+ NO_OF_CLEANERS.incrementAndGet() + ")");
+				return new Thread(runnable, "imcache:bufferCleaner(name="+getName()+",thread="+ NO_OF_CLEANERS.incrementAndGet() + ")");
 			}
 		});
 		cleanerService.scheduleAtFixedRate(new Runnable() {
@@ -169,7 +169,7 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 		}, 0, bufferCleanerPeriod, TimeUnit.MILLISECONDS);
 		ScheduledExecutorService evictionService = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
 			public Thread newThread(Runnable runnable) {
-				return new Thread(runnable, "imcache:evictor("+ NO_OF_EVICTORS.incrementAndGet() + ")");
+				return new Thread(runnable, "imcache:bufferCleaner(name="+getName()+",thread="+ NO_OF_EVICTORS.incrementAndGet() + ")");
 			}
 		});
 		evictionService.scheduleAtFixedRate(new Runnable() {
