@@ -31,9 +31,14 @@ import java.util.List;
 public interface CachePopulator<K,V> {
 	
 	/**
-	 * Pupulates the given cache with the cache items.
+	 * Populates the given cache with the cache items.
 	 */
 	void pupulate();
 	
+	/**
+	 * Loads entries for the cahce.
+	 *
+	 * @return the list
+	 */
 	List<CacheEntry<K,V>> loadEntries();
 }
