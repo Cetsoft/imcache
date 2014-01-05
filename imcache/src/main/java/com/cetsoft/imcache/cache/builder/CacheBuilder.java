@@ -30,11 +30,9 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 
 import com.cetsoft.imcache.bytebuffer.OffHeapByteBufferStore;
-import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.SearchableCache;
-import com.cetsoft.imcache.cache.VersionedItem;
 import com.cetsoft.imcache.cache.heap.ConcurrentHeapCache;
 import com.cetsoft.imcache.cache.heap.HeapCache;
 import com.cetsoft.imcache.cache.heap.TransactionalHeapCache;
@@ -42,11 +40,10 @@ import com.cetsoft.imcache.cache.heap.tx.TransactionCommitter;
 import com.cetsoft.imcache.cache.offheap.OffHeapCache;
 import com.cetsoft.imcache.cache.offheap.VersionedOffHeapCache;
 import com.cetsoft.imcache.cache.search.ConcurrentIndexHandler;
-import com.cetsoft.imcache.cache.search.Query;
 import com.cetsoft.imcache.cache.search.IndexHandler;
+import com.cetsoft.imcache.cache.search.Query;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 import com.cetsoft.imcache.serialization.Serializer;
-
 
 /**
  * The Class CacheBuilder.
@@ -108,7 +105,6 @@ public abstract class CacheBuilder{
 		}
 	};
 	
-	@SuppressWarnings("unchecked")
 	public abstract <K,V> SearchableCache<K, V> build();
 	
 	/** The cache loader. */
