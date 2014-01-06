@@ -64,9 +64,13 @@ public abstract class ConcurrentCachePopulator<K, V> extends AbstractCachePopula
 	 */
 	public void pupulate() {
 		final List<CacheEntry<K, V>> entries = loadEntries();
+		if(entries.size()<concurrencyLevel){
+			concurrencyLevel = entries.size();
+		}
+		final int partition = entries.size()/concurrencyLevel;
 		for (int i = 0; i < concurrencyLevel; i++) {
-			final int start = i*entries.size()/concurrencyLevel;
-			final int stop = i==concurrencyLevel-1?i*entries.size()/concurrencyLevel:entries.size();
+			final int start = i*partition;
+			final int stop = i!=concurrencyLevel-1?(i+1)*partition:entries.size();
 			new Thread(new Runnable() {
 				public void run() {
 					for (int j = start; j < stop; j++) {
