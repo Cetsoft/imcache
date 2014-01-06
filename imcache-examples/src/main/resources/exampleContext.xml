@@ -16,7 +16,20 @@
 
 	<context:component-scan base-package="com.cetsoft.imcache.examples" />
 	<cache:annotation-driven />
-
+	
 	<bean id="cacheManager" class="com.cetsoft.imcache.spring.ImcacheCacheManager"/>
 	
+	<bean id="cache" class="com.cetsoft.imcache.cache.Cache" factory-bean="cacheBuilder" factory-method="build"/>
+	
+	<bean id="cacheBuilder" class="com.cetsoft.imcache.spring.SpringCacheBuilder">
+		<property name="type" value="offheap"/>
+		<property name="bufferStore">
+			<ref bean="bufferStore"/>
+		</property>
+	</bean>
+	
+	<bean id="bufferStore" class="com.cetsoft.imcache.bytebuffer.OffHeapByteBufferStore">
+		<constructor-arg name="capacity" value="100000"/>
+		<constructor-arg name="bufferSize"  value="10"/>
+	</bean>	
 </beans>
