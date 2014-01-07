@@ -33,6 +33,7 @@ import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 import com.cetsoft.imcache.serialization.Serializer;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class VersionedOffHeapCache is a type of offheap cache where cache items
  * have versions that are incremented for each update.
@@ -42,6 +43,9 @@ import com.cetsoft.imcache.serialization.Serializer;
  */
 public class VersionedOffHeapCache<K, V> implements SearchableCache<K, VersionedItem<V>>{
 
+	/** The name. */
+	private String name;
+	
 	/** The off heap cache. */
 	protected OffHeapCache<K, VersionedItem<V>> offHeapCache;
 	
@@ -140,6 +144,9 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 		return offHeapCache.hitRatio();
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.cetsoft.imcache.cache.SearchableCache#execute(com.cetsoft.imcache.cache.search.Query)
+	 */
 	public List<VersionedItem<V>> execute(Query query) {
 		return offHeapCache.execute(query);
 	}
@@ -344,8 +351,21 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.cetsoft.imcache.cache.Cache#getName()
+	 */
 	public String getName() {
-		return null;
+		if(this.name!=null){
+			return name;
+		}
+		return this.getClass().getName();
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.cetsoft.imcache.cache.Cache#setName(java.lang.String)
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

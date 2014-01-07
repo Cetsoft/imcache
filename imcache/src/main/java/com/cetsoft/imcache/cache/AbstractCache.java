@@ -26,6 +26,7 @@ import java.util.List;
 import com.cetsoft.imcache.cache.search.Query;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class AbstractCache.
  *
@@ -33,6 +34,9 @@ import com.cetsoft.imcache.cache.search.IndexHandler;
  * @param <V> the value type
  */
 public abstract class AbstractCache<K, V> implements SearchableCache<K, V> {
+	
+	/** The name. */
+	private String name;
 
 	/** The cache loader. */
 	protected CacheLoader<K, V> cacheLoader;
@@ -129,8 +133,21 @@ public abstract class AbstractCache<K, V> implements SearchableCache<K, V> {
 		this.indexHandler = indexHandler;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.cetsoft.imcache.cache.Cache#getName()
+	 */
 	public String getName(){
-		return "";
+		if(name!=null){
+			return name;
+		}
+		return this.getClass().getName();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.cetsoft.imcache.cache.Cache#setName(java.lang.String)
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
