@@ -116,7 +116,11 @@ public abstract class CacheBuilder{
 	 * @param cacheName the cache name
 	 * @return the searchable cache
 	 */
-	public abstract <K,V> SearchableCache<K, V> build(String cacheName);
+	public <K,V> SearchableCache<K, V> build(String cacheName){
+		SearchableCache<K, V> cache = build();
+		cache.setName(cacheName);
+		return cache;
+	}
 	
 	/** The cache loader. */
 	protected CacheLoader<Object, Object> cacheLoader;
