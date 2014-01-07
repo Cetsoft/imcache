@@ -64,7 +64,7 @@ public class ImcacheCacheManager implements CacheManager, InitializingBean {
 	public Cache getCache(String name) {
 		Cache cache = caches.get(name);
 		if (cache == null) {
-			ImcacheCache newCache = new ImcacheCache(cacheBuilder.build());
+			ImcacheCache newCache = new ImcacheCache(cacheBuilder.build(name));
 			final Cache exCache = caches.putIfAbsent(name, newCache);
 			if (exCache != null) {
 				cache = exCache;
