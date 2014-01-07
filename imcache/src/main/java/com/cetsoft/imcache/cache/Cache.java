@@ -20,6 +20,7 @@
 */
 package com.cetsoft.imcache.cache;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Interface Cache.
  *
@@ -73,9 +74,17 @@ public interface Cache<K, V> {
 	double hitRatio();
 	
 	/**
-	 * Gets the name.
+	 * Gets the specified name if exist, 
+	 * otherwise returns the class name.
 	 *
 	 * @return the name
 	 */
 	String getName();
+	
+	/**
+	 * Sets the name.
+	 *
+	 * @param name the new name
+	 */
+	void setName(String name);
 }
