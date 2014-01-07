@@ -65,6 +65,7 @@ public abstract class CacheBuilder{
 		public void add(Object key, Object value) {}
 	};
 	
+	/** The Constant SERIALIZER. */
 	protected static final Serializer<Object> SERIALIZER = new Serializer<Object>() {
 		public byte[] serialize(Object object){
 			byte[] objectBytes = null;
@@ -98,7 +99,24 @@ public abstract class CacheBuilder{
 		}
 	};
 	
+	/**
+	 * Builds the cache.
+	 *
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @return the searchable cache
+	 */
 	public abstract <K,V> SearchableCache<K, V> build();
+	
+	/**
+	 * Builds the cache.
+	 *
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param cacheName the cache name
+	 * @return the searchable cache
+	 */
+	public abstract <K,V> SearchableCache<K, V> build(String cacheName);
 	
 	/** The cache loader. */
 	protected CacheLoader<Object, Object> cacheLoader;
