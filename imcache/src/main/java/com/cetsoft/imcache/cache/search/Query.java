@@ -45,7 +45,18 @@ public interface Query{
 	 */
 	Criteria getCriteria();
 	
+	/**
+	 * Sets the filter.
+	 *
+	 * @param filter the filter
+	 * @return the query
+	 */
 	Query setFilter(Filter filter);
 	
+	/**
+	 * Gets the filter.
+	 *
+	 * @return the filter
+	 */
 	Filter getFilter();
 }
