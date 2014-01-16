@@ -931,9 +931,8 @@ public class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V> implements
 			LinkedHashEntry<K, V> before = node.before, after = node.after;
 			before.after = after;
 			after.before = before;
-		} catch (Exception ex) {
-			System.err.println(ex);
-		} finally {
+		}
+		finally {
 			linkLock.unlock();
 		}
 	}
