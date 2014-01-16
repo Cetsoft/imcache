@@ -31,6 +31,7 @@ import com.cetsoft.imcache.cache.VersionedItem;
 import com.cetsoft.imcache.cache.search.Query;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.index.IndexType;
+import com.cetsoft.imcache.cache.util.SerializationUtils;
 import com.cetsoft.imcache.serialization.Serializer;
 
 // TODO: Auto-generated Javadoc
@@ -245,7 +246,7 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 			byte[] payload = serializer.serialize(value.getValue());
 			byte[] newPayload = new byte[payload.length+4];
 			System.arraycopy(payload, 0, newPayload, 0, payload.length);
-			System.arraycopy(serializeVersion(value.getVersion()), 0, newPayload, payload.length, 4);
+			System.arraycopy(SerializationUtils.serializeInt(value.getVersion()), 0, newPayload, payload.length, 4);
 			return newPayload;
 		}
 
@@ -258,38 +259,8 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 			System.arraycopy(payload, 0, newPayload, 0, payload.length-4);
 			System.arraycopy(payload, payload.length-4, version, 0,4);
 			SimpleItem<V> cacheItem = new SimpleItem<V>(serializer.deserialize(newPayload));
-			cacheItem.setVersion(deserializeVersion(version));
+			cacheItem.setVersion(SerializationUtils.deserializeInt(version));
 			return cacheItem;
-		}
-		
-		/**
-		 * Serialize version.
-		 *
-		 * @param version the version
-		 * @return the byte[]
-		 */
-		private byte[] serializeVersion(int version){
-			byte[] ret = new byte[4];
-		    ret[3] = (byte) (version & 0xFF);   
-		    ret[2] = (byte) ((version >> 8) & 0xFF);   
-		    ret[1] = (byte) ((version >> 16) & 0xFF);   
-		    ret[0] = (byte) ((version >> 24) & 0xFF);
-		    return ret;
-		}
-		
-		/**
-		 * Deserialize version.
-		 *
-		 * @param version the version
-		 * @return the int
-		 */
-		private int deserializeVersion(byte[] version){
-		    int value = 0;
-		    for (int i = 0; i < 4; i++) {
-		        int shift = (4 - 1 - i) * 8;
-		        value += (version[i] & 0x000000FF) << shift;
-		    }
-		    return value;
 		}
 		
 	}
