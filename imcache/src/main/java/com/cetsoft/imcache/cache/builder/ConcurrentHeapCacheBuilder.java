@@ -81,6 +81,7 @@ public class ConcurrentHeapCacheBuilder extends CacheBuilder{
 	@SuppressWarnings("unchecked")
 	public <K,V> ConcurrentHeapCacheBuilder indexHandler(IndexHandler<K, V> indexHandler){
 		this.indexHandler = (IndexHandler<Object, Object>) indexHandler;
+		isSearchable = true;
 		return this;
 	}
 	
