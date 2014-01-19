@@ -27,7 +27,6 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 import com.cetsoft.imcache.bytebuffer.OffHeapByteBuffer;
 import com.cetsoft.imcache.bytebuffer.Pointer;
@@ -59,50 +58,8 @@ public class OffHeapByteBufferTest {
 			System.err.println("Problem");
 		}
 		buffer.retrieve(new Pointer(115, buffer));
-		System.out.println();
 	}
 
-	/**
-	 * The Class SimpleObject.
-	 */
-	public static class SimpleObject implements Serializable{
-		
-		/** The Constant serialVersionUID. */
-		private static final long serialVersionUID = -4857889076136732189L;
-
-		/** The y. */
-		private int x, y;
-
-		/**
-		 * Instantiates a new simple object.
-		 *
-		 * @param x the x
-		 * @param y the y
-		 */
-		public SimpleObject(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-
-		/**
-		 * Gets the x.
-		 *
-		 * @return the x
-		 */
-		public int getX() {
-			return x;
-		}
-
-		/**
-		 * Gets the y.
-		 *
-		 * @return the y
-		 */
-		public int getY() {
-			return y;
-		}
-	}
-	
 	/**
 	 * Serialize.
 	 *
