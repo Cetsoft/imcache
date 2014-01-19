@@ -135,7 +135,7 @@ public abstract class CacheBuilder{
 	 * Searchable.
 	 */
 	protected void searchable(){
-		if(!isSearchable){
+		if(isSearchable){
 			indexHandler = new ConcurrentIndexHandler<Object, Object>();
 		}
 	}
