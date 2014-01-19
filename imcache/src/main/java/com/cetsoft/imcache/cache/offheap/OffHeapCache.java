@@ -248,6 +248,7 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 			if (pointer != null) {
 				synchronized (pointer) {
 					byte[] payload = bufferStore.remove(pointer);
+					pointerMap.remove(key);
 					return serializer.deserialize(payload);
 				}
 			}
