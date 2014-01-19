@@ -144,14 +144,18 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 		});
 		cleanerService.scheduleAtFixedRate(new Runnable() {
 			public void run() {
+				// Buffers can be fully dirty and we may not find any pointer to resolve that.
+				// This case is so unlikely that we did not conside.
 				Collection<Pointer> pointers = pointerMap.values();
 				List<Pointer> pointersToBeRedistributed = new ArrayList<Pointer>();
 				Map<OffHeapByteBuffer, Float> buffers = new HashMap<OffHeapByteBuffer, Float>();
 				Set<Integer> buffersToBeCleaned = new HashSet<Integer>();
+				// For all pointers we try to understand if there is a need for redistribution.
 				for (Pointer pointer : pointers) {
 					Float ratio = buffers.get(pointer.getOffHeapByteBuffer());
 					if (ratio == null) {
-						ratio = (float) (pointer.getOffHeapByteBuffer().dirtyMemory() / (pointer.getOffHeapByteBuffer().freeMemory()
+						// calculate the ratio of the dirty
+						ratio = (float) ((double)pointer.getOffHeapByteBuffer().dirtyMemory() / (pointer.getOffHeapByteBuffer().freeMemory()
 								+ pointer.getOffHeapByteBuffer().usedMemory() + pointer.getOffHeapByteBuffer().dirtyMemory()));
 						buffers.put(pointer.getOffHeapByteBuffer(), ratio);
 					}
