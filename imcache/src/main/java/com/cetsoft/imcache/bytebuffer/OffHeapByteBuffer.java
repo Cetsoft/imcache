@@ -114,6 +114,7 @@ public class OffHeapByteBuffer implements OffHeapStore{
 		readWriteLock.writeLock(pointer.getPosition());
 		try{
 			byte [] payload = retrieve(pointer);
+			dirtyMemory.addAndGet(payload.length+POINTER_SIZE);
 			markAsDirty(pointer.getPosition());
 			return payload;
 		}finally{

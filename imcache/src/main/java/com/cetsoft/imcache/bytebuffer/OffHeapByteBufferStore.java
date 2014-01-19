@@ -103,23 +103,44 @@ public class OffHeapByteBufferStore implements OffHeapStore{
 			try{
 				return currentBuffer().store(payload);
 			}catch(BufferOverflowException exception){
-				bufferChangeLock.lock();
 				try{
-					try{
-						return currentBuffer().store(payload);
-					}catch(BufferOverflowException overflowException){
-						Integer currentBuffer = availableBuffers.poll();
-						if(currentBuffer==null){
-							throw new BufferOverflowException();
-						}
-						this.currentBuffer.set(currentBuffer);
-						return store(payload);
-					}
-				}finally{
-					bufferChangeLock.unlock();
+					return currentBuffer().store(payload);
+				}catch(BufferOverflowException overflowException){
+					nextBuffer();
+					return store(payload);
 				}
 			}
 		}
+	}
+
+	/**
+	 * Gets and sets the next buffer.
+	 */
+	protected void nextBuffer() {
+		bufferChangeLock.lock();
+		try{
+			Integer currentBuffer = availableBuffers.poll();
+			if(currentBuffer==null){
+				throw new BufferOverflowException();
+			}
+			this.currentBuffer.set(currentBuffer);
+		}finally{
+			bufferChangeLock.unlock();
+		}
+	}
+	
+	/**
+	 * Stores the payload to the available buffers except the given buffer.
+	 *
+	 * @param payload the payload
+	 * @param buffer the buffer
+	 * @return the pointer
+	 */
+	private Pointer store(byte[] payload, OffHeapByteBuffer buffer) {
+		while(currentBuffer()==buffer){
+			nextBuffer();
+		}
+		return store(payload);
 	}
 
 	/* (non-Javadoc)
@@ -203,7 +224,7 @@ public class OffHeapByteBufferStore implements OffHeapStore{
 		for (Pointer pointer : pointersToBeRedistributed) {
 			synchronized (pointer) {
 				byte [] payload = retrieve(pointer);
-				pointer.copy(store(payload));
+				pointer.copy(store(payload, pointer.getOffHeapByteBuffer()));
 			}
 		}
 	}
