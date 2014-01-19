@@ -58,8 +58,15 @@ public class SpringCacheBuilder extends CacheBuilder {
 	private Serializer<Object> serializer = SERIALIZER;
 	
 	/** The buffer store. */
-	private OffHeapByteBufferStore bufferStore;;
-
+	private OffHeapByteBufferStore bufferStore;
+	
+	/**
+	 * Instantiates a new spring cache builder.
+	 */
+	public SpringCacheBuilder() {
+		super();
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.cetsoft.imcache.cache.builder.CacheBuilder#build()
 	 */
