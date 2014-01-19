@@ -62,14 +62,7 @@ is a good choice to start OffHeapCache. Let's see sample OffHeapCache use.
 		//8388608 is 8 MB and 10 buffers. 8MB*10 = 80 MB.
   		OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
 		final Cache<Integer,SimpleObject> offHeapCache = CacheBuilder.offHeapCache().
-		serializer(new Serializer<SimpleObject>() {
-			public byte[] serialize(SimpleObject value) {
-				return com.cetsoft.imcache.test.Serializer.serialize(value);
-			}
-			public SimpleObject deserialize(byte[] payload) {
-				return com.cetsoft.imcache.test.Serializer.deserialize(payload);
-			}
-		}).storage(bufferStore).build();
+		storage(bufferStore).build();
 	}
 ```
 By default configuration, OffHeapCache will try to clean the places which are not used and marked as 
@@ -84,15 +77,7 @@ is a good choice to start VersionedOffHeapCache. Let's see sample VersionedOffHe
 		//8388608 is 8 MB and 10 buffers. 8MB*10 = 80 MB.
   		OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
 		final Cache<Integer,VersionedItem<SimpleObject>> offHeapCache = 
-		CacheBuilder.versionedOffHeapCache().
-		serializer(new com.cetsoft.imcache.serialization.Serializer<SimpleObject>() {
-			public byte[] serialize(SimpleObject value) {
-				return com.cetsoft.imcache.test.Serializer.serialize(value);
-			}
-			public SimpleObject deserialize(byte[] payload) {
-				return com.cetsoft.imcache.test.Serializer.deserialize(payload);
-			}
-		}).storage(bufferStore).build();
+		CacheBuilder.versionedOffHeapCache().storage(bufferStore).build();
 		VersionedItem<SimpleObject> versionedItem = offHeapCache.get(12);
 	}
 ```
