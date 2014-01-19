@@ -127,6 +127,7 @@ public class OffHeapCacheBuilder extends CacheBuilder{
 	@SuppressWarnings("unchecked")
 	public <K,V> OffHeapCacheBuilder indexHandler(IndexHandler<K, V> indexHandler){
 		this.indexHandler = (IndexHandler<Object, Object>) indexHandler;
+		isSearchable = true;
 		return this;
 	}
 	

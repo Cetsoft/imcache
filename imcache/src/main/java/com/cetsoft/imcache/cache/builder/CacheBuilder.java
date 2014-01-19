@@ -44,7 +44,7 @@ import com.cetsoft.imcache.serialization.Serializer;
 public abstract class CacheBuilder{
 	
 	/** The is searchable. */
-	protected boolean isSearchable = false; 
+	protected volatile boolean isSearchable = false; 
 	
 	/** The Constant CACHE_LOADER. */
 	protected static final CacheLoader<Object, Object> CACHE_LOADER = new CacheLoader<Object, Object>() {
@@ -135,8 +135,9 @@ public abstract class CacheBuilder{
 	 * Searchable.
 	 */
 	protected void searchable(){
-		if(isSearchable){
+		if(!isSearchable){
 			indexHandler = new ConcurrentIndexHandler<Object, Object>();
+			isSearchable = true;
 		}
 	}
 

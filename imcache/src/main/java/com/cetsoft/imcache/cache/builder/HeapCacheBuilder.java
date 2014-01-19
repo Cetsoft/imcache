@@ -24,6 +24,7 @@ import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.SearchableCache;
 import com.cetsoft.imcache.cache.heap.HeapCache;
+import com.cetsoft.imcache.cache.search.DefaultIndexHandler;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 
@@ -81,6 +82,7 @@ public class HeapCacheBuilder extends CacheBuilder{
 	@SuppressWarnings("unchecked")
 	public <K,V> HeapCacheBuilder indexHandler(IndexHandler<K, V> indexHandler){
 		this.indexHandler = (IndexHandler<Object, Object>) indexHandler;
+		isSearchable = true;
 		return this;
 	}
 	
@@ -119,5 +121,17 @@ public class HeapCacheBuilder extends CacheBuilder{
 	public <K,V> SearchableCache<K, V> build() {
 		return new HeapCache<K, V>((CacheLoader<K, V>)cacheLoader,(EvictionListener<K, V>) evictionListener,
 				(IndexHandler<K, V>) indexHandler, capacity);
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see com.cetsoft.imcache.cache.builder.CacheBuilder#searchable()
+	 */
+	@Override
+	public void searchable(){
+		if(!isSearchable){
+			indexHandler = new DefaultIndexHandler<Object, Object>();
+			isSearchable = true;
+		}
 	}
 }
