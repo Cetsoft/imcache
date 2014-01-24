@@ -1,7 +1,6 @@
 imcache
 =======
-
-###<span style="color: red">Open source enthusiast are wanted to develop next versions of imcache.</span>
+###Open source enthusiast are wanted to develop next versions of imcache!
 Imcache is a Java Caching Library. It supports various kinds of caching models that have been applied so far. 
 Imcache intends to speed up applications by providing a means to manage cached data. It offers solutions ranging 
 from small applications to large scale applications.
