@@ -1,7 +1,8 @@
 package com.cetsoft.imcache.cache.search;
 
 /**
- * The Class AttributeException.
+ * The Class AttributeException is thrown where attribute is not found
+ * for the given object.
  */
 public class AttributeException extends RuntimeException{
 

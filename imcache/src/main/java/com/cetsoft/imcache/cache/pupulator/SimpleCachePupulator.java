@@ -26,7 +26,7 @@ import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheEntry;
 
 /**
- * The Class SimpleCachePupulator.
+ * The Class SimpleCachePupulator populates the cache directly.
  *
  * @param <K> the key type
  * @param <V> the value type

@@ -22,7 +22,6 @@ package com.cetsoft.imcache.cache.heap.tx;
 
 import java.util.Stack;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CacheTransaction.
  */

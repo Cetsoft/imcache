@@ -26,7 +26,7 @@ import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheEntry;
 
 /**
- * The Class LazyCachePupulator.
+ * The Class LazyCachePupulator populates the cache slowly after it is called.
  *
  * @param <K> the key type
  * @param <V> the value type

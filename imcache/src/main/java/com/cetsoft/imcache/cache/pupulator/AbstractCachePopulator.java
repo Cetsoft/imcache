@@ -24,7 +24,7 @@ import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CachePopulator;
 
 /**
- * The Class AbstractCachePopulator.
+ * The Class AbstractCachePopulator populates the cache.
  *
  * @param <K> the key type
  * @param <V> the value type

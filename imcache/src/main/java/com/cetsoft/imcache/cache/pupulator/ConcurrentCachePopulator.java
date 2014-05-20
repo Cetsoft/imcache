@@ -26,7 +26,7 @@ import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheEntry;
 
 /**
- * The Class ConcurrentCachePopulator.
+ * The Class ConcurrentCachePopulator initializes threads to populate the cache.
  *
  * @param <K> the key type
  * @param <V> the value type
