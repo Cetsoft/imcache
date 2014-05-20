@@ -31,7 +31,6 @@ public class SpringConfigurationExample {
 	@PostConstruct
 	public void initCache(){
 		new SimpleCachePupulator<String, String>(cache) {
-			@Override
 			public List<CacheEntry<String, String>> loadEntries() {
 				List<CacheEntry<String, String>>  cacheEntries = new ArrayList<CacheEntry<String,String>>();
 				for (String cacheEntry : cacheDao.getAll()) {
@@ -49,7 +48,6 @@ public class SpringConfigurationExample {
 	
 	protected static class CacheDaoImpl implements CacheDao{
 			
-		@Override
 		public List<String> getAll() {
 			List<String> fruits = new ArrayList<String>();
 			fruits.add("orange");

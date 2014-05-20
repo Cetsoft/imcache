@@ -26,7 +26,6 @@ import java.util.List;
 import com.cetsoft.imcache.cache.search.Query;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class AbstractCache.
  *

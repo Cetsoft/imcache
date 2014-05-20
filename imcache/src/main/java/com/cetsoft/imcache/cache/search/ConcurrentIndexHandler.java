@@ -25,7 +25,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.cetsoft.imcache.cache.search.index.CacheIndex;
 
 /**
- * The Class ConcurrentIndexHandler.
+ * The Class ConcurrentIndexHandler handles the indexes for the caches
+ * in a thread-safe manner.
  *
  * @param <K> the key type
  * @param <V> the value type

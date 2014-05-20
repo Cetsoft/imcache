@@ -34,7 +34,6 @@ import com.cetsoft.imcache.cache.search.index.IndexType;
 import com.cetsoft.imcache.cache.util.SerializationUtils;
 import com.cetsoft.imcache.serialization.Serializer;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class VersionedOffHeapCache is a type of offheap cache where cache items
  * have versions that are incremented for each update.

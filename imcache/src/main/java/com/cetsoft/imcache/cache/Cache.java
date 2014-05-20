@@ -20,7 +20,6 @@
 */
 package com.cetsoft.imcache.cache;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface Cache.
  *
