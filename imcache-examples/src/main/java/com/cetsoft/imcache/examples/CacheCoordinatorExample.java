@@ -28,15 +28,26 @@ import com.cetsoft.imcache.cache.coordinator.CacheCoordinator;
 import com.cetsoft.imcache.cache.coordinator.CacheFactory;
 import com.cetsoft.imcache.cache.coordinator.LocalCacheCoordinator;
 
+/**
+ * The Class CacheCoordinatorExample.
+ */
 public class CacheCoordinatorExample {
 	
+	/** The str cache type. */
 	private static CacheType<String, String> strCacheType = new ImcacheType<String, String>();
+	
+	/** The factory. */
 	private static CacheFactory factory = new CacheFactory() {
 		public <K, V> Cache<K, V> create() {
 			return CacheBuilder.heapCache().build();
 		}
 	};
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		final CacheCoordinator cacheCoordinator = new LocalCacheCoordinator(factory);
 		final CacheTypeTest test = new CacheTypeTest(cacheCoordinator);
@@ -50,18 +61,41 @@ public class CacheCoordinatorExample {
 		}
 	}
 	
+	/**
+	 * The Class CacheTypeTest.
+	 */
 	private static class CacheTypeTest{
 		
+		/** The cache coordinator. */
 		final CacheCoordinator cacheCoordinator;
 		
+		/**
+		 * Instantiates a new cache type test.
+		 *
+		 * @param cacheCoordinator the cache coordinator
+		 */
 		public CacheTypeTest(CacheCoordinator cacheCoordinator) {
 			this.cacheCoordinator = cacheCoordinator;
 		}
 
+		/**
+		 * Sets the value.
+		 *
+		 * @param type the type
+		 * @param key the key
+		 * @param value the value
+		 */
 		public void setValue(CacheType<String,String> type, String key, String value){
 			cacheCoordinator.getCache(type).put(key, value);
 		}
 		
+		/**
+		 * Gets the value.
+		 *
+		 * @param type the type
+		 * @param key the key
+		 * @return the value
+		 */
 		public String getValue(CacheType<String,String> type, String key){
 			return cacheCoordinator.getCache(type).get(key);
 		}
