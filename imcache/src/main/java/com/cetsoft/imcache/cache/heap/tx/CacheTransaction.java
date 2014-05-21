@@ -58,7 +58,7 @@ public class CacheTransaction implements Transaction{
 	 * @return the transaction
 	 */
 	public static Transaction get(){
-		if(cacheTransaction.get()==null){
+		if(cacheTransaction.get()==null || cacheTransaction.get().getStatus()==TransactionStatus.COMPLETED){
 			cacheTransaction.set(new CacheTransaction(transactionCounter++));
 		}
 		return cacheTransaction.get();
