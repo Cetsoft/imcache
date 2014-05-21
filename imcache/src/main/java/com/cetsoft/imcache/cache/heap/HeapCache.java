@@ -124,7 +124,7 @@ public class HeapCache<K,V> extends AbstractCache<K, V>{
 	/**
 	 * The Class LimitedHashMap.
 	 */
-	private class LimitedHashMap extends LinkedHashMap<K,V>{
+	protected class LimitedHashMap extends LinkedHashMap<K,V>{
 
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = -831411504252696399L;
@@ -178,7 +178,9 @@ public class HeapCache<K,V> extends AbstractCache<K, V>{
 		@Override
 		protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
 			boolean shouldRemove = size() > this.capacity;
-			HeapCache.this.evictionListener.onEviction(eldest.getKey(), eldest.getValue());
+			if(shouldRemove){
+				HeapCache.this.evictionListener.onEviction(eldest.getKey(), eldest.getValue());
+			}
 			return shouldRemove;
 		}
 		
