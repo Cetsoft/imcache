@@ -152,6 +152,9 @@ public class HeapCache<K,V> extends AbstractCache<K, V>{
 			if(value==null){
 				miss++;
 				value = HeapCache.this.cacheLoader.load((K)key);
+				if(value!=null){
+					cache.put((K) key, value);
+				}
 			}
 			else{
 				hit++;

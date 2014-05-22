@@ -129,13 +129,13 @@ public class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V> implements
 	transient Collection<V> values;
 
 	/**
-	 * ConcurrentHashMap list entry. Note that this is never exported out as a user-visible
+	 * ConcurrentHashMap hash entry. Note that this is never exported out as a user-visible
 	 * Map.Entry.
 	 *
 	 * @param <K> the key type
 	 * @param <V> the value type
 	 */
-	static final class LinkedHashEntry<K, V> {
+	static final class LinkedHashEntry<K, V>{
 		
 		/** The hash. */
 		final int hash;

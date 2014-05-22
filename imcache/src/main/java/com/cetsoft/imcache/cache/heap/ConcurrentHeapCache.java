@@ -122,7 +122,7 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 	/**
 	 * The Class ConcurrentLimitedHashMap.
 	 */
-	private class ConcurrentLimitedHashMap extends ConcurrentLinkedHashMap<K, V> implements Map<K,V>{
+	protected class ConcurrentLimitedHashMap extends ConcurrentLinkedHashMap<K, V> implements Map<K,V>{
 		
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = -1816555501039461556L;
@@ -144,12 +144,12 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 		 */
 		@Override
 		public V put(K key, V value){
-			if(capacity==this.size()){
+			if(this.size()>capacity){
 				Entry<K,V> entry = this.removeEldestEntry();
 				ConcurrentHeapCache.this.evictionListener.onEviction(entry.getKey(), entry.getValue());
 			}
 			V exValue = super.put(key, value);
-			ConcurrentHeapCache.this.indexHandler.add(key, exValue);
+			ConcurrentHeapCache.this.indexHandler.add(key, value);
 			return exValue;
 		}
 		
@@ -163,6 +163,9 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 			if(value==null){
 				miss.incrementAndGet();
 				value = ConcurrentHeapCache.this.cacheLoader.load((K)key);
+				if(value!=null){
+					put((K) key, value);
+				}
 			}
 			else{
 				hit.incrementAndGet();
