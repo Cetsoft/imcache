@@ -37,9 +37,9 @@ import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 
 /**
- * The Class HeapCacheTest.
+ * The Class ConcurrentHeapCacheTest.
  */
-public class HeapCacheTest {
+public class ConcurrentHeapCacheTest {
 	
 	/** The cache loader. */
 	@Mock
@@ -61,7 +61,7 @@ public class HeapCacheTest {
 	Map<Object, Object> limitedMap;
 	
 	/** The cache. */
-	HeapCache<Object, Object> cache;
+	ConcurrentHeapCache<Object, Object> cache;
 
 	/**
 	 * Setup.
@@ -69,7 +69,7 @@ public class HeapCacheTest {
 	@Before
 	public void setup(){
 		MockitoAnnotations.initMocks(this);
-		cache = new HeapCache<Object, Object>(cacheLoader, evictionListener, indexHandler, 1000);
+		cache = new ConcurrentHeapCache<Object,Object>(cacheLoader, evictionListener, indexHandler, 1000);
 		cache.cache = spy(cache.cache);
 		limitedMap = cache.cache;
 	}
@@ -83,7 +83,6 @@ public class HeapCacheTest {
 		doNothing().when(indexHandler).add(any(), any());
 		cache.put(3, "3");
 		verify(limitedMap).put(any(), any());
-		verify(indexHandler).add(any(), any());
 	}
 	
 	/**
@@ -104,10 +103,8 @@ public class HeapCacheTest {
 	public void invalidate(){
 		Object expectedValue = new Object();
 		doReturn(expectedValue).when(limitedMap).remove(any());
-		doNothing().when(indexHandler).remove(any(), any());
 		Object actualValue = cache.invalidate(any());
 		verify(limitedMap).remove(any());
-		verify(indexHandler).remove(any(), any());
 		assertEquals(expectedValue, actualValue);
 	}
 	
@@ -142,8 +139,8 @@ public class HeapCacheTest {
 	@Test
 	public void hitRatio(){
 		long hit = 10, miss=20;
-		cache.hit = hit;
-		cache.miss = miss;
+		cache.hit.set(hit);
+		cache.miss.set(miss);
 		double actualHitRatio = 1/3;
 		double expectedHitRatio = cache.hitRatio();
 		assertEquals(expectedHitRatio, actualHitRatio, 0);
@@ -156,12 +153,11 @@ public class HeapCacheTest {
 	 */
 	@Test 
 	public void getLimitedMapValueInMap(){
-		long hitBefore = cache.hit;
 		Object expectedValue = new Object();
-		limitedMap.put(expectedValue, expectedValue);
-		Object actualValue = limitedMap.get(expectedValue);
+		cache = new ConcurrentHeapCache<Object, Object>(cacheLoader, evictionListener, indexHandler, 10);
+		cache.cache.put(expectedValue, expectedValue);
+		Object actualValue = cache.get(expectedValue);
 		assertEquals(expectedValue, actualValue);
-		assertEquals(hitBefore+1, cache.hit);
 	} 
 	
 	/**
@@ -171,48 +167,47 @@ public class HeapCacheTest {
 	 */
 	@Test 
 	public void getLimitedMapValueNotInMap(){
-		long missBefore = cache.miss;
+		long missBefore = cache.miss.get();
 		Object expectedValue = new Object();
 		doReturn(null).when(limitedMap).put(any(), any());
 		doReturn(expectedValue).when(cacheLoader).load(expectedValue);
-		Object actualValue = limitedMap.get(expectedValue);
+		Object actualValue = cache.get(expectedValue);
 		assertEquals(expectedValue, actualValue);
-		assertEquals(missBefore+1, cache.miss);
+		assertEquals(missBefore+1, cache.miss.get());
 		verify(limitedMap).put(any(), any());
 	}
 	
 	/**
-	 * Removes the limited map value in map.
+	 * Put concurrent limited hash map size greater than capacity.
 	 */
-	@Test 
-	public void removeLimitedMapValueInMap(){
-		Object expectedValue = new Object();
-		limitedMap.put(expectedValue, expectedValue);
-		Object actualValue = limitedMap.remove(expectedValue);
-		assertEquals(expectedValue, actualValue);
-		verify(evictionListener).onEviction(expectedValue, expectedValue);
-	} 
-	
-	/**
-	 * Removes the limited map value not in map.
-	 */
-	@Test 
-	public void removeLimitedMapValueNotInMap(){
+	@Test
+	public void putConcurrentLimitedHashMapSizeGreaterThanCapacity(){
+		cache = new ConcurrentHeapCache<Object, Object>(cacheLoader, evictionListener, indexHandler, 0);
 		Object object = new Object();
-		Object actualValue = limitedMap.remove(object);
-		assertEquals(null, actualValue);
+		cache.cache.put(object, object);
+		doReturn(object).when(entry).getKey();
+		doReturn(object).when(entry).getValue();
+		doNothing().when(evictionListener).onEviction(object, object);
+		doNothing().when(indexHandler).add(object, object);
+		cache.put(object, object);
+		verify(evictionListener).onEviction(object, object);
+		verify(indexHandler,times(2)).add(object, object);
 	}
 	
 	/**
-	 * Removes the eldest entry limited map capacity not enough.
+	 * Removes the concurrent limited hash map exist ex key.
 	 */
-	@Test 
-	public void removeEldestEntryLimitedMapCapacityNotEnough(){
+	@Test
+	public void removeConcurrentLimitedHashMapExistExKey(){
+		cache = new ConcurrentHeapCache<Object, Object>(cacheLoader, evictionListener, indexHandler, 0);
 		Object object = new Object();
+		cache.cache.put(object, object);
 		doReturn(object).when(entry).getKey();
 		doReturn(object).when(entry).getValue();
-		doReturn(1000000).when(limitedMap).size();
-		limitedMap.put(object, object);
+		doNothing().when(evictionListener).onEviction(object, object);
+		doNothing().when(indexHandler).add(object, object);
+		cache.invalidate(object);
 		verify(evictionListener).onEviction(object, object);
+		verify(indexHandler).add(object, object);
 	}
 }
