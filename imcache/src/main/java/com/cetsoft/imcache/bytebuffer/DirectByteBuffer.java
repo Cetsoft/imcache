@@ -91,7 +91,8 @@ public class DirectByteBuffer implements ByteBuffer{
 	 * @param destinationPosition the destination position
 	 * @param length the length
 	 */
-	private static void copyToArray(long sourceAddress, Object destination, long destinationBaseOffset, long destinationPosition, long length) {
+	private static void copyToArray(long sourceAddress, Object destination, long destinationBaseOffset, 
+		long destinationPosition, long length) {
 		// Calculate the distance from the beginning of the object up until a destinationPoint
 		long offset = destinationBaseOffset + destinationPosition;
 		while (length > 0) {
@@ -114,7 +115,8 @@ public class DirectByteBuffer implements ByteBuffer{
 	 * @param destinationAddress the destination address
 	 * @param length the length
 	 */
-	private static void copyFromArray(Object source, long sourceBaseOffset, long sourcePosition, long destinationAddress, long length) {
+	private static void copyFromArray(Object source, long sourceBaseOffset, long sourcePosition, 
+		long destinationAddress, long length) {
 		// Calculate the distance from the beginning of the object up until a sourcePoint
 		long offset = sourceBaseOffset + sourcePosition;
 		while (length > 0) {

@@ -37,10 +37,10 @@ public class OffHeapByteBufferStore implements OffHeapStore{
 	private volatile int bufferSize;
 	
 	/** The buffers. */
-	private OffHeapByteBuffer[] buffers;
+	protected OffHeapByteBuffer[] buffers;
 	
 	/** The available buffers. */
-	private BlockingQueue<Integer> availableBuffers;
+	protected BlockingQueue<Integer> availableBuffers;
 	
 	/** The current buffer. */
 	private AtomicInteger currentBuffer = new AtomicInteger(0);
@@ -136,7 +136,7 @@ public class OffHeapByteBufferStore implements OffHeapStore{
 	 * @param buffer the buffer
 	 * @return the pointer
 	 */
-	private Pointer store(byte[] payload, OffHeapByteBuffer buffer) {
+	protected Pointer store(byte[] payload, OffHeapByteBuffer buffer) {
 		while(currentBuffer()==buffer){
 			nextBuffer();
 		}
