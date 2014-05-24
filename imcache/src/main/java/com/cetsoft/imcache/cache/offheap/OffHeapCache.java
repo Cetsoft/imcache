@@ -82,7 +82,7 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 	protected AtomicLong miss = new AtomicLong();
 
 	/** The pointer map. */
-	private ConcurrentMap<K, Pointer> pointerMap = new ConcurrentHashMap<K, Pointer>();
+	protected ConcurrentMap<K, Pointer> pointerMap = new ConcurrentHashMap<K, Pointer>();
 
 	/** The serializer. */
 	private Serializer<V> serializer;
@@ -144,33 +144,9 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 		});
 		cleanerService.scheduleAtFixedRate(new Runnable() {
 			public void run() {
-				// Buffers can be fully dirty and we may not find any pointer to resolve that.
-				// This case is so unlikely that we did not conside.
-				Collection<Pointer> pointers = pointerMap.values();
-				List<Pointer> pointersToBeRedistributed = new ArrayList<Pointer>();
-				Map<OffHeapByteBuffer, Float> buffers = new HashMap<OffHeapByteBuffer, Float>();
-				Set<Integer> buffersToBeCleaned = new HashSet<Integer>();
-				// For all pointers we try to understand if there is a need for redistribution.
-				for (Pointer pointer : pointers) {
-					Float ratio = buffers.get(pointer.getOffHeapByteBuffer());
-					if (ratio == null) {
-						// calculate the ratio of the dirty
-						ratio = (float) ((double)pointer.getOffHeapByteBuffer().dirtyMemory() / (pointer.getOffHeapByteBuffer().freeMemory()
-								+ pointer.getOffHeapByteBuffer().usedMemory() + pointer.getOffHeapByteBuffer().dirtyMemory()));
-						buffers.put(pointer.getOffHeapByteBuffer(), ratio);
-					}
-					if (ratio - bufferCleanerThreshold > DELTA) {
-						pointersToBeRedistributed.add(pointer);
-						buffersToBeCleaned.add(pointer.getOffHeapByteBuffer().getIndex());
-					}
-				}
-				bufferStore.redistribute(pointersToBeRedistributed);
-				for (Integer bufferIndex : buffersToBeCleaned) {
-					bufferStore.free(bufferIndex);
-				}
+				cleanBuffers(bufferCleanerThreshold);
 			}
-
-		}, 0, bufferCleanerPeriod, TimeUnit.MILLISECONDS);
+		}, bufferCleanerPeriod, bufferCleanerPeriod, TimeUnit.MILLISECONDS);
 		ScheduledExecutorService evictionService = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
 			public Thread newThread(Runnable runnable) {
 				return new Thread(runnable, "imcache:bufferCleaner(name="+getName()+",thread="+ NO_OF_EVICTORS.incrementAndGet() + ")");
@@ -178,16 +154,9 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 		});
 		evictionService.scheduleAtFixedRate(new Runnable() {
 			public void run() {
-				Set<Entry<K,Pointer>> entries = pointerMap.entrySet();
-				for (Entry<K,Pointer> entry : entries) {
-					synchronized (entry.getValue()) {
-						if(entry.getValue().getAccessTime()+evictionPeriod<System.currentTimeMillis()){
-							invalidate(entry.getKey());
-						}
-					}
-				}
+				doEviction(evictionPeriod);
 			}
-		}, 0, evictionPeriod, TimeUnit.MILLISECONDS);
+		}, bufferCleanerPeriod, evictionPeriod, TimeUnit.MILLISECONDS);
 	}
 
 	/*
@@ -199,11 +168,12 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 		writeLock(key);
 		Pointer pointer = pointerMap.get(key);
 		try {
+			byte[] bytes = serializer.serialize(value);
 			if (pointer == null) {
-				pointer = bufferStore.store(serializer.serialize(value));
+				pointer = bufferStore.store(bytes);
 			} else {
 				synchronized (pointer) {
-					pointer = bufferStore.update(pointer, serializer.serialize(value));
+					pointer = bufferStore.update(pointer, bytes);
 				}
 			}
 			pointerMap.put(key, pointer);
@@ -324,6 +294,64 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 	 */
 	protected void writeUnlock(K key) {
 		readWriteLock.writeUnlock(Math.abs(key.hashCode()));
+	}
+	
+	/**
+	 * Clean buffers.
+	 *
+	 * @param bufferCleanerThreshold the buffer cleaner threshold
+	 */
+	protected void cleanBuffers(final float bufferCleanerThreshold) {
+		// Buffers can be fully dirty and we may not find any pointer to resolve that.
+		// This case is so unlikely that we did not consider.
+		Collection<Pointer> pointers = pointerMap.values();
+		List<Pointer> pointersToBeRedistributed = new ArrayList<Pointer>();
+		Map<OffHeapByteBuffer, Float> buffers = new HashMap<OffHeapByteBuffer, Float>();
+		Set<Integer> buffersToBeCleaned = new HashSet<Integer>();
+		// For all pointers we try to understand if there is a need for redistribution.
+		for (Pointer pointer : pointers) {
+			Float ratio = buffers.get(pointer.getOffHeapByteBuffer());
+			if (ratio == null) {
+				// calculate the ratio of the dirty
+				ratio = getDirtyRatio(pointer);
+				buffers.put(pointer.getOffHeapByteBuffer(), ratio);
+			}
+			if (ratio - bufferCleanerThreshold > DELTA) {
+				pointersToBeRedistributed.add(pointer);
+				buffersToBeCleaned.add(pointer.getOffHeapByteBuffer().getIndex());
+			}
+		}
+		bufferStore.redistribute(pointersToBeRedistributed);
+		for (Integer bufferIndex : buffersToBeCleaned) {
+			bufferStore.free(bufferIndex);
+		}
+	}
+
+	/**
+	 * Gets the dirty ratio.
+	 *
+	 * @param pointer the pointer
+	 * @return the dirty ratio
+	 */
+	protected float getDirtyRatio(Pointer pointer) {
+		return (float) ((double)pointer.getOffHeapByteBuffer().dirtyMemory() / (pointer.getOffHeapByteBuffer().freeMemory()
+				+ pointer.getOffHeapByteBuffer().usedMemory() + pointer.getOffHeapByteBuffer().dirtyMemory()));
+	}
+	
+	/**
+	 * Do eviction.
+	 *
+	 * @param evictionPeriod the eviction period
+	 */
+	protected void doEviction(final long evictionPeriod) {
+		Set<Entry<K,Pointer>> entries = pointerMap.entrySet();
+		for (Entry<K,Pointer> entry : entries) {
+			synchronized (entry.getValue()) {
+				if(entry.getValue().getAccessTime()+evictionPeriod<System.currentTimeMillis()){
+					invalidate(entry.getKey());
+				}
+			}
+		}
 	}
 	
 }
