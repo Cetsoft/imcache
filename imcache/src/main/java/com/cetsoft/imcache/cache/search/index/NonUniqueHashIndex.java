@@ -23,7 +23,6 @@ package com.cetsoft.imcache.cache.search.index;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 /**
  * The Class NonUniqueHashIndex is type of index where hash indexed value 
  * can have one or more corresponding values.

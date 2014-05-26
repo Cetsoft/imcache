@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UniqueHashIndex extends CacheIndexBase{
 	
 	/** The map. */
-	private Map<Object,Object> map = new ConcurrentHashMap<Object, Object>();
+	protected Map<Object,Object> map = new ConcurrentHashMap<Object, Object>();
 
 	/* (non-Javadoc)
 	 * @see com.cetsoft.imcache.cache.search.index.CacheIndex#put(java.lang.Object, java.lang.Object)
