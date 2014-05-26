@@ -43,7 +43,6 @@ import com.cetsoft.imcache.cache.offheap.VersionedOffHeapCache.CacheItemSerializ
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.serialization.Serializer;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OffHeapCacheTest.
  */
