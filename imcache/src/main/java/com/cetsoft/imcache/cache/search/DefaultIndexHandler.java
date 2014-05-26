@@ -115,65 +115,105 @@ public class DefaultIndexHandler<K,V> implements IndexHandler<K, V>{
 		return (List<K>) results;
 	}
 	
+	/**
+	 * Execute.
+	 *
+	 * @param criteria the criteria
+	 * @return the list
+	 */
 	protected List<Object> execute(Criteria criteria){
 		if(criteria instanceof ArithmeticCriteria){
-			ArithmeticCriteria arithmeticCriteria = ((ArithmeticCriteria)criteria);
-			CacheIndex cacheIndex = indexes.get(arithmeticCriteria.getAttributeName());
-			if(cacheIndex==null){
-				throw new IndexNotFoundException();
-			}
-			return arithmeticCriteria.meets(cacheIndex);
+			return executeArithmetic((ArithmeticCriteria)criteria);
+		}
+		else if(criteria instanceof AndCriteria){
+			return executeAnd((AndCriteria)criteria);
+		}
+		else if(criteria instanceof OrCriteria){
+			return executeOr((OrCriteria)criteria);
 		}
 		else{
-			if(criteria instanceof AndCriteria){
-				AndCriteria andCriteria = (AndCriteria)criteria;
-				List<Object> results = new ArrayList<Object>();
-				for (Criteria innerCriteria : andCriteria.getCriterias()) {
-					List<Object> result = execute(innerCriteria);
-					if(results.size()==0){
-						results.addAll(result);
-					}
-					else{
-						List<Object> mergedResults = new ArrayList<Object>(results.size());
-						for (Object object : result) {
-							if(results.contains(object)){
-								mergedResults.add(object);
-							}
-						}
-						results = mergedResults;
-					}
-				}
-				return results;
-			}
-			else if(criteria instanceof OrCriteria){
-				Set<Object> results = new HashSet<Object>();
-				OrCriteria orCriteria = (OrCriteria)criteria;
-				for (Criteria innerCriteria : orCriteria.getCriterias()) {
-					List<Object> result = execute(innerCriteria);
-					results.addAll(result);
-				}
-				return new ArrayList<Object>(results);
+			return executeDiff((DiffCriteria)criteria);
+		}
+	}
+
+	/**
+	 * Execute arithmetic.
+	 *
+	 * @param criteria the criteria
+	 * @return the list
+	 */
+	protected List<Object> executeArithmetic(ArithmeticCriteria arithmeticCriteria) {
+		CacheIndex cacheIndex = indexes.get(arithmeticCriteria.getAttributeName());
+		if(cacheIndex==null){
+			throw new IndexNotFoundException();
+		}
+		return arithmeticCriteria.meets(cacheIndex);
+	}
+
+	/**
+	 * Execute and.
+	 *
+	 * @param criteria the criteria
+	 * @return the list
+	 */
+	protected List<Object> executeAnd(AndCriteria andCriteria) {
+		List<Object> results = new ArrayList<Object>();
+		for (Criteria innerCriteria : andCriteria.getCriterias()) {
+			List<Object> result = execute(innerCriteria);
+			if(results.size()==0){
+				results.addAll(result);
 			}
 			else{
-				DiffCriteria diffCriteria = (DiffCriteria)criteria;
-				List<Object> leftResult = execute(diffCriteria.getLeftCriteria());
-				List<Object> rightResult = execute(diffCriteria.getRightCriteria());
-				for (Object object : rightResult) {
-					leftResult.remove(object);
+				List<Object> mergedResults = new ArrayList<Object>(results.size());
+				for (Object object : result) {
+					if(results.contains(object)){
+						mergedResults.add(object);
+					}
 				}
-				return leftResult;
+				results = mergedResults;
 			}
 		}
+		return results;
+	}
+
+	/**
+	 * Execute diff.
+	 *
+	 * @param criteria the criteria
+	 * @return the list
+	 */
+	protected List<Object> executeDiff(DiffCriteria diffCriteria) {
+		List<Object> leftResult = execute(diffCriteria.getLeftCriteria());
+		List<Object> rightResult = execute(diffCriteria.getRightCriteria());
+		for (Object object : rightResult) {
+			leftResult.remove(object);
+		}
+		return leftResult;
+	}
+
+	/**
+	 * Execute or.
+	 *
+	 * @param criteria the criteria
+	 * @return the list
+	 */
+	protected List<Object> executeOr(OrCriteria orCriteria) {
+		Set<Object> results = new HashSet<Object>();
+		for (Criteria innerCriteria : orCriteria.getCriterias()) {
+			List<Object> result = execute(innerCriteria);
+			results.addAll(result);
+		}
+		return new ArrayList<Object>(results);
 	}
 	
 	/**
 	 * Gets the indexed key.
 	 *
-	 * @param attribute the attribute
+	 * @param attributeName the attribute name
 	 * @param value the value
 	 * @return the indexed key
 	 */
-	private Object getIndexedKey(String attributeName, V value) {
+	protected Object getIndexedKey(String attributeName, V value) {
 		try {
 			Field field = value.getClass().getDeclaredField(attributeName);
 			field.setAccessible(true);
