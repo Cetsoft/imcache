@@ -52,7 +52,7 @@ public class BetweenFilter extends ArithmeticFilter{
 		List<Object> result = new ArrayList<Object>();
 		for (Object object : objects) {
 			Comparable objectValue = (Comparable)getAttributeValue(object);
-			if(objectValue.compareTo(value)>0&&objectValue.compareTo(upperBound)<0){
+			if(objectValue.compareTo(value)<0&&objectValue.compareTo(upperBound)>0){
 				result.add(object);
 			}
 		}

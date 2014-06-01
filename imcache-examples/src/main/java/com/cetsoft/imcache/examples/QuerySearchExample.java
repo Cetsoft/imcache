@@ -27,7 +27,7 @@ import com.cetsoft.imcache.cache.builder.CacheBuilder;
 import com.cetsoft.imcache.cache.search.CacheQuery;
 import com.cetsoft.imcache.cache.search.criteria.BetweenCriteria;
 import com.cetsoft.imcache.cache.search.criteria.ETCriteria;
-import com.cetsoft.imcache.cache.search.filter.LEFilter;
+import com.cetsoft.imcache.cache.search.filter.LTFilter;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 
 /**
@@ -46,7 +46,7 @@ public class QuerySearchExample {
 		cache.put(1, createObject(2, 2));
 		cache.put(2, createObject(3, 3));
 		List<SimpleObject> objects = cache.execute(CacheQuery.newQuery().setCriteria(new BetweenCriteria("j",1,3).
-				or(new ETCriteria("j", 3))).setFilter(new LEFilter("k", 3)));
+				or(new ETCriteria("j", 3))).setFilter(new LTFilter("k", 3)));
 		for (SimpleObject simpleObject : objects) {
 			System.out.println(simpleObject);
 		}

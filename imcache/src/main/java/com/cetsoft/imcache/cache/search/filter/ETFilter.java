@@ -44,7 +44,7 @@ public class ETFilter extends ArithmeticFilter{
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Object> filter(List<Object> objects) {
-		List<Object> result = new ArrayList<Object>();
+		List<Object> result = new ArrayList<Object>(objects.size());
 		for (Object object : objects) {
 			Comparable objectValue = (Comparable)getAttributeValue(object);
 			if(objectValue.compareTo(value)==0){

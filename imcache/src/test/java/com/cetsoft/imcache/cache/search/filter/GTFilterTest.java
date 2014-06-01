@@ -16,42 +16,49 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Nov 8, 2013
+* Date   : Jun 1, 2014
 */
 package com.cetsoft.imcache.cache.search.filter;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The Class GTFilter is used to retrieve items
- * greater than the given value.
- */
-public class GTFilter extends ArithmeticFilter {
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
+@SuppressWarnings({"rawtypes", "unchecked"})
+public class GTFilterTest {
+
+	GTFilter gtFilter;
+	
+	@Mock
+	Comparable comparable;
+	
 	/**
-	 * Instantiates a new gT filter.
-	 *
-	 * @param attributeName the attribute name
-	 * @param value the value
+	 * Setup.
 	 */
-	public GTFilter(String attributeName, Object value) {
-		super(attributeName, value);
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		gtFilter = spy(new GTFilter("x", new Comparable() {
+			public int compareTo(Object o) {return 0;}
+		}));
 	}
-
-	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.cache.search.filter.Filter#filter(com.cetsoft.imcache.cache.search.index.CacheIndex)
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<Object> filter(List<Object> objects) {
-		List<Object> result = new ArrayList<Object>(objects.size());
-		for (Object object : objects) {
-			Comparable objectValue = (Comparable)getAttributeValue(object);
-			if(objectValue.compareTo(value)>0){
-				result.add(object);
-			}
-		}
-		return result;
+	
+	@Test
+	public void filter(){
+		List<Object> objects= new ArrayList<Object>();
+		objects.add(comparable);
+		objects.add(comparable);
+		doReturn(0).doReturn(1).when(comparable).compareTo(any());
+		doReturn(comparable).when(gtFilter).getAttributeValue(comparable);
+		List<Object> actualObjects = gtFilter.filter(objects);
+		assertEquals(comparable, actualObjects.get(0));
 	}
 
 }

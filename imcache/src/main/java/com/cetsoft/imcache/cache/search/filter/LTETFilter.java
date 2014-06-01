@@ -20,6 +20,7 @@
 */
 package com.cetsoft.imcache.cache.search.filter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,8 +42,16 @@ public class LTETFilter extends ArithmeticFilter {
 	/* (non-Javadoc)
 	 * @see com.cetsoft.imcache.cache.search.filter.Filter#filter(com.cetsoft.imcache.cache.search.index.CacheIndex)
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Object> filter(List<Object> objects) {
-		return null;
+		List<Object> result = new ArrayList<Object>();
+		for (Object object : objects) {
+			Comparable objectValue = (Comparable)getAttributeValue(object);
+			if(objectValue.compareTo(value)<=0){
+				result.add(object);
+			}
+		}
+		return result;
 	}
 
 }
