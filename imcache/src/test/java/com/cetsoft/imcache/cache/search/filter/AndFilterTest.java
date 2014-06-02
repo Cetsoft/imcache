@@ -31,11 +31,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+/**
+ * The Class AndFilterTest.
+ */
 @SuppressWarnings("unchecked")
 public class AndFilterTest {
 
+	/** The and filter. */
 	AndFilter andFilter;
 	
+	/** The filter. */
 	@Mock
 	Filter filter;
 	
@@ -48,6 +53,9 @@ public class AndFilterTest {
 		andFilter = spy(new AndFilter(filter, filter));
 	}
 	
+	/**
+	 * Filter.
+	 */
 	@Test
 	public void filter(){
 		Object object1 = new Object();

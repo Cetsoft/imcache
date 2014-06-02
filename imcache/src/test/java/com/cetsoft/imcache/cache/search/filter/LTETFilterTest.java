@@ -31,11 +31,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+/**
+ * The Class LTETFilterTest.
+ */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class LTETFilterTest {
 
+	/** The ltet filter. */
 	LTETFilter ltetFilter;
 	
+	/** The comparable. */
 	@Mock
 	Comparable comparable;
 	
@@ -50,6 +55,9 @@ public class LTETFilterTest {
 		}));
 	}
 	
+	/**
+	 * Filter.
+	 */
 	@Test
 	public void filter(){
 		List<Object> objects= new ArrayList<Object>();

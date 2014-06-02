@@ -36,19 +36,28 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RangeIndexTest.
+ */
 public class RangeIndexTest {
 
+	/** The range index. */
 	RangeIndex rangeIndex;
 	
+	/** The upper bound. */
 	@Mock
 	Comparable<Object> comparable, lowerBound, upperBound;
 	
+	/** The map. */
 	@Mock
 	NavigableMap<Object, Set<Object>> map;
 	
+	/** The entry. */
 	@Mock
 	Entry<Object, Set<Object>> entry;
 	
+	/** The result. */
 	@Spy
 	List<Object> result = new ArrayList<Object>();
 	
@@ -62,6 +71,9 @@ public class RangeIndexTest {
 		rangeIndex.map = map;
 	}
 	
+	/**
+	 * Less than.
+	 */
 	@Test
 	public void lessThan(){
 		Object value = new Object();
@@ -71,6 +83,9 @@ public class RangeIndexTest {
 		verify(rangeIndex).lower(map, entry);
 	}
 	
+	/**
+	 * Less than or equals to.
+	 */
 	@Test
 	public void lessThanOrEqualsTo(){
 		Object value = new Object();
@@ -82,6 +97,9 @@ public class RangeIndexTest {
 		verify(rangeIndex).equalsTo(value, result);
 	}
 	
+	/**
+	 * Lower.
+	 */
 	@Test
 	public void lower(){
 		Object key = new Object();
@@ -95,6 +113,9 @@ public class RangeIndexTest {
 		assertEquals(value, actualObjects.get(0));
 	}
 	
+	/**
+	 * Greater than.
+	 */
 	@Test
 	public void greaterThan(){
 		Object value = new Object();
@@ -104,6 +125,9 @@ public class RangeIndexTest {
 		verify(rangeIndex).higher(map, entry);
 	}
 	
+	/**
+	 * Greater than or equals to.
+	 */
 	@Test
 	public void greaterThanOrEqualsTo(){
 		Object value = new Object();
@@ -115,6 +139,9 @@ public class RangeIndexTest {
 		verify(rangeIndex).equalsTo(value, result);
 	}
 	
+	/**
+	 * Higher.
+	 */
 	@Test
 	public void higher(){
 		Object key = new Object();
@@ -128,6 +155,9 @@ public class RangeIndexTest {
 		assertEquals(value, actualObjects.get(0));
 	}
 	
+	/**
+	 * Equals to.
+	 */
 	@Test
 	public void equalsTo(){
 		List<Object> list = new ArrayList<Object>();
@@ -139,6 +169,9 @@ public class RangeIndexTest {
 		assertTrue(list.contains(value));
 	}
 	
+	/**
+	 * Between.
+	 */
 	@Test
 	public void between(){
 		Comparable<Object> key = comparable;

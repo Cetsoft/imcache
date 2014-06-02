@@ -31,11 +31,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+/**
+ * The Class DiffFilterTest.
+ */
 @SuppressWarnings("unchecked")
 public class DiffFilterTest {
 
+	/** The diff filter. */
 	DiffFilter diffFilter;
 	
+	/** The filter. */
 	@Mock
 	Filter filter;
 	
@@ -48,6 +53,9 @@ public class DiffFilterTest {
 		diffFilter = spy(new DiffFilter(filter, filter));
 	}
 	
+	/**
+	 * Filter.
+	 */
 	@Test
 	public void filter(){
 		Object object1 = new Object();

@@ -31,11 +31,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+/**
+ * The Class ETFilterTest.
+ */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class ETFilterTest {
 
+	/** The et filter. */
 	ETFilter etFilter;
 	
+	/** The comparable. */
 	@Mock
 	Comparable comparable;
 	
@@ -50,6 +55,9 @@ public class ETFilterTest {
 		}));
 	}
 	
+	/**
+	 * Filter.
+	 */
 	@Test
 	public void filter(){
 		List<Object> objects= new ArrayList<Object>();

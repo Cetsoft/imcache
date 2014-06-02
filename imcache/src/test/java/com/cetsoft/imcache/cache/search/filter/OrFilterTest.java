@@ -31,11 +31,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+/**
+ * The Class OrFilterTest.
+ */
 @SuppressWarnings("unchecked")
 public class OrFilterTest {
 
+	/** The or filter. */
 	OrFilter orFilter;
 	
+	/** The filter. */
 	@Mock
 	Filter filter;
 	
@@ -48,6 +53,9 @@ public class OrFilterTest {
 		orFilter = spy(new OrFilter(filter, filter));
 	}
 	
+	/**
+	 * Filter.
+	 */
 	@Test
 	public void filter(){
 		Object object1 = new Object();
