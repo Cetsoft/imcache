@@ -25,18 +25,18 @@ import java.util.List;
 import com.cetsoft.imcache.cache.search.index.CacheIndex;
 
 /**
- * The Class LECriteria is used to retrieve items
+ * The Class LTCriteria is used to retrieve items
  * less than given value.
  */
-public class LECriteria extends ArithmeticCriteria{
+public class LTCriteria extends ArithmeticCriteria{
 
 	/**
-	 * Instantiates a new lE criteria.
+	 * Instantiates a new Less Than criteria.
 	 *
 	 * @param attributeName the attribute name
 	 * @param value the value
 	 */
-	public LECriteria(String attributeName, Object value) {
+	public LTCriteria(String attributeName, Object value) {
 		super(attributeName, value);
 	}
 
