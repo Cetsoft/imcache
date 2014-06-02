@@ -31,11 +31,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+/**
+ * The Class GTFilterTest.
+ */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class GTFilterTest {
 
+	/** The gt filter. */
 	GTFilter gtFilter;
 	
+	/** The comparable. */
 	@Mock
 	Comparable comparable;
 	
@@ -50,6 +55,9 @@ public class GTFilterTest {
 		}));
 	}
 	
+	/**
+	 * Filter.
+	 */
 	@Test
 	public void filter(){
 		List<Object> objects= new ArrayList<Object>();

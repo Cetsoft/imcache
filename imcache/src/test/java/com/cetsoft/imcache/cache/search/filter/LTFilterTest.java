@@ -31,11 +31,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+/**
+ * The Class LTFilterTest.
+ */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class LTFilterTest {
 
+	/** The lt filter. */
 	LTFilter ltFilter;
 	
+	/** The comparable. */
 	@Mock
 	Comparable comparable;
 	
@@ -50,6 +55,9 @@ public class LTFilterTest {
 		}));
 	}
 	
+	/**
+	 * Filter.
+	 */
 	@Test
 	public void filter(){
 		List<Object> objects= new ArrayList<Object>();

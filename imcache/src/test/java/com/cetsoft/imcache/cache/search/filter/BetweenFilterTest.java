@@ -31,11 +31,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+/**
+ * The Class BetweenFilterTest.
+ */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class BetweenFilterTest {
 
+	/** The between filter. */
 	BetweenFilter betweenFilter;
 	
+	/** The upper bound. */
 	@Mock
 	Comparable comparable, lowerBound, upperBound;
 	
@@ -48,6 +53,9 @@ public class BetweenFilterTest {
 		betweenFilter = spy(new BetweenFilter("x", lowerBound, upperBound));
 	}
 	
+	/**
+	 * Filter.
+	 */
 	@Test
 	public void filter(){
 		List<Object> objects= new ArrayList<Object>();
