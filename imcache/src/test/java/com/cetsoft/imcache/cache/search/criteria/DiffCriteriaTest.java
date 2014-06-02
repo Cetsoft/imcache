@@ -16,46 +16,50 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Nov 8, 2013
+* Date   : Jun 2, 2014
 */
 package com.cetsoft.imcache.cache.search.criteria;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.cetsoft.imcache.cache.search.index.CacheIndex;
+
 /**
- * The Class DiffCriteria  is used to retrieve items
- * difference for the leftCriteria to rightCriteria.
+ * The Class DiffCriteriaTest.
  */
-public class DiffCriteria extends LogicalCriteria {
+public class DiffCriteriaTest {
 	
 	/** The right criteria. */
-	private Criteria leftCriteria, rightCriteria;
+	@Mock
+	Criteria leftCriteria, rightCriteria;
+	
+	/** The cache index. */
+	@Mock
+	CacheIndex cacheIndex;
+
+	/**
+	 * Setup.
+	 */
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+	}
 	
 	/**
-	 * Instantiates a new diff criteria.
-	 *
-	 * @param leftCriteria the left criteria
-	 * @param rightCriteria the right criteria
+	 * Left right criteria.
 	 */
-	public DiffCriteria(Criteria leftCriteria, Criteria rightCriteria){
-		this.leftCriteria = leftCriteria;
-		this.rightCriteria = rightCriteria;
-	}
-
-	/**
-	 * Gets the left criteria.
-	 *
-	 * @return the left criteria
-	 */
-	public Criteria getLeftCriteria() {
-		return leftCriteria;
-	}
-
-	/**
-	 * Gets the right criteria.
-	 *
-	 * @return the right criteria
-	 */
-	public Criteria getRightCriteria() {
-		return rightCriteria;
+	@Test
+	public void leftRightCriteria(){
+		DiffCriteria diffCriteria = new DiffCriteria(leftCriteria, rightCriteria);
+		Criteria actualLeftCriteria = diffCriteria.getLeftCriteria();
+		Criteria actualRightCriteria = diffCriteria.getRightCriteria();
+		assertEquals(leftCriteria, actualLeftCriteria);
+		assertEquals(rightCriteria, actualRightCriteria);
 	}
 	
 }

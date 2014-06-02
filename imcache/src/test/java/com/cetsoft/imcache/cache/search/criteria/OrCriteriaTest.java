@@ -16,46 +16,50 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Nov 8, 2013
+* Date   : Jun 2, 2014
 */
 package com.cetsoft.imcache.cache.search.criteria;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.cetsoft.imcache.cache.search.index.CacheIndex;
+
 /**
- * The Class DiffCriteria  is used to retrieve items
- * difference for the leftCriteria to rightCriteria.
+ * The Class OrCriteriaTest.
  */
-public class DiffCriteria extends LogicalCriteria {
+public class OrCriteriaTest {
 	
-	/** The right criteria. */
-	private Criteria leftCriteria, rightCriteria;
+	/** The criteria. */
+	@Mock
+	Criteria criteria;
 	
-	/**
-	 * Instantiates a new diff criteria.
-	 *
-	 * @param leftCriteria the left criteria
-	 * @param rightCriteria the right criteria
-	 */
-	public DiffCriteria(Criteria leftCriteria, Criteria rightCriteria){
-		this.leftCriteria = leftCriteria;
-		this.rightCriteria = rightCriteria;
-	}
+	/** The cache index. */
+	@Mock
+	CacheIndex cacheIndex;
 
 	/**
-	 * Gets the left criteria.
-	 *
-	 * @return the left criteria
+	 * Setup.
 	 */
-	public Criteria getLeftCriteria() {
-		return leftCriteria;
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
 	}
-
+	
 	/**
-	 * Gets the right criteria.
+	 * Gets the criterias.
 	 *
-	 * @return the right criteria
+	 * @return the criterias
 	 */
-	public Criteria getRightCriteria() {
-		return rightCriteria;
+	@Test
+	public void getCriterias(){
+		OrCriteria orCriteria = new OrCriteria(criteria, criteria);
+		Criteria[] criterias = orCriteria.getCriterias();
+		assertEquals(criteria, criterias[0]);
 	}
 	
 }
