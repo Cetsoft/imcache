@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.cetsoft</groupId>
 		<artifactId>imcache-parent</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
+		<version>0.1.0</version>
 	</parent>
 	<dependencies>
 		<dependency>
