@@ -9,7 +9,7 @@ from small applications to large scale applications.
 <dependency>
   <groupId>com.cetsoft</groupId>
   <artifactId>imcache</artifactId>
-  <version>0.0.9</version><!--Can be updated for later versions-->
+  <version>0.1.0</version><!--Can be updated for later versions-->
 </dependency>
 ```
 ###The Cache Interface
