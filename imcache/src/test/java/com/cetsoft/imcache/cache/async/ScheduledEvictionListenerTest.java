@@ -57,7 +57,7 @@ public class ScheduledEvictionListenerTest {
 		MockitoAnnotations.initMocks(this);
 		asyncEvictionListener = spy( new ScheduledEvictionListener<Object, Object>() {
 			@Override
-			void saveAll(List<CacheTask<Object, Object>> cacheTasks) {}
+			public void save(List<CacheTask<Object, Object>> cacheTasks) {}
 		});
 		asyncEvictionListener.cacheTasks = cacheTasks;
 	}
@@ -118,7 +118,7 @@ public class ScheduledEvictionListenerTest {
 				return null;
 			}
 		}).when(cacheTasks).drainTo(anyList(), anyInt());
-		doNothing().when(asyncEvictionListener).saveAll(anyList());
+		doNothing().when(asyncEvictionListener).save(anyList());
 		asyncEvictionListener.drainQueue();
 		assertEquals(cacheTask, tasksHolder.tasks.get(0));
 	}
