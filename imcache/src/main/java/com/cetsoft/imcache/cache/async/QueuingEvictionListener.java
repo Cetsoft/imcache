@@ -77,7 +77,7 @@ public abstract class QueuingEvictionListener<K,V> implements AsyncEvictionListe
 	protected void drainQueue() {
 		List<CacheTask<K, V>> cacheTasksToBeDrained = new ArrayList<CacheTask<K, V>>(batchSize);
 		cacheTasks.drainTo(cacheTasksToBeDrained, batchSize);
-		saveAll(cacheTasksToBeDrained);
+		save(cacheTasksToBeDrained);
 	}
 	
 	/**
@@ -85,7 +85,7 @@ public abstract class QueuingEvictionListener<K,V> implements AsyncEvictionListe
 	 *
 	 * @param cacheTasks the cache tasks
 	 */
-	public abstract void saveAll(List<CacheTask<K, V>> cacheTasks);
+	public abstract void save(List<CacheTask<K, V>> cacheTasks);
 	
 	/**
 	 * The Class SimpleCacheTask.
