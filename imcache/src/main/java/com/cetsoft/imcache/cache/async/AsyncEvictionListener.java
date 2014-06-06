@@ -23,13 +23,10 @@ package com.cetsoft.imcache.cache.async;
 import com.cetsoft.imcache.cache.EvictionListener;
 
 /**
- * The listener interface for receiving asyncEviction events.
- * The class that is interested in processing a asyncEviction
- * event implements this interface, and the object created
- * with that class is registered with a component using the
- * component's <code>addAsyncEvictionListener<code> method. When
- * the asyncEviction event occurs, that object's appropriate
- * method is invoked.
+ * The listener interface for receiving eviction events.
+ * The class that is interested in processing a eviction
+ * event implements this interface. When eviction event occurs, 
+ * that object's onEviction method is invoked.
  *
  * @param <K> the key type
  * @param <V> the value type
