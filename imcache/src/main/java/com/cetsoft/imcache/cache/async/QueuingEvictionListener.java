@@ -85,7 +85,7 @@ public abstract class QueuingEvictionListener<K,V> implements AsyncEvictionListe
 	 *
 	 * @param cacheTasks the cache tasks
 	 */
-	abstract void saveAll(List<CacheTask<K, V>> cacheTasks);
+	public abstract void saveAll(List<CacheTask<K, V>> cacheTasks);
 	
 	/**
 	 * The Class SimpleCacheTask.
