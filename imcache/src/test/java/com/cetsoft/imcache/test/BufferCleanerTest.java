@@ -20,9 +20,9 @@
 */
 package com.cetsoft.imcache.test;
 
-import com.cetsoft.imcache.bytebuffer.OffHeapByteBufferStore;
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.builder.CacheBuilder;
+import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
 
 /**
  * The Class BufferCleanerTest.

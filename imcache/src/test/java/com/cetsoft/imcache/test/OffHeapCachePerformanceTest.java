@@ -26,9 +26,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.cetsoft.imcache.bytebuffer.OffHeapByteBufferStore;
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.builder.CacheBuilder;
+import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
 
 /**
  * The Class OffHeapCachePerformanceTest.

@@ -18,23 +18,35 @@
 * Author : Yusuf Aytas
 * Date   : Sep 22, 2013
 */
-package com.cetsoft.imcache.bytebuffer;
+package com.cetsoft.imcache.cache.offheap.bytebuffer;
 
 /**
- * The Class OffHeapByteBufferException.
+ * The Interface ByteBuffer.
  */
-public class OffHeapByteBufferException extends RuntimeException{
-
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 5414061921999468983L;
+public interface ByteBuffer {
 	
 	/**
-	 * Instantiates a new off heap byte buffer exception.
+	 * Gets the destination from the specified location.
 	 *
-	 * @param string the string
+	 * @param position the position
+	 * @param destination the destination
+	 * @param offset the offset
+	 * @param length the length
 	 */
-	public OffHeapByteBufferException(String string) {
-		super(string);
-	}
-
+	void get(int position, byte[] destination, int offset, int length);
+	
+	/**
+	 * Puts source to the specified location of the ByteBuffer.
+	 *
+	 * @param position the position
+	 * @param source the source
+	 * @param offset the offset
+	 * @param length the length
+	 */
+	void put(int position, byte[] source, int offset, int length);
+	
+	/**
+	 * Frees the buffer.
+	 */
+	void free();
 }

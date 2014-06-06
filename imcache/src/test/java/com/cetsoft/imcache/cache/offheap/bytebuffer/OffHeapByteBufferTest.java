@@ -18,7 +18,7 @@
 * Author : Yusuf Aytas
 * Date   : May 22, 2014
 */
-package com.cetsoft.imcache.bytebuffer;
+package com.cetsoft.imcache.cache.offheap.bytebuffer;
 
 import static org.junit.Assert.*;
 
@@ -28,6 +28,10 @@ import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+
+import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBuffer;
+import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferException;
+import com.cetsoft.imcache.cache.offheap.bytebuffer.Pointer;
 
 /**
  * The Class DirectByteBufferTest.
