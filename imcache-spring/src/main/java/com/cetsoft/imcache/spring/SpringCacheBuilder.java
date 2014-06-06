@@ -20,7 +20,6 @@
 */
 package com.cetsoft.imcache.spring;
 
-import com.cetsoft.imcache.bytebuffer.OffHeapByteBufferStore;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.SearchableCache;
@@ -31,6 +30,7 @@ import com.cetsoft.imcache.cache.builder.OffHeapCacheBuilder;
 import com.cetsoft.imcache.cache.builder.TransactionalHeapCacheBuilder;
 import com.cetsoft.imcache.cache.builder.VersionedOffHeapCacheBuilder;
 import com.cetsoft.imcache.cache.offheap.OffHeapCache;
+import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.serialization.Serializer;
 

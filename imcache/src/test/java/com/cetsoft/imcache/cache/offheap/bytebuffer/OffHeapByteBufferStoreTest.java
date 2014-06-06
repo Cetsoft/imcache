@@ -18,7 +18,7 @@
 * Author : Yusuf Aytas
 * Date   : May 22, 2014
 */
-package com.cetsoft.imcache.bytebuffer;
+package com.cetsoft.imcache.cache.offheap.bytebuffer;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -34,6 +34,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+
+import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBuffer;
+import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
+import com.cetsoft.imcache.cache.offheap.bytebuffer.Pointer;
 
 /**
  * The Class DirectByteBufferTest.

@@ -37,12 +37,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.cetsoft.imcache.bytebuffer.OffHeapByteBuffer;
-import com.cetsoft.imcache.bytebuffer.OffHeapByteBufferStore;
-import com.cetsoft.imcache.bytebuffer.Pointer;
 import com.cetsoft.imcache.cache.AbstractCache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
+import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBuffer;
+import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
+import com.cetsoft.imcache.cache.offheap.bytebuffer.Pointer;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.concurrent.lock.StripedReadWriteLock;
 import com.cetsoft.imcache.serialization.Serializer;

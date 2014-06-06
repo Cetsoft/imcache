@@ -28,8 +28,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
-import com.cetsoft.imcache.bytebuffer.OffHeapByteBuffer;
-import com.cetsoft.imcache.bytebuffer.Pointer;
+import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBuffer;
+import com.cetsoft.imcache.cache.offheap.bytebuffer.Pointer;
 
 /**
  * The Class OffHeapByteBufferTest.

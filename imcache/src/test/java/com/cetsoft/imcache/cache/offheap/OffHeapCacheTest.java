@@ -37,11 +37,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
-import com.cetsoft.imcache.bytebuffer.OffHeapByteBuffer;
-import com.cetsoft.imcache.bytebuffer.OffHeapByteBufferStore;
-import com.cetsoft.imcache.bytebuffer.Pointer;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
+import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBuffer;
+import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
+import com.cetsoft.imcache.cache.offheap.bytebuffer.Pointer;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.serialization.Serializer;
 
