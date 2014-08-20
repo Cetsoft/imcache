@@ -1,9 +1,7 @@
 imcache
 =======
 ###Open source enthusiast are wanted to develop next versions of imcache!
-Imcache is a Java Caching Library. It supports various kinds of caching models that have been applied so far. 
-Imcache intends to speed up applications by providing a means to manage cached data. It offers solutions ranging 
-from small applications to large scale applications.
+Imcache is a Java Caching Library. It supports n-level caching hierarchy where it supports various kind of caching methods like heap, offheap, and more. Imcache will also support well-known caching solutions like memcache and redis. To extend, you can define a heapcache backed by offheap cache which is also backed by database. If a key is not found in heap, it will be asked to offheap and so on. In order to use imcache, you need to specify your dependency as follows.
 ###Pom Reference
 ```xml
 <dependency>
@@ -13,28 +11,29 @@ from small applications to large scale applications.
 </dependency>
 ```
 ###The Cache Interface
-Cache interfaces provides general methods that is implemented by all imcache caches. See the methods below.
+Imcache supports simple operation defined by the cache interface. Cache interface provides general methods that is implemented by all imcache caches. See the methods below.
 ```java
-  public interface Cache<K, V> {
-	  void put(K key, V value);
-	  V get(K key);
-	  V invalidate(K key);
-	  void clear();
-	  double hitRatio();
-  }
+public interface Cache<K, V> {
+    void put(K key, V value);
+    V get(K key);
+    V invalidate(K key);
+    void clear()
+    double hitRatio();
+}
 ```
 ###The Cache Builder
 Cache Builder is one of the core asset of the imcache. You can create simple heapCaches to complexOffHeapCaches via 
 Cache Builder. Let's see Cache Builder in action below.
 ```java
-  void example(){
-  	Cache<Integer,Integer> cache = CacheBuilder.heapCache().
-  	cacheLoader(new CacheLoader<Integer, Integer>() {
-		public Integer load(Integer key) {
-			return null;
-		}
-	}).capacity(10000).build(); 
-  }
+void example(){
+    Cache<Integer,Integer> cache = CacheBuilder.heapCache().
+    cacheLoader(new CacheLoader<Integer, Integer>() {
+  	//Here you can load the key from another cache like offheapcache
+        public Integer load(Integer key) {
+	    return null;
+	}
+    }).capacity(10000).build(); 
+}
 ```
 ###The Cache Loader
 The CacheLoader interface for loading values with specified keys. The class that is interested in loading values 
@@ -58,12 +57,12 @@ access time to the objects.
 To make offheap cache work to JVM Parameters <b>"-XX:MaxDirectMemorySize=4g"</b> must be set. Buffer capacity of 8 mb 
 is a good choice to start OffHeapCache. Let's see sample OffHeapCache use.
 ```java
-	void example(){
-		//8388608 is 8 MB and 10 buffers. 8MB*10 = 80 MB.
-  		OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
-		final Cache<Integer,SimpleObject> offHeapCache = CacheBuilder.offHeapCache().
-		storage(bufferStore).build();
-	}
+void example(){
+    //8388608 is 8 MB and 10 buffers. 8MB*10 = 80 MB.
+    OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
+    final Cache<Integer,SimpleObject> offHeapCache = CacheBuilder.offHeapCache().
+    storage(bufferStore).build();
+}
 ```
 By default configuration, OffHeapCache will try to clean the places which are not used and marked as 
 dirty periodically. What is more, it will do eviction periodically, too.
@@ -73,13 +72,13 @@ The Class VersionedOffHeapCache is a type of offheap cache where cache items hav
 To make versioned off heap cache work to JVM Parameters <b>"-XX:MaxDirectMemorySize=4g"</b> must be set. Buffer capacity of 8 mb 
 is a good choice to start VersionedOffHeapCache. Let's see sample VersionedOffHeapCache use.
 ```java
-	void example(){
-		//8388608 is 8 MB and 10 buffers. 8MB*10 = 80 MB.
-  		OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
-		final Cache<Integer,VersionedItem<SimpleObject>> offHeapCache = 
-		CacheBuilder.versionedOffHeapCache().storage(bufferStore).build();
-		VersionedItem<SimpleObject> versionedItem = offHeapCache.get(12);
-	}
+void example(){
+    //8388608 is 8 MB and 10 buffers. 8MB*10 = 80 MB.
+    OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
+    final Cache<Integer,VersionedItem<SimpleObject>> offHeapCache = 
+    CacheBuilder.versionedOffHeapCache().storage(bufferStore).build();
+    VersionedItem<SimpleObject> versionedItem = offHeapCache.get(12);
+}
 ```
 
 ###Searching, Indexing and Query Execution
@@ -87,19 +86,19 @@ imcache provides searching for all the caches by default. Searching is done by e
 Execute method takes a Query as an input and returns results as list. A query consists of criteria and filter. Here
 is an example use for queries.
 ```java
-	void example(){
-		SearchableCache<Integer, SimpleObject> cache = CacheBuilder.heapCache().
-		addIndex("j", IndexType.RANGE_INDEX).build();
-		cache.put(0, createObject());
-		cache.put(1, createObject());
-		cache.put(2, createObject());
-		List<SimpleObject> objects = cache.execute(CacheQuery.newQuery().
-		setCriteria(new BetweenCriteria("j",1,3).or(new ETCriteria("j", 3))).
-		setFilter(new LEFilter("k", 3)));
-		for (SimpleObject simpleObject : objects) {
-			System.out.println(simpleObject);
-		}
-	}
+void example(){
+    SearchableCache<Integer, SimpleObject> cache = CacheBuilder.heapCache().
+    addIndex("j", IndexType.RANGE_INDEX).build();
+    cache.put(0, createObject());
+    cache.put(1, createObject());
+    cache.put(2, createObject());
+    List<SimpleObject> objects = cache.execute(CacheQuery.newQuery().
+    setCriteria(new BetweenCriteria("j",1,3).or(new ETCriteria("j", 3))).
+    setFilter(new LEFilter("k", 3)));
+    for (SimpleObject simpleObject : objects) {
+        System.out.println(simpleObject);
+    }
+}
 ```
 
 <i>To learn more about imcache please look at examples provided.</i>
