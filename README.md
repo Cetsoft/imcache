@@ -10,6 +10,25 @@ Imcache is a Java Caching Library. It supports n-level caching hierarchy where i
   <version>0.1.0</version><!--Can be updated for later versions-->
 </dependency>
 ```
+###Simple Application
+```java
+Cache<String,User> cache = CacheBuilder.heapCache().
+cacheLoader(new CacheLoader<String, User>() {
+    public User load(String key) {
+        return userDAO.get(key);
+    }
+}).evictionListener(new EvictionListener<String, User>{
+    public onEviction(String key, User user){
+        userDAO.save(key, user);
+    }
+}).capacity(10000).build();
+//If there is not a user in the heap cache it'll be loaded via userDAO.
+User user = cache.get("#unique idendtifier"); 
+User newUser = new User("email", "Richard", "Murray")
+//When maximum value for cache size is reached, eviction event occurs.
+//In case of eviction, newUser will be saved to db.
+cache.put(newUser.getEmail(), newUser);
+```
 ###The Cache Interface
 Imcache supports simple operation defined by the cache interface. Cache interface provides general methods that is implemented by all imcache caches. See the methods below.
 ```java
