@@ -23,7 +23,7 @@ cacheLoader(new CacheLoader<String, User>() {
     }
 }).capacity(10000).build();
 //If there is not a user in the heap cache it'll be loaded via userDAO.
-User user = cache.get("#unique idendtifier"); 
+User user = cache.get("#unique identifier"); 
 User newUser = new User("email", "Richard", "Murray")
 //When maximum value for cache size is reached, eviction event occurs.
 //In case of eviction, newUser will be saved to db.
