@@ -13,3 +13,8 @@ flexi-core/target/
 /working
 /preprocessing
 /file/
+.idea/
+imcache-examples/imcache-examples.iml
+imcache-parent.iml
+imcache-spring/imcache-spring.iml
+imcache/imcache.iml

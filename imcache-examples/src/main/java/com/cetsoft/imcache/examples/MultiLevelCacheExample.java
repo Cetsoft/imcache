@@ -24,6 +24,7 @@ import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.builder.CacheBuilder;
+import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
 
 /**
  * The Class MultiLevelCacheExample.
@@ -38,7 +39,9 @@ public class MultiLevelCacheExample {
 	@SuppressWarnings("null")
 	public static void main(String [] args){
 		final CacheDao cacheDao = null;// This is just for example purposes.
-		final Cache<String,String> offHeapCache = CacheBuilder.offHeapCache().cacheLoader(new CacheLoader<String, String>() {
+        OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(10000,10);
+		final Cache<String,String> offHeapCache = CacheBuilder.offHeapCache().storage(bufferStore)
+          .cacheLoader(new CacheLoader<String, String>() {
 			public String load(String key) {
 				return cacheDao.load(key);
 			}
