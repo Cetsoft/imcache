@@ -1,1739 +1,1606 @@
 /*
-* Copyright (C) 2013 Cetsoft, http://www.cetsoft.com
-*
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Library General Public
-* License as published by the Free Software Foundation; either
-* version 2 of the License, or (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Library General Public License for more details.
-*
-* You should have received a copy of the GNU Library General Public
-* License along with this library; if not, write to the Free
-* Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-* 
-* Author : Yusuf Aytas
-* Date   : Sep 19, 2013
-*/
+ * Copyright (C) 2013 Cetsoft, http://www.cetsoft.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * 
+ * Author : Yusuf Aytas
+ * Date   : Sep 2, 2014
+ */
+/***********************************************************************
+ * Copyright 2010 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
 package com.cetsoft.imcache.concurrent;
 
-import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.AbstractCollection;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Collection;
-import java.util.ConcurrentModificationException;
-import java.util.Enumeration;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicIntegerArray;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * The Class ConcurrentLinkedHashMap.
- * This implementation depends heavily on the openjdk implementation of ConcurrentHashMap.
- * All the methods except for the ones which preserve the links between the entries are
- * from ConcurrentHashMap. In this class, LinkedHashEntry is introduced to solve link 
- * problem via before and after references.
- *
- * @param <K> the key type
- * @param <V> the value type
+ * A hash table supporting full concurrency of retrievals, adjustable expected
+ * concurrency for updates, and a maximum capacity to bound the map by. This
+ * implementation differs from {@link ConcurrentHashMap} in that it maintains a
+ * page replacement algorithm that is used to evict an entry when the map has
+ * exceeded its capacity.
+ * An entry is evicted from the map when the <tt>weighted capacity</tt> exceeds
+ * its <tt>maximum weighted capacity</tt> threshold. A {@link Weigher} instance
+ * determines how many units of capacity that a value consumes. The default
+ * weigher assigns each value a weight of <tt>1</tt> to bound the map by the
+ * total number of key-value pairs. A map that holds collections may choose to
+ * weigh values by the number of elements in the collection and bound the map by
+ * the total number of elements that it contains. A change to a value that
+ * modifies its weight requires that an update operation is performed on the
+ * map.
+ * <p>
+ * An {@link EvictionListener} may be supplied for notification when an entry is
+ * evicted from the map. This listener is invoked on a caller's thread and will
+ * not block other threads from operating on the map. An implementation should
+ * be aware that the caller's thread will not expect long execution times or
+ * failures as a side effect of the listener being notified. Execution safety
+ * and a fast turn around time can be achieved by performing the operation
+ * asynchronously, such as by submitting a task to an
+ * {@link java.util.concurrent.ExecutorService}.
+ * <p>
+ * The <tt>concurrency level</tt> determines the number of threads that can
+ * concurrently modify the table. Using a significantly higher or lower value
+ * than needed can waste space or lead to thread contention, but an estimate
+ * within an order of magnitude of the ideal value does not usually have a
+ * noticeable impact. Because placement in hash tables is essentially random,
+ * the actual concurrency will vary.
+ * <p>
+ * This class and its views and iterators implement all of the <em>optional</em>
+ * methods of the {@link Map} and {@link Iterator} interfaces.
+ * <p>
+ * Like {@link java.util.Hashtable} but unlike {@link HashMap}, this class does
+ * <em>not</em> allow <tt>null</tt> to be used as a key or value. Unlike
+ * {@link java.util.LinkedHashMap}, this class does <em>not</em> provide
+ * predictable iteration order. A snapshot of the keys and entries may be
+ * obtained in ascending and descending order of retention.
+ * 
+ * @param <K> the type of keys maintained by this map
+ * @param <V> the type of mapped values
  */
-public class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V> implements
-		ConcurrentMap<K, V>, Serializable {
+// based on com.googlecode.concurrentlinkedhashmap.
+public class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>, Serializable {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 3842915019347732912L;
-
-	/** The head entry. */
-	private volatile LinkedHashEntry<K, V> headEntry = new LinkedHashEntry<K, V>(0, null, null, null);
-	
-	/** The tail entry. */
-	private volatile LinkedHashEntry<K, V> tailEntry = new LinkedHashEntry<K, V>(0, null, null, null);
-	
-	/** The link lock. */
-	private final Lock linkLock = new ReentrantLock();
-	/**
-	 * The default initial capacity for this table, used when not otherwise specified in a
-	 * constructor.
+	/*
+	 * This class performs a best-effort bounding of a ConcurrentHashMap using a
+	 * page-replacement algorithm to determine which entries to evict when the
+	 * capacity is exceeded. The page replacement algorithm's data structures
+	 * are kept eventually consistent with the map. An update to the map and
+	 * recording of reads may not be immediately reflected on the algorithm's
+	 * data structures. These structures are guarded by a lock and operations
+	 * are applied in batches to avoid lock contention. The penalty of applying
+	 * the batches is spread across threads so that the amortized cost is
+	 * slightly higher than performing just the ConcurrentHashMap operation. A
+	 * memento of the reads and writes that were performed on the map are
+	 * recorded in a buffer. These buffers are drained at the first opportunity
+	 * after a write or when a buffer exceeds a threshold size. A mostly strict
+	 * ordering is achieved by observing that each buffer is in a weakly sorted
+	 * order relative to the last drain. This allows the buffers to be merged in
+	 * O(n) time so that the operations are run in the expected order. Due to a
+	 * lack of a strict ordering guarantee, a task can be executed out-of-order,
+	 * such as a removal followed by its addition. The state of the entry is
+	 * encoded within the value's weight. Alive: The entry is in both the
+	 * hash-table and the page replacement policy. This is represented by a
+	 * positive weight. Retired: The entry is not in the hash-table and is
+	 * pending removal from the page replacement policy. This is represented by
+	 * a negative weight. Dead: The entry is not in the hash-table and is not in
+	 * the page replacement policy. This is represented by a weight of zero. The
+	 * Least Recently Used page replacement algorithm was chosen due to its
+	 * simplicity, high hit rate, and ability to be implemented with O(1) time
+	 * complexity.
 	 */
-	static final int DEFAULT_INITIAL_CAPACITY = 16;
 
-	/**
-	 * The default load factor for this table, used when not otherwise specified in a constructor.
-	 */
-	static final float DEFAULT_LOAD_FACTOR = 0.75f;
-
-	/**
-	 * The default concurrency level for this table, used when not otherwise specified in a
-	 * constructor.
-	 */
-	static final int DEFAULT_CONCURRENCY_LEVEL = 16;
-
-	/**
-	 * The maximum capacity, used if a higher value is implicitly specified by either of the
-	 * constructors with arguments. MUST be a power of two <= 1<<30 to ensure that entries are
-	 * indexable using ints.
-	 */
+	/** The maximum weighted capacity of the map. */
 	static final int MAXIMUM_CAPACITY = 1 << 30;
 
-	/**
-	 * The minimum capacity for per-segment tables. Must be a power of two, at least two to avoid
-	 * immediate resizing on next use after lazy construction.
-	 */
-	static final int MIN_SEGMENT_TABLE_CAPACITY = 2;
+	/** The maximum weight of a value. */
+	static final int MAXIMUM_WEIGHT = 1 << 29;
 
-	/**
-	 * The maximum number of segments to allow; used to bound constructor arguments. Must be power
-	 * of two less than 1 << 24.
-	 */
-	static final int MAX_SEGMENTS = 1 << 16; // slightly conservative
+	/** The maximum number of pending operations per buffer. */
+	static final int MAXIMUM_BUFFER_SIZE = 1 << 20;
 
-	/**
-	 * Number of unsynchronized retries in size and containsValue methods before resorting to
-	 * locking. This is used to avoid unbounded retries if tables undergo continuous modification
-	 * which would make it impossible to obtain an accurate result.
-	 */
-	static final int RETRIES_BEFORE_LOCK = 2;
+	/** The number of pending operations per buffer before attempting to drain. */
+	static final int BUFFER_THRESHOLD = 16;
 
-	/**
-	 * Mask value for indexing into segments. The upper bits of a key's hash code are used to choose
-	 * the segment.
-	 */
-	final int segmentMask;
+	/** The number of buffers to use. */
+	static final int NUMBER_OF_BUFFERS;
 
-	/**
-	 * Shift value for indexing within segments.
-	 */
-	final int segmentShift;
+	/** Mask value for indexing into the buffers. */
+	static final int BUFFER_MASK;
 
-	/**
-	 * The segments, each of which is a specialized hash table.
-	 */
-	final Segment<K, V>[] segments;
+	/** The maximum number of operations to perform per amortized drain. */
+	static final int AMORTIZED_DRAIN_THRESHOLD;
 
-	/** The key set. */
+	private static final long INITIAL_DELAY = 1000;
+
+	static {
+		int buffers = ceilingNextPowerOfTwo(Runtime.getRuntime().availableProcessors());
+		AMORTIZED_DRAIN_THRESHOLD = (1 + buffers) * BUFFER_THRESHOLD;
+		NUMBER_OF_BUFFERS = buffers;
+		BUFFER_MASK = buffers - 1;
+	}
+
+	static final int ceilingNextPowerOfTwo(int x) {
+		// From Hacker's Delight, Chapter 3, Harry S. Warren Jr.
+		return 1 << (Integer.SIZE - Integer.numberOfLeadingZeros(x - 1));
+	}
+
+	/** The draining status of the buffers. */
+	enum DrainStatus {
+
+		/** A drain is not taking place. */
+		IDLE,
+
+		/** A drain is required due to a pending write modification. */
+		REQUIRED,
+
+		/** A drain is in progress. */
+		PROCESSING
+	}
+
+	// The backing data store holding the key-value associations
+	final ConcurrentMap<K, Node> map;
+	final int concurrencyLevel;
+
+	// These fields provide support to bound the map by a maximum capacity
+	final LinkedDeque<Node> evictionDeque;
+
+	// must write under lock
+	volatile int weightedSize;
+
+	// must write under lock
+	volatile int capacity;
+
+	volatile int nextOrder;
+	int drainedOrder;
+
+	final Lock evictionLock;
+	final Queue<Task>[] buffers;
+	final ExecutorService executorService;
+	final Weigher<? super V> weigher;
+	final AtomicIntegerArray bufferLengths;
+	final AtomicReference<DrainStatus> drainStatus;
+
+	// These fields provide support for notifying a listener.
+	final Queue<Node> pendingNotifications;
+	final EvictionListener<K, V> evictionListener;
+
 	transient Set<K> keySet;
-	
-	/** The entry set. */
-	transient Set<Map.Entry<K, V>> entrySet;
-	
-	/** The values. */
 	transient Collection<V> values;
+	transient Set<Entry<K, V>> entrySet;
 
 	/**
-	 * ConcurrentHashMap hash entry. Note that this is never exported out as a user-visible
-	 * Map.Entry.
-	 *
-	 * @param <K> the key type
-	 * @param <V> the value type
+	 * Creates an instance based on the builder's configuration.
 	 */
-	static final class LinkedHashEntry<K, V>{
+	@SuppressWarnings({ "unchecked", "cast" })
+	public ConcurrentLinkedHashMap(int concurrencyLevel, int capacity, int initialCapacity, Weigher<V> weigher,
+			long period, ScheduledExecutorService executorService, EvictionListener<K, V> evictionListener) {
+		// The data store and its maximum capacity
+		this.concurrencyLevel = concurrencyLevel;
+		this.capacity = Math.min(capacity, MAXIMUM_CAPACITY);
+		// The eviction support
+		this.weigher = weigher;
+		executorService.scheduleAtFixedRate(new CatchUpTask(this), INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
+		this.executorService = executorService;
 		
-		/** The hash. */
-		final int hash;
-		
-		/** The key. */
-		final K key;
-		
-		/** The value. */
-		volatile V value;
-		
-		/** The next. */
-		volatile LinkedHashEntry<K, V> next;
-		
-		/** The before. */
-		volatile LinkedHashEntry<K, V> before;
-		
-		/** The after. */
-		volatile LinkedHashEntry<K, V> after;
+		map = new ConcurrentHashMap<K, Node>(initialCapacity, 0.75f, concurrencyLevel);
 
-		/**
-		 * Instantiates a new linked hash entry.
-		 *
-		 * @param hash the hash
-		 * @param key the key
-		 * @param value the value
-		 * @param next the next
-		 */
-		LinkedHashEntry(int hash, K key, V value, LinkedHashEntry<K, V> next) {
-			this.hash = hash;
-			this.key = key;
-			this.value = value;
-			this.next = next;
+		nextOrder = Integer.MIN_VALUE;
+		drainedOrder = Integer.MIN_VALUE;
+		evictionLock = new ReentrantLock();
+		evictionDeque = new LinkedDeque<Node>();
+		drainStatus = new AtomicReference<DrainStatus>(DrainStatus.IDLE);
+
+		buffers = (Queue<Task>[]) new Queue[NUMBER_OF_BUFFERS];
+		bufferLengths = new AtomicIntegerArray(NUMBER_OF_BUFFERS);
+		for (int i = 0; i < NUMBER_OF_BUFFERS; i++) {
+			buffers[i] = new ConcurrentLinkedQueue<Task>();
 		}
 
-		/**
-		 * Sets next field with volatile write semantics. (See above about use of putOrderedObject.)
-		 *
-		 * @param n the n
-		 */
-		final void setNext(LinkedHashEntry<K, V> n) {
-			UNSAFE.putOrderedObject(this, nextOffset, n);
-		}
+		// The notification queue and listener
+		this.evictionListener = evictionListener;
+		pendingNotifications = new ConcurrentLinkedQueue<Node>();
+	}
 
-		// Unsafe mechanics
-		/** The Constant UNSAFE. */
-		static final sun.misc.Unsafe UNSAFE;
-		
-		/** The Constant nextOffset. */
-		static final long nextOffset;
-		static {
-			try {
-				UNSAFE = getUnsafe();
-				@SuppressWarnings("rawtypes")
-				Class k = LinkedHashEntry.class;
-				nextOffset = UNSAFE.objectFieldOffset(k.getDeclaredField("next"));
-			} catch (Exception e) {
-				throw new Error(e);
-			}
+	/** Asserts that the object is not null. */
+	static void checkNotNull(Object o) {
+		if (o == null) {
+			throw new NullPointerException();
 		}
 	}
 
+	/* ---------------- Eviction Support -------------- */
+
 	/**
-	 * Gets the ith element of given table (if nonnull) with volatile read semantics. Note: This is
-	 * manually integrated into a few performance-sensitive methods to reduce call overhead.
-	 *
-	 * @param <K> the key type
-	 * @param <V> the value type
-	 * @param tab the tab
-	 * @param i the i
-	 * @return the linked hash entry
+	 * Retrieves the maximum weighted capacity of the map.
+	 * 
+	 * @return the maximum weighted capacity
 	 */
-	@SuppressWarnings("unchecked")
-	static final <K, V> LinkedHashEntry<K, V> entryAt(LinkedHashEntry<K, V>[] tab, int i) {
-		return (tab == null) ? null : (LinkedHashEntry<K, V>) UNSAFE.getObjectVolatile(tab,
-				((long) i << TSHIFT) + TBASE);
+	public int capacity() {
+		return capacity;
 	}
 
 	/**
-	 * Sets the ith element of given table, with volatile write semantics. (See above about use of
-	 * putOrderedObject.)
-	 *
-	 * @param <K> the key type
-	 * @param <V> the value type
-	 * @param tab the tab
-	 * @param i the i
-	 * @param e the e
+	 * Sets the maximum weighted capacity of the map and eagerly evicts entries
+	 * until it shrinks to the appropriate size.
+	 * 
+	 * @param capacity
+	 *            the maximum weighted capacity of the map
+	 * @throws IllegalArgumentException
+	 *             if the capacity is negative
 	 */
-	static final <K, V> void setEntryAt(LinkedHashEntry<K, V>[] tab, int i, LinkedHashEntry<K, V> e) {
-		UNSAFE.putOrderedObject(tab, ((long) i << TSHIFT) + TBASE, e);
-	}
-
-	/**
-	 * Applies a supplemental hash function to a given hashCode, which defends against poor quality
-	 * hash functions. This is critical because ConcurrentHashMap uses power-of-two length hash
-	 * tables, that otherwise encounter collisions for hashCodes that do not differ in lower or
-	 * upper bits.
-	 *
-	 * @param h the h
-	 * @return the int
-	 */
-	private static int hash(int h) {
-		// Spread bits to regularize both segment and index locations,
-		// using variant of single-word Wang/Jenkins hash.
-		h += (h << 15) ^ 0xffffcd7d;
-		h ^= (h >>> 10);
-		h += (h << 3);
-		h ^= (h >>> 6);
-		h += (h << 2) + (h << 14);
-		return h ^ (h >>> 16);
-	}
-
-	/**
-	 * Segments are specialized versions of hash tables. This subclasses from ReentrantLock
-	 * opportunistically, just to simplify some locking and avoid separate construction.
-	 *
-	 * @param <K> the key type
-	 * @param <V> the value type
-	 */
-	static final class Segment<K, V> extends ReentrantLock implements Serializable {
-
-		/** The Constant serialVersionUID. */
-		private static final long serialVersionUID = 2249069246763182397L;
-
-		/**
-		 * The maximum number of times to tryLock in a prescan before possibly blocking on acquire
-		 * in preparation for a locked segment operation. On multiprocessors, using a bounded number
-		 * of retries maintains cache acquired while locating nodes.
-		 */
-		static final int MAX_SCAN_RETRIES = Runtime.getRuntime().availableProcessors() > 1 ? 64 : 1;
-
-		/**
-		 * The per-segment table. Elements are accessed via entryAt/setEntryAt providing volatile
-		 * semantics.
-		 */
-		transient volatile LinkedHashEntry<K, V>[] table;
-
-		/**
-		 * The number of elements. Accessed only either within locks or among other volatile reads
-		 * that maintain visibility.
-		 */
-		transient int count;
-
-		/**
-		 * The total number of mutative operations in this segment. Even though this may overflows
-		 * 32 bits, it provides sufficient accuracy for stability checks in CHM isEmpty() and size()
-		 * methods. Accessed only either within locks or among other volatile reads that maintain
-		 * visibility.
-		 */
-		transient int modCount;
-
-		/**
-		 * The table is rehashed when its size exceeds this threshold. (The value of this field is
-		 * always <tt>(int)(capacity *
-		 * loadFactor)</tt>.)
-		 */
-		transient int threshold;
-
-		/**
-		 * The load factor for the hash table. Even though this value is same for all segments, it
-		 * is replicated to avoid needing links to outer object.
-		 * 
-		 * @serial
-		 */
-		final float loadFactor;
-
-		/** The lock. */
-		transient Lock lock;
-
-		/** The map. */
-		transient ConcurrentLinkedHashMap<K, V> map;
-
-		/**
-		 * Instantiates a new segment.
-		 *
-		 * @param lf the lf
-		 * @param threshold the threshold
-		 * @param tab the tab
-		 * @param lock the lock
-		 * @param map the map
-		 */
-		Segment(float lf, int threshold, LinkedHashEntry<K, V>[] tab, Lock lock,
-				ConcurrentLinkedHashMap<K, V> map) {
-			this.loadFactor = lf;
-			this.threshold = threshold;
-			this.table = tab;
-			this.lock = lock;
-			this.map = map;
-		}
-
-		/**
-		 * Put.
-		 *
-		 * @param key the key
-		 * @param hash the hash
-		 * @param value the value
-		 * @param onlyIfAbsent the only if absent
-		 * @return the v
-		 */
-		final V put(K key, int hash, V value, boolean onlyIfAbsent) {
-			LinkedHashEntry<K, V> node = tryLock() ? null : scanAndLockForPut(key, hash, value);
-			V oldValue;
-			try {
-				LinkedHashEntry<K, V>[] tab = table;
-				int index = (tab.length - 1) & hash;
-				LinkedHashEntry<K, V> first = entryAt(tab, index);
-				for (LinkedHashEntry<K, V> e = first;;) {
-					if (e != null) {
-						K k;
-						if ((k = e.key) == key || (e.hash == hash && key.equals(k))) {
-							oldValue = e.value;
-							if (!onlyIfAbsent) {
-								map.removeAndAddAfterHead(e);
-								if (e.before == null || e.after == null) {
-									System.out.println();
-								}
-								e.value = value;
-								++modCount;
-							}
-							break;
-						}
-						e = e.next;
-					} else {
-						if (node != null)
-							node.setNext(first);
-						else
-							node = new LinkedHashEntry<K, V>(hash, key, value, first);
-						map.addAfterHead(node);
-						int c = count + 1;
-						if (c > threshold && tab.length < MAXIMUM_CAPACITY)
-							rehash(node);
-						else
-							setEntryAt(tab, index, node);
-						++modCount;
-						count = c;
-						oldValue = null;
-						break;
-					}
-				}
-			} finally {
-				unlock();
-			}
-			return oldValue;
-		}
-
-		/**
-		 * Doubles size of table and repacks entries, also adding the given node to new table.
-		 *
-		 * @param node the node
-		 */
-		@SuppressWarnings("unchecked")
-		private void rehash(LinkedHashEntry<K, V> node) {
-			LinkedHashEntry<K, V>[] oldTable = table;
-			int oldCapacity = oldTable.length;
-			int newCapacity = oldCapacity << 1;
-			threshold = (int) (newCapacity * loadFactor);
-			LinkedHashEntry<K, V>[] newTable = (LinkedHashEntry<K, V>[]) new LinkedHashEntry[newCapacity];
-			int sizeMask = newCapacity - 1;
-			for (int i = 0; i < oldCapacity; i++) {
-				LinkedHashEntry<K, V> e = oldTable[i];
-				if (e != null) {
-					LinkedHashEntry<K, V> next = e.next;
-					int idx = e.hash & sizeMask;
-					if (next == null) // Single node on list
-						newTable[idx] = e;
-					else { // Reuse consecutive sequence at same slot
-						LinkedHashEntry<K, V> lastRun = e;
-						int lastIdx = idx;
-						for (LinkedHashEntry<K, V> last = next; last != null; last = last.next) {
-							int k = last.hash & sizeMask;
-							if (k != lastIdx) {
-								lastIdx = k;
-								lastRun = last;
-							}
-						}
-						newTable[lastIdx] = lastRun;
-						// Clone remaining nodes
-						for (LinkedHashEntry<K, V> p = e; p != lastRun; p = p.next) {
-							V v = p.value;
-							int h = p.hash;
-							int k = h & sizeMask;
-							LinkedHashEntry<K, V> n = newTable[k];
-							newTable[k] = new LinkedHashEntry<K, V>(h, p.key, v, n);
-							map.copyLink(newTable[k], p);
-						}
-					}
-				}
-			}
-			int nodeIndex = node.hash & sizeMask; // add the new node
-			node.setNext(newTable[nodeIndex]);
-			newTable[nodeIndex] = node;
-			table = newTable;
-		}
-
-		/**
-		 * Scans for a node containing given key while trying to acquire lock, creating and
-		 * returning one if not found. Upon return, guarantees that lock is held. UNlike in most
-		 * methods, calls to method equals are not screened: Since traversal speed doesn't matter,
-		 * we might as well help warm up the associated code and accesses as well.
-		 *
-		 * @param key the key
-		 * @param hash the hash
-		 * @param value the value
-		 * @return a new node if key not found, else null
-		 */
-		private LinkedHashEntry<K, V> scanAndLockForPut(K key, int hash, V value) {
-			LinkedHashEntry<K, V> first = entryForHash(this, hash);
-			LinkedHashEntry<K, V> e = first;
-			LinkedHashEntry<K, V> node = null;
-			int retries = -1; // negative while locating node
-			while (!tryLock()) {
-				LinkedHashEntry<K, V> f; // to recheck first below
-				if (retries < 0) {
-					if (e == null) {
-						if (node == null) // speculatively create node
-							node = new LinkedHashEntry<K, V>(hash, key, value, null);
-						retries = 0;
-					} else if (key.equals(e.key))
-						retries = 0;
-					else
-						e = e.next;
-				} else if (++retries > MAX_SCAN_RETRIES) {
-					lock();
-					break;
-				} else if ((retries & 1) == 0 && (f = entryForHash(this, hash)) != first) {
-					e = first = f; // re-traverse if entry changed
-					retries = -1;
-				}
-			}
-			return node;
-		}
-
-		/**
-		 * Scans for a node containing the given key while trying to acquire lock for a remove or
-		 * replace operation. Upon return, guarantees that lock is held. Note that we must lock even
-		 * if the key is not found, to ensure sequential consistency of updates.
-		 *
-		 * @param key the key
-		 * @param hash the hash
-		 */
-		private void scanAndLock(Object key, int hash) {
-			// similar to but simpler than scanAndLockForPut
-			LinkedHashEntry<K, V> first = entryForHash(this, hash);
-			LinkedHashEntry<K, V> e = first;
-			int retries = -1;
-			while (!tryLock()) {
-				LinkedHashEntry<K, V> f;
-				if (retries < 0) {
-					if (e == null || key.equals(e.key))
-						retries = 0;
-					else
-						e = e.next;
-				} else if (++retries > MAX_SCAN_RETRIES) {
-					lock();
-					break;
-				} else if ((retries & 1) == 0 && (f = entryForHash(this, hash)) != first) {
-					e = first = f;
-					retries = -1;
-				}
-			}
-		}
-
-		/**
-		 * Remove; match on key only if value null, else match both.
-		 *
-		 * @param key the key
-		 * @param hash the hash
-		 * @param value the value
-		 * @return the v
-		 */
-		final V remove(Object key, int hash, Object value) {
-			if (!tryLock())
-				scanAndLock(key, hash);
-			V oldValue = null;
-			try {
-				LinkedHashEntry<K, V>[] tab = table;
-				int index = (tab.length - 1) & hash;
-				LinkedHashEntry<K, V> e = entryAt(tab, index);
-				LinkedHashEntry<K, V> pred = null;
-				while (e != null) {
-					K k;
-					LinkedHashEntry<K, V> next = e.next;
-					if ((k = e.key) == key || (e.hash == hash && key.equals(k))) {
-						V v = e.value;
-						if (value == null || value == v || value.equals(v)) {
-							if (pred == null)
-								setEntryAt(tab, index, next);
-							else
-								pred.setNext(next);
-							++modCount;
-							--count;
-							oldValue = v;
-						}
-						map.remove(e);
-						break;
-					}
-					pred = e;
-					e = next;
-				}
-			} finally {
-				unlock();
-			}
-			return oldValue;
-		}
-
-		/**
-		 * Replace.
-		 *
-		 * @param key the key
-		 * @param hash the hash
-		 * @param oldValue the old value
-		 * @param newValue the new value
-		 * @return true, if successful
-		 */
-		final boolean replace(K key, int hash, V oldValue, V newValue) {
-			if (!tryLock())
-				scanAndLock(key, hash);
-			boolean replaced = false;
-			try {
-				LinkedHashEntry<K, V> e;
-				for (e = entryForHash(this, hash); e != null; e = e.next) {
-					K k;
-					if ((k = e.key) == key || (e.hash == hash && key.equals(k))) {
-						if (oldValue.equals(e.value)) {
-							e.value = newValue;
-							++modCount;
-							replaced = true;
-						}
-						break;
-					}
-				}
-			} finally {
-				unlock();
-			}
-			return replaced;
-		}
-
-		/**
-		 * Replace.
-		 *
-		 * @param key the key
-		 * @param hash the hash
-		 * @param value the value
-		 * @return the v
-		 */
-		final V replace(K key, int hash, V value) {
-			if (!tryLock())
-				scanAndLock(key, hash);
-			V oldValue = null;
-			try {
-				LinkedHashEntry<K, V> e;
-				for (e = entryForHash(this, hash); e != null; e = e.next) {
-					K k;
-					if ((k = e.key) == key || (e.hash == hash && key.equals(k))) {
-						oldValue = e.value;
-						e.value = value;
-						++modCount;
-						break;
-					}
-				}
-			} finally {
-				unlock();
-			}
-			return oldValue;
-		}
-
-		/**
-		 * Clear.
-		 */
-		final void clear() {
-			lock();
-			try {
-				LinkedHashEntry<K, V>[] tab = table;
-				for (int i = 0; i < tab.length; i++)
-					setEntryAt(tab, i, null);
-				++modCount;
-				count = 0;
-			} finally {
-				unlock();
-			}
-		}
-	}
-
-	// Accessing segments
-
-	/**
-	 * Gets the jth element of given segment array (if nonnull) with volatile element access
-	 * semantics via Unsafe. (The null check can trigger harmlessly only during deserialization.)
-	 * Note: because each element of segments array is set only once (using fully ordered writes),
-	 * some performance-sensitive methods rely on this method only as a recheck upon null reads.
-	 *
-	 * @param <K> the key type
-	 * @param <V> the value type
-	 * @param ss the ss
-	 * @param j the j
-	 * @return the segment
-	 */
-	@SuppressWarnings("unchecked")
-	static final <K, V> Segment<K, V> segmentAt(Segment<K, V>[] ss, int j) {
-		long u = (j << SSHIFT) + SBASE;
-		return ss == null ? null : (Segment<K, V>) UNSAFE.getObjectVolatile(ss, u);
-	}
-
-	/**
-	 * Returns the segment for the given index, creating it and recording in segment table (via CAS)
-	 * if not already present.
-	 *
-	 * @param k the k
-	 * @return the segment
-	 */
-	@SuppressWarnings("unchecked")
-	private Segment<K, V> ensureSegment(int k) {
-		final Segment<K, V>[] ss = this.segments;
-		long u = (k << SSHIFT) + SBASE; // raw offset
-		Segment<K, V> seg;
-		if ((seg = (Segment<K, V>) UNSAFE.getObjectVolatile(ss, u)) == null) {
-			Segment<K, V> proto = ss[0]; // use segment 0 as prototype
-			int cap = proto.table.length;
-			float lf = proto.loadFactor;
-			int threshold = (int) (cap * lf);
-			LinkedHashEntry<K, V>[] tab = (LinkedHashEntry<K, V>[]) new LinkedHashEntry[cap];
-			if ((seg = (Segment<K, V>) UNSAFE.getObjectVolatile(ss, u)) == null) { // recheck
-				Segment<K, V> s = new Segment<K, V>(lf, threshold, tab, linkLock, this);
-				while ((seg = (Segment<K, V>) UNSAFE.getObjectVolatile(ss, u)) == null) {
-					if (UNSAFE.compareAndSwapObject(ss, u, null, seg = s))
-						break;
-				}
-			}
-		}
-		return seg;
-	}
-
-	// Hash-based segment and entry accesses
-
-	/**
-	 * Get the segment for the given hash.
-	 *
-	 * @param h the h
-	 * @return the segment
-	 */
-	@SuppressWarnings("unchecked")
-	private Segment<K, V> segmentForHash(int h) {
-		long u = (((h >>> segmentShift) & segmentMask) << SSHIFT) + SBASE;
-		return (Segment<K, V>) UNSAFE.getObjectVolatile(segments, u);
-	}
-
-	/**
-	 * Gets the table entry for the given segment and hash.
-	 *
-	 * @param <K> the key type
-	 * @param <V> the value type
-	 * @param seg the seg
-	 * @param h the h
-	 * @return the linked hash entry
-	 */
-	@SuppressWarnings("unchecked")
-	static final <K, V> LinkedHashEntry<K, V> entryForHash(Segment<K, V> seg, int h) {
-		LinkedHashEntry<K, V>[] tab;
-		return (seg == null || (tab = seg.table) == null) ? null : (LinkedHashEntry<K, V>) UNSAFE
-				.getObjectVolatile(tab, ((long) (((tab.length - 1) & h)) << TSHIFT) + TBASE);
-	}
-
-	/* ---------------- Public operations -------------- */
-
-	/**
-	 * Creates a new, empty map with the specified initial capacity, load factor and concurrency
-	 * level.
-	 *
-	 * @param initialCapacity the initial capacity. The implementation performs internal sizing to accommodate
-	 * this many elements.
-	 * @param loadFactor the load factor threshold, used to control resizing. Resizing may be performed
-	 * when the average number of elements per bin exceeds this threshold.
-	 * @param concurrencyLevel the estimated number of concurrently updating threads. The implementation performs
-	 * internal sizing to try to accommodate this many threads.
-	 */
-	@SuppressWarnings("unchecked")
-	public ConcurrentLinkedHashMap(int initialCapacity, float loadFactor, int concurrencyLevel) {
-		if (!(loadFactor > 0) || initialCapacity < 0 || concurrencyLevel <= 0)
+	public void setCapacity(int capacity) {
+		if (capacity < 0) {
 			throw new IllegalArgumentException();
-		if (concurrencyLevel > MAX_SEGMENTS)
-			concurrencyLevel = MAX_SEGMENTS;
-		// Find power-of-two sizes best matching arguments
-		int sshift = 0;
-		int ssize = 1;
-		while (ssize < concurrencyLevel) {
-			++sshift;
-			ssize <<= 1;
 		}
-		this.segmentShift = 32 - sshift;
-		this.segmentMask = ssize - 1;
-		if (initialCapacity > MAXIMUM_CAPACITY)
-			initialCapacity = MAXIMUM_CAPACITY;
-		int c = initialCapacity / ssize;
-		if (c * ssize < initialCapacity)
-			++c;
-		int cap = MIN_SEGMENT_TABLE_CAPACITY;
-		while (cap < c)
-			cap <<= 1;
-		// create segments and segments[0]
-		Segment<K, V> s0 = new Segment<K, V>(loadFactor, (int) (cap * loadFactor),
-				(LinkedHashEntry<K, V>[]) new LinkedHashEntry[cap], linkLock, this);
-		Segment<K, V>[] ss = (Segment<K, V>[]) new Segment[ssize];
-		UNSAFE.putOrderedObject(ss, SBASE, s0); // ordered write of segments[0]
-		this.segments = ss;
-		headEntry.after = tailEntry;
-		tailEntry.before = headEntry;
-	}
 
-	/**
-	 * Creates a new, empty map with the specified initial capacity and load factor and with the
-	 * default concurrencyLevel (16).
-	 *
-	 * @param initialCapacity The implementation performs internal sizing to accommodate this many elements.
-	 * @param loadFactor the load factor threshold, used to control resizing. Resizing may be performed
-	 * when the average number of elements per bin exceeds this threshold.
-	 * @since 1.6
-	 */
-	public ConcurrentLinkedHashMap(int initialCapacity, float loadFactor) {
-		this(initialCapacity, loadFactor, DEFAULT_CONCURRENCY_LEVEL);
-	}
-
-	/**
-	 * Creates a new, empty map with the specified initial capacity, and with default load factor
-	 * (0.75) and concurrencyLevel (16).
-	 *
-	 * @param initialCapacity the initial capacity. The implementation performs internal sizing to accommodate
-	 * this many elements.
-	 */
-	public ConcurrentLinkedHashMap(int initialCapacity) {
-		this(initialCapacity, DEFAULT_LOAD_FACTOR, DEFAULT_CONCURRENCY_LEVEL);
-	}
-
-	/**
-	 * Creates a new, empty map with a default initial capacity (16), load factor (0.75) and
-	 * concurrencyLevel (16).
-	 */
-	public ConcurrentLinkedHashMap() {
-		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR, DEFAULT_CONCURRENCY_LEVEL);
-	}
-
-	/**
-	 * Creates a new map with the same mappings as the given map. The map is created with a capacity
-	 * of 1.5 times the number of mappings in the given map or 16 (whichever is greater), and a
-	 * default load factor (0.75) and concurrencyLevel (16).
-	 * 
-	 * @param m
-	 *            the map
-	 */
-	public ConcurrentLinkedHashMap(Map<? extends K, ? extends V> m) {
-		this(Math.max((int) (m.size() / DEFAULT_LOAD_FACTOR) + 1, DEFAULT_INITIAL_CAPACITY),
-				DEFAULT_LOAD_FACTOR, DEFAULT_CONCURRENCY_LEVEL);
-		putAll(m);
-	}
-
-	/**
-	 * Returns <tt>true</tt> if this map contains no key-value mappings.
-	 * 
-	 * @return <tt>true</tt> if this map contains no key-value mappings
-	 */
-	public boolean isEmpty() {
-		/*
-		 * Sum per-segment modCounts to avoid mis-reporting when elements are concurrently added and
-		 * removed in one segment while checking another, in which case the table was never actually
-		 * empty at any point. (The sum ensures accuracy up through at least 1<<31 per-segment
-		 * modifications before recheck.) Methods size() and containsValue() use similar
-		 * constructions for stability checks.
-		 */
-		long sum = 0L;
-		final Segment<K, V>[] segments = this.segments;
-		for (int j = 0; j < segments.length; ++j) {
-			Segment<K, V> seg = segmentAt(segments, j);
-			if (seg != null) {
-				if (seg.count != 0)
-					return false;
-				sum += seg.modCount;
-			}
-		}
-		if (sum != 0L) { // recheck unless no modifications
-			for (int j = 0; j < segments.length; ++j) {
-				Segment<K, V> seg = segmentAt(segments, j);
-				if (seg != null) {
-					if (seg.count != 0)
-						return false;
-					sum -= seg.modCount;
-				}
-			}
-			if (sum != 0L)
-				return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Returns the number of key-value mappings in this map. If the map contains more than
-	 * <tt>Integer.MAX_VALUE</tt> elements, returns <tt>Integer.MAX_VALUE</tt>.
-	 * 
-	 * @return the number of key-value mappings in this map
-	 */
-	public int size() {
-		// Try a few times to get accurate count. On failure due to
-		// continuous async changes in table, resort to locking.
-		final Segment<K, V>[] segments = this.segments;
-		int size;
-		boolean overflow; // true if size overflows 32 bits
-		long sum; // sum of modCounts
-		long last = 0L; // previous sum
-		int retries = -1; // first iteration isn't retry
+		evictionLock.lock();
 		try {
-			for (;;) {
-				if (retries++ == RETRIES_BEFORE_LOCK) {
-					for (int j = 0; j < segments.length; ++j)
-						ensureSegment(j).lock(); // force creation
-				}
-				sum = 0L;
-				size = 0;
-				overflow = false;
-				for (int j = 0; j < segments.length; ++j) {
-					Segment<K, V> seg = segmentAt(segments, j);
-					if (seg != null) {
-						sum += seg.modCount;
-						int c = seg.count;
-						if (c < 0 || (size += c) < 0)
-							overflow = true;
-					}
-				}
-				if (sum == last)
-					break;
-				last = sum;
-			}
+			this.capacity = Math.min(capacity, MAXIMUM_CAPACITY);
+			drainBuffers(AMORTIZED_DRAIN_THRESHOLD);
+			evict();
 		} finally {
-			if (retries > RETRIES_BEFORE_LOCK) {
-				for (int j = 0; j < segments.length; ++j)
-					segmentAt(segments, j).unlock();
-			}
+			evictionLock.unlock();
 		}
-		return overflow ? Integer.MAX_VALUE : size;
+		notifyListener();
+	}
+
+	/** Determines whether the map has exceeded its capacity. */
+	boolean hasOverflowed() {
+		return weightedSize > capacity;
 	}
 
 	/**
-	 * Returns the value to which the specified key is mapped, or {@code null} if this map contains
-	 * no mapping for the key.
+	 * Evicts entries from the map while it exceeds the capacity and appends
+	 * evicted entries to the notification queue for processing.
+	 */
+	void evict() {
+		// Attempts to evict entries from the map if it exceeds the maximum
+		// capacity. If the eviction fails due to a concurrent removal of the
+		// victim, that removal may cancel out the addition that triggered this
+		// eviction. The victim is eagerly unlinked before the removal task so
+		// that if an eviction is still required then a new victim will be
+		// chosen
+		// for removal.
+		while (hasOverflowed()) {
+			Node node = evictionDeque.poll();
+
+			// If weighted values are used, then the pending operations will
+			// adjust
+			// the size to reflect the correct weight
+			if (node == null) {
+				return;
+			}
+
+			// Notify the listener only if the entry was evicted
+			if (map.remove(node.key, node)) {
+				pendingNotifications.add(node);
+			}
+
+			node.makeDead();
+		}
+	}
+
+	/**
+	 * Performs the post-processing work required after the map operation.
 	 * 
-	 * <p>
-	 * More formally, if this map contains a mapping from a key {@code k} to a value {@code v} such
-	 * that {@code key.equals(k)}, then this method returns {@code v}; otherwise it returns
-	 *
-	 * @param key the key
-	 * @return the v
-	 * {@code null}. (There can be at most one such mapping.)
+	 * @param task
+	 *            the pending operation to be applied
 	 */
-	@SuppressWarnings("unchecked")
-	public V get(Object key) {
-		Segment<K, V> s; // manually integrate access methods to reduce overhead
-		LinkedHashEntry<K, V>[] tab;
-		int h = hash(key.hashCode());
-		long u = (((h >>> segmentShift) & segmentMask) << SSHIFT) + SBASE;
-		if ((s = (Segment<K, V>) UNSAFE.getObjectVolatile(segments, u)) != null
-				&& (tab = s.table) != null) {
-			for (LinkedHashEntry<K, V> e = (LinkedHashEntry<K, V>) UNSAFE.getObjectVolatile(tab,
-					(((long) (((tab.length - 1) & h))) << TSHIFT) + TBASE); e != null; e = e.next) {
-				K k;
-				if ((k = e.key) == key || (e.hash == h && key.equals(k))) {
-					removeAndAddAfterHead(e);
-					return e.value;
-				}
-			}
+	void afterCompletion(Task task) {
+		boolean delayable = schedule(task);
+		if (shouldDrainBuffers(delayable)) {
+			tryToDrainBuffers(AMORTIZED_DRAIN_THRESHOLD);
 		}
-		return null;
+		notifyListener();
 	}
 
 	/**
-	 * Removes the and add after head.
-	 *
-	 * @param node the node
+	 * Schedules the task to be applied to the page replacement policy.
+	 * 
+	 * @param task
+	 *            the pending operation
+	 * @return if the draining of the buffers can be delayed
 	 */
-	private void removeAndAddAfterHead(LinkedHashEntry<K, V> node) {
-		linkLock.lock();
-		try {
-			remove(node);
-			addAfterHead(node);
-		} finally {
-			linkLock.unlock();
+	private boolean schedule(Task task) {
+		int index = bufferIndex();
+		int buffered = bufferLengths.incrementAndGet(index);
+
+		if (task.isWrite()) {
+			buffers[index].add(task);
+			drainStatus.set(DrainStatus.REQUIRED);
+			return false;
+		}
+
+		// A buffer may discard a read task if its length exceeds a tolerance
+		// level
+		if (buffered <= MAXIMUM_BUFFER_SIZE) {
+			buffers[index].add(task);
+			return (buffered <= BUFFER_THRESHOLD);
+		} else { // not optimized for fail-safe scenario
+			bufferLengths.decrementAndGet(index);
+			return false;
 		}
 	}
 
-	/**
-	 * Removes the.
-	 *
-	 * @param node the node
-	 */
-	protected void remove(LinkedHashEntry<K, V> node) {
-		linkLock.lock();
-		try {
-			LinkedHashEntry<K, V> before = node.before, after = node.after;
-			before.after = after;
-			after.before = before;
-		}
-		finally {
-			linkLock.unlock();
-		}
+	/** Returns the index to the buffer that the task should be scheduled on. */
+	static int bufferIndex() {
+		// A buffer is chosen by the thread's id so that tasks are distributed
+		// in a
+		// pseudo evenly manner. This helps avoid hot entries causing contention
+		// due
+		// to other threads trying to append to the same buffer.
+		return (int) Thread.currentThread().getId() & BUFFER_MASK;
+	}
+
+	/** Returns the ordering value to assign to a task. */
+	int nextOrdering() {
+		// The next ordering is acquired in a racy fashion as the increment is
+		// not
+		// atomic with the insertion into a buffer. This means that concurrent
+		// tasks
+		// can have the same ordering and the buffers are in a weakly sorted
+		// order.
+		return nextOrder++;
 	}
 
 	/**
-	 * Adds the after head.
-	 *
-	 * @param node the node
+	 * Determines whether the buffers should be drained.
+	 * 
+	 * @param delayable a drain should be delayed until required
+	 * @return if a drain should be attempted
 	 */
-	protected void addAfterHead(LinkedHashEntry<K, V> node) {
-		linkLock.lock();
-		try {
-			node.after = headEntry.after;
-			node.before = headEntry;
-			headEntry.after.before = node;
-			headEntry.after = node;
-		} finally {
-			linkLock.unlock();
-		}
-	}
-
-	/**
-	 * Copy link.
-	 *
-	 * @param newNode the new node
-	 * @param node the node
-	 */
-	protected void copyLink(LinkedHashEntry<K, V> newNode, LinkedHashEntry<K, V> node) {
-		linkLock.lock();
-		try {
-			newNode.before = node.before;
-			newNode.after = node.after;
-		} finally {
-			linkLock.unlock();
-		}
-	}
-
-	/**
-	 * Tests if the specified object is a key in this table.
-	 *
-	 * @param key possible key
-	 * @return <tt>true</tt> if and only if the specified object is a key in this table, as
-	 * determined by the <tt>equals</tt> method; <tt>false</tt> otherwise.
-	 */
-	@SuppressWarnings("unchecked")
-	public boolean containsKey(Object key) {
-		Segment<K, V> s; // same as get() except no need for volatile value read
-		LinkedHashEntry<K, V>[] tab;
-		int h = hash(key.hashCode());
-		long u = (((h >>> segmentShift) & segmentMask) << SSHIFT) + SBASE;
-		if ((s = (Segment<K, V>) UNSAFE.getObjectVolatile(segments, u)) != null
-				&& (tab = s.table) != null) {
-			for (LinkedHashEntry<K, V> e = (LinkedHashEntry<K, V>) UNSAFE.getObjectVolatile(tab,
-					((long) (((tab.length - 1) & h)) << TSHIFT) + TBASE); e != null; e = e.next) {
-				K k;
-				if ((k = e.key) == key || (e.hash == h && key.equals(k)))
-					return true;
-			}
+	boolean shouldDrainBuffers(boolean delayable) {
+		if (executorService.isShutdown()) {
+			DrainStatus status = drainStatus.get();
+			return (status != DrainStatus.PROCESSING) & (!delayable | (status == DrainStatus.REQUIRED));
 		}
 		return false;
 	}
 
 	/**
-	 * Returns <tt>true</tt> if this map maps one or more keys to the specified value. Note: This
-	 * method requires a full internal traversal of the hash table, and so is much slower than
-	 * method <tt>containsKey</tt>.
-	 *
-	 * @param value value whose presence in this map is to be tested
-	 * @return <tt>true</tt> if this map maps one or more keys to the specified value
+	 * Attempts to acquire the eviction lock and apply the pending operations to
+	 * the page replacement policy.
+	 * 
+	 * @param maxToDrain the maximum number of operations to drain
 	 */
-	public boolean containsValue(Object value) {
-		// Same idea as size()
-		if (value == null)
-			throw new NullPointerException();
-		final Segment<K, V>[] segments = this.segments;
-		boolean found = false;
-		long last = 0;
-		int retries = -1;
-		try {
-			outer: for (;;) {
-				if (retries++ == RETRIES_BEFORE_LOCK) {
-					for (int j = 0; j < segments.length; ++j)
-						ensureSegment(j).lock(); // force creation
-				}
-				int sum = 0;
-				for (int j = 0; j < segments.length; ++j) {
-					LinkedHashEntry<K, V>[] tab;
-					Segment<K, V> seg = segmentAt(segments, j);
-					if (seg != null && (tab = seg.table) != null) {
-						for (int i = 0; i < tab.length; i++) {
-							LinkedHashEntry<K, V> e;
-							for (e = entryAt(tab, i); e != null; e = e.next) {
-								V v = e.value;
-								if (v != null && value.equals(v)) {
-									found = true;
-									break outer;
-								}
-							}
-						}
-						sum += seg.modCount;
-					}
-				}
-				if (retries > 0 && sum == last)
-					break;
-				last = sum;
-			}
-		} finally {
-			if (retries > RETRIES_BEFORE_LOCK) {
-				for (int j = 0; j < segments.length; ++j)
-					segmentAt(segments, j).unlock();
+	void tryToDrainBuffers(int maxToDrain) {
+		if (evictionLock.tryLock()) {
+			try {
+				drainStatus.set(DrainStatus.PROCESSING);
+				drainBuffers(maxToDrain);
+			} finally {
+				drainStatus.compareAndSet(DrainStatus.PROCESSING, DrainStatus.IDLE);
+				evictionLock.unlock();
 			}
 		}
-		return found;
 	}
 
 	/**
-	 * Legacy method testing if some key maps into the specified value in this table. This method is
-	 * identical in functionality to {@link #containsValue}, and exists solely to ensure full
-	 * compatibility with class {@link java.util.Hashtable}, which supported this method prior to
-	 * introduction of the Java Collections framework.
-	 *
-	 * @param value a value to search for
-	 * @return <tt>true</tt> if and only if some key maps to the <tt>value</tt> argument in this
-	 * table as determined by the <tt>equals</tt> method; <tt>false</tt> otherwise
-	 */
-	public boolean contains(Object value) {
-		return containsValue(value);
-	}
-
-	/**
-	 * Maps the specified key to the specified value in this table. Neither the key nor the value
-	 * can be null.
+	 * Drains the buffers and applies the pending operations.
 	 * 
-	 * <p>
-	 * The value can be retrieved by calling the <tt>get</tt> method with a key that is equal to the
-	 * original key.
-	 *
+	 * @param maxToDrain the maximum number of operations to drain
+	 */
+	void drainBuffers(int maxToDrain) {
+		// A mostly strict ordering is achieved by observing that each buffer
+		// contains tasks in a weakly sorted order starting from the last drain.
+		// The buffers can be merged into a sorted list in O(n) time by using
+		// counting sort and chaining on a collision.
+
+		// The output is capped to the expected number of tasks plus additional
+		// slack to optimistically handle the concurrent additions to the
+		// buffers.
+		Task[] tasks = new Task[maxToDrain];
+
+		// Moves the tasks into the output array, applies them, and updates the
+		// marker for the starting order of the next drain.
+		int maxTaskIndex = moveTasksFromBuffers(tasks);
+		runTasks(tasks, maxTaskIndex);
+		updateDrainedOrder(tasks, maxTaskIndex);
+	}
+
+	/**
+	 * Moves the tasks from the buffers into the output array.
+	 * 
+	 * @param tasks the ordered array of the pending operations
+	 * @return the highest index location of a task that was added to the array
+	 */
+	int moveTasksFromBuffers(Task[] tasks) {
+		int maxTaskIndex = -1;
+		for (int i = 0; i < buffers.length; i++) {
+			int maxIndex = moveTasksFromBuffer(tasks, i);
+			maxTaskIndex = Math.max(maxIndex, maxTaskIndex);
+		}
+		return maxTaskIndex;
+	}
+
+	/**
+	 * Moves the tasks from the specified buffer into the output array.
+	 * 
+	 * @param tasksthe ordered array of the pending operations
+	 * @param bufferIndex the buffer to drain into the tasks array
+	 * @return the highest index location of a task that was added to the array
+	 */
+	int moveTasksFromBuffer(Task[] tasks, int bufferIndex) {
+		// While a buffer is being drained it may be concurrently appended to.
+		// The
+		// number of tasks removed are tracked so that the length can be
+		// decremented
+		// by the delta rather than set to zero.
+		Queue<Task> buffer = buffers[bufferIndex];
+		int removedFromBuffer = 0;
+
+		Task task;
+		int maxIndex = -1;
+		while ((task = buffer.poll()) != null) {
+			removedFromBuffer++;
+
+			// The index into the output array is determined by calculating the
+			// offset
+			// since the last drain
+			int index = task.getOrder() - drainedOrder;
+			if (index < 0) {
+				// The task was missed by the last drain and can be run
+				// immediately
+				task.run();
+			} else if (index >= tasks.length) {
+				// Due to concurrent additions, the order exceeds the capacity
+				// of the
+				// output array. It is added to the end as overflow and the
+				// remaining
+				// tasks in the buffer will be handled by the next drain.
+				maxIndex = tasks.length - 1;
+				addTaskToChain(tasks, task, maxIndex);
+				break;
+			} else {
+				maxIndex = Math.max(index, maxIndex);
+				addTaskToChain(tasks, task, index);
+			}
+		}
+		bufferLengths.addAndGet(bufferIndex, -removedFromBuffer);
+		return maxIndex;
+	}
+
+	/**
+	 * Adds the task as the head of the chain at the index location.
+	 * 
+	 * @param tasks the ordered array of the pending operations
+	 * @param task the pending operation to add
+	 * @param index the array location
+	 */
+	void addTaskToChain(Task[] tasks, Task task, int index) {
+		task.setNext(tasks[index]);
+		tasks[index] = task;
+	}
+
+	/**
+	 * Runs the pending page replacement policy operations.
+	 * 
+	 * @param tasks the ordered array of the pending operations
+	 * @param maxTaskIndex the maximum index of the array
+	 */
+	void runTasks(Task[] tasks, int maxTaskIndex) {
+		for (int i = 0; i <= maxTaskIndex; i++) {
+			runTasksInChain(tasks[i]);
+		}
+	}
+
+	/**
+	 * Runs the pending operations on the linked chain.
+	 * 
+	 * @param task the first task in the chain of operations
+	 */
+	void runTasksInChain(Task task) {
+		while (task != null) {
+			Task current = task;
+			task = task.getNext();
+			current.setNext(null);
+			current.run();
+		}
+	}
+
+	/**
+	 * Updates the order to start the next drain from.
+	 * 
+	 * @param tasks the ordered array of operations
+	 * @param maxTaskIndex the maximum index of the array
+	 */
+	void updateDrainedOrder(Task[] tasks, int maxTaskIndex) {
+		if (maxTaskIndex >= 0) {
+			Task task = tasks[maxTaskIndex];
+			drainedOrder = task.getOrder() + 1;
+		}
+	}
+
+	/** Notifies the listener of entries that were evicted. */
+	void notifyListener() {
+		Node node;
+		while ((node = pendingNotifications.poll()) != null) {
+			evictionListener.onEviction(node.key, node.getValue());
+		}
+	}
+
+	/** Updates the node's location in the page replacement policy. */
+	class ReadTask extends AbstractTask {
+
+		final Node node;
+
+		ReadTask(Node node) {
+			this.node = node;
+		}
+
+		public void run() {
+			// An entry may scheduled for reordering despite having been
+			// previously
+			// removed. This can occur when the entry was concurrently read
+			// while a
+			// writer was removing it. If the entry is no longer linked then it
+			// does
+			// not need to be processed.
+			if (evictionDeque.contains(node)) {
+				evictionDeque.moveToBack(node);
+			}
+		}
+
+		public boolean isWrite() {
+			return false;
+		}
+	}
+
+	/** Adds the node to the page replacement policy. */
+	final class AddTask extends AbstractTask {
+
+		final Node node;
+		final int weight;
+
+		AddTask(Node node, int weight) {
+			this.weight = weight;
+			this.node = node;
+		}
+
+		public void run() {
+			weightedSize += weight;
+
+			// ignore out-of-order write operations
+			if (node.get().isAlive()) {
+				evictionDeque.add(node);
+				evict();
+			}
+		}
+
+		public boolean isWrite() {
+			return true;
+		}
+	}
+
+	/** Removes a node from the page replacement policy. */
+	final class RemovalTask extends AbstractTask {
+
+		final Node node;
+
+		RemovalTask(Node node) {
+			this.node = node;
+		}
+
+		public void run() {
+			// add may not have been processed yet
+			evictionDeque.remove(node);
+			node.makeDead();
+		}
+
+		public boolean isWrite() {
+			return true;
+		}
+	}
+
+	/** Updates the weighted size and evicts an entry on overflow. */
+	final class UpdateTask extends ReadTask {
+
+		final int weightDifference;
+
+		public UpdateTask(Node node, int weightDifference) {
+			super(node);
+			this.weightDifference = weightDifference;
+		}
+
+		@Override
+		public void run() {
+			super.run();
+			weightedSize += weightDifference;
+			evict();
+		}
+
+		@Override
+		public boolean isWrite() {
+			return true;
+		}
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return map.isEmpty();
+	}
+
+	@Override
+	public int size() {
+		return map.size();
+	}
+
+	/**
+	 * Returns the weighted size of this map.
+	 * 
+	 * @return the combined weight of the values in this map
+	 */
+	public int weightedSize() {
+		return Math.max(0, weightedSize);
+	}
+
+	@Override
+	public void clear() {
+		// The alternative is to iterate through the keys and call #remove(),
+		// which
+		// adds unnecessary contention on the eviction lock and buffers.
+		evictionLock.lock();
+		try {
+			Node node;
+			while ((node = evictionDeque.poll()) != null) {
+				map.remove(node.key, node);
+				node.makeDead();
+			}
+
+			// Drain the buffers and run only the write tasks
+			for (int i = 0; i < buffers.length; i++) {
+				Queue<Task> buffer = buffers[i];
+				int removed = 0;
+				Task task;
+				while ((task = buffer.poll()) != null) {
+					if (task.isWrite()) {
+						task.run();
+					}
+					removed++;
+				}
+				bufferLengths.addAndGet(i, -removed);
+			}
+		} finally {
+			evictionLock.unlock();
+		}
+	}
+
+	@Override
+	public boolean containsKey(Object key) {
+		return map.containsKey(key);
+	}
+
+	@Override
+	public boolean containsValue(Object value) {
+		checkNotNull(value);
+
+		for (Node node : map.values()) {
+			if (node.getValue().equals(value)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public V get(Object key) {
+		final Node node = map.get(key);
+		if (node == null) {
+			return null;
+		}
+		afterCompletion(new ReadTask(node));
+		return node.getValue();
+	}
+
+	@Override
+	public V put(K key, V value) {
+		return put(key, value, false);
+	}
+
+	public V putIfAbsent(K key, V value) {
+		return put(key, value, true);
+	}
+
+	/**
+	 * Adds a node to the list and the data store. If an existing node is found,
+	 * then its value is updated if allowed.
+	 * 
 	 * @param key key with which the specified value is to be associated
 	 * @param value value to be associated with the specified key
-	 * @return the previous value associated with <tt>key</tt>, or <tt>null</tt> if there was no
-	 * mapping for <tt>key</tt>
+	 * @param onlyIfAbsent a write is performed only if the key is not already associated with a value
+	 * @return the prior value in the data store or null if no mapping was found
 	 */
-	@SuppressWarnings("unchecked")
-	public V put(K key, V value) {
-		Segment<K, V> s;
-		if (value == null)
-			throw new NullPointerException();
-		int hash = hash(key.hashCode());
-		int j = (hash >>> segmentShift) & segmentMask;
-		if ((s = (Segment<K, V>) UNSAFE.getObject // nonvolatile; recheck
-				(segments, (j << SSHIFT) + SBASE)) == null) // in ensureSegment
-			s = ensureSegment(j);
-		return s.put(key, hash, value, false);
-	}
+	V put(K key, V value, boolean onlyIfAbsent) {
+		checkNotNull(value);
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return the previous value associated with the specified key, or <tt>null</tt> if there was
-	 *         no mapping for the key
-	 * @throws NullPointerException
-	 *             if the specified key or value is null
-	 */
-	@SuppressWarnings("unchecked")
-	public V putIfAbsent(K key, V value) {
-		Segment<K, V> s;
-		if (value == null)
-			throw new NullPointerException();
-		int hash = hash(key.hashCode());
-		int j = (hash >>> segmentShift) & segmentMask;
-		if ((s = (Segment<K, V>) UNSAFE.getObject(segments, (j << SSHIFT) + SBASE)) == null)
-			s = ensureSegment(j);
-		return s.put(key, hash, value, true);
-	}
+		final int weight = weigher.weightOf(value);
+		final WeightedValue<V> weightedValue = new WeightedValue<V>(value, weight);
+		final Node node = new Node(key, weightedValue);
 
-	/**
-	 * Copies all of the mappings from the specified map to this one. These mappings replace any
-	 * mappings that this map had for any of the keys currently in the specified map.
-	 * 
-	 * @param m
-	 *            mappings to be stored in this map
-	 */
-	public void putAll(Map<? extends K, ? extends V> m) {
-		for (Map.Entry<? extends K, ? extends V> e : m.entrySet())
-			put(e.getKey(), e.getValue());
-	}
-
-	/**
-	 * Removes the key (and its corresponding value) from this map. This method does nothing if the
-	 * key is not in the map.
-	 *
-	 * @param key the key that needs to be removed
-	 * @return the previous value associated with <tt>key</tt>, or <tt>null</tt> if there was no
-	 * mapping for <tt>key</tt>
-	 */
-	public V remove(Object key) {
-		int hash = hash(key.hashCode());
-		Segment<K, V> s = segmentForHash(hash);
-		return s == null ? null : s.remove(key, hash, null);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws NullPointerException
-	 *             if the specified key is null
-	 */
-	public boolean remove(Object key, Object value) {
-		int hash = hash(key.hashCode());
-		Segment<K, V> s;
-		return value != null && (s = segmentForHash(hash)) != null
-				&& s.remove(key, hash, value) != null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws NullPointerException
-	 *             if any of the arguments are null
-	 */
-	public boolean replace(K key, V oldValue, V newValue) {
-		int hash = hash(key.hashCode());
-		if (oldValue == null || newValue == null)
-			throw new NullPointerException();
-		Segment<K, V> s = segmentForHash(hash);
-		return s != null && s.replace(key, hash, oldValue, newValue);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return the previous value associated with the specified key, or <tt>null</tt> if there was
-	 *         no mapping for the key
-	 * @throws NullPointerException
-	 *             if the specified key or value is null
-	 */
-	public V replace(K key, V value) {
-		int hash = hash(key.hashCode());
-		if (value == null)
-			throw new NullPointerException();
-		Segment<K, V> s = segmentForHash(hash);
-		return s == null ? null : s.replace(key, hash, value);
-	}
-
-	/**
-	 * Removes all of the mappings from this map.
-	 */
-	public void clear() {
-		final Segment<K, V>[] segments = this.segments;
-		for (int j = 0; j < segments.length; ++j) {
-			Segment<K, V> s = segmentAt(segments, j);
-			if (s != null)
-				s.clear();
-		}
-	}
-
-	/**
-	 * Removes the eldest entry.
-	 *
-	 * @return the entry
-	 */
-	public Entry<K, V> removeEldestEntry() {
-		linkLock.lock();
-		try {
-			LinkedHashEntry<K, V> node = tailEntry.before;
-			if (!node.equals(headEntry)) {
-				remove(node);
-				return new WriteThroughEntry(node.key, node.value);
-			} else {
-				throw new NoSuchElementException();
+		for (;;) {
+			final Node prior = map.putIfAbsent(node.key, node);
+			if (prior == null) {
+				afterCompletion(new AddTask(node, weight));
+				return null;
+			} else if (onlyIfAbsent) {
+				afterCompletion(new ReadTask(prior));
+				return prior.getValue();
 			}
-		} finally {
-			linkLock.unlock();
+			for (;;) {
+				final WeightedValue<V> oldWeightedValue = prior.get();
+				if (!oldWeightedValue.isAlive()) {
+					break;
+				}
+
+				if (prior.compareAndSet(oldWeightedValue, weightedValue)) {
+					final int weightedDifference = weight - oldWeightedValue.weight;
+					final Task task = (weightedDifference == 0) ? new ReadTask(prior) : new UpdateTask(prior,
+							weightedDifference);
+					afterCompletion(task);
+					return oldWeightedValue.value;
+				}
+			}
 		}
 	}
 
-	/**
-	 * Returns a {@link Set} view of the keys contained in this map. The set is backed by the map,
-	 * so changes to the map are reflected in the set, and vice-versa. The set supports element
-	 * removal, which removes the corresponding mapping from this map, via the
-	 * <tt>Iterator.remove</tt>, <tt>Set.remove</tt>, <tt>removeAll</tt>, <tt>retainAll</tt>, and
-	 * <tt>clear</tt> operations. It does not support the <tt>add</tt> or <tt>addAll</tt>
-	 * operations.
-	 * 
-	 * <p>
-	 * The view's <tt>iterator</tt> is a "weakly consistent" iterator that will never throw
-	 *
-	 * @return the sets the
-	 * {@link ConcurrentModificationException}, and guarantees to traverse elements as they existed
-	 * upon construction of the iterator, and may (but is not guaranteed to) reflect any
-	 * modifications subsequent to construction.
-	 */
+	@Override
+	public V remove(Object key) {
+		final Node node = map.remove(key);
+		if (node == null) {
+			return null;
+		}
+
+		node.makeRetired();
+		afterCompletion(new RemovalTask(node));
+		return node.getValue();
+	}
+
+	public boolean remove(Object key, Object value) {
+		Node node = map.get(key);
+		if ((node == null) || (value == null)) {
+			return false;
+		}
+
+		WeightedValue<V> weightedValue = node.get();
+		for (;;) {
+			if (weightedValue.hasValue(value)) {
+				if (node.tryToRetire(weightedValue)) {
+					if (map.remove(key, node)) {
+						afterCompletion(new RemovalTask(node));
+						return true;
+					}
+				} else {
+					weightedValue = node.get();
+					if (weightedValue.isAlive()) {
+						// retry as an intermediate update may have replaced the
+						// value
+						// with
+						// an equal instance that has a different reference
+						// identity
+						continue;
+					}
+				}
+			}
+			return false;
+		}
+	}
+
+	public V replace(K key, V value) {
+		checkNotNull(value);
+
+		final int weight = weigher.weightOf(value);
+		final WeightedValue<V> weightedValue = new WeightedValue<V>(value, weight);
+
+		final Node node = map.get(key);
+		if (node == null) {
+			return null;
+		}
+		for (;;) {
+			WeightedValue<V> oldWeightedValue = node.get();
+			if (!oldWeightedValue.isAlive()) {
+				return null;
+			}
+			if (node.compareAndSet(oldWeightedValue, weightedValue)) {
+				int weightedDifference = weight - oldWeightedValue.weight;
+				final Task task = (weightedDifference == 0) ? new ReadTask(node) : new UpdateTask(node,
+						weightedDifference);
+				afterCompletion(task);
+				return oldWeightedValue.value;
+			}
+		}
+	}
+
+	public boolean replace(K key, V oldValue, V newValue) {
+		checkNotNull(oldValue);
+		checkNotNull(newValue);
+
+		final int weight = weigher.weightOf(newValue);
+		final WeightedValue<V> newWeightedValue = new WeightedValue<V>(newValue, weight);
+
+		final Node node = map.get(key);
+		if (node == null) {
+			return false;
+		}
+		for (;;) {
+			final WeightedValue<V> weightedValue = node.get();
+			if (!weightedValue.isAlive() || !weightedValue.hasValue(oldValue)) {
+				return false;
+			}
+			if (node.compareAndSet(weightedValue, newWeightedValue)) {
+				int weightedDifference = weight - weightedValue.weight;
+				final Task task = (weightedDifference == 0) ? new ReadTask(node) : new UpdateTask(node,
+						weightedDifference);
+				afterCompletion(task);
+				return true;
+			}
+		}
+	}
+
+	@Override
 	public Set<K> keySet() {
 		Set<K> ks = keySet;
-		return (ks != null) ? ks : (keySet = new KeySet());
+		return (ks == null) ? (keySet = new KeySet()) : ks;
 	}
 
 	/**
-	 * Returns a {@link Collection} view of the values contained in this map. The collection is
-	 * backed by the map, so changes to the map are reflected in the collection, and vice-versa. The
-	 * collection supports element removal, which removes the corresponding mapping from this map,
-	 * via the <tt>Iterator.remove</tt>, <tt>Collection.remove</tt>, <tt>removeAll</tt>,
-	 * <tt>retainAll</tt>, and <tt>clear</tt> operations. It does not support the <tt>add</tt> or
-	 * <tt>addAll</tt> operations.
-	 * 
+	 * Returns a unmodifiable snapshot {@link Set} view of the keys contained in
+	 * this map. The set's iterator returns the keys whose order of iteration is
+	 * the ascending order in which its entries are considered eligible for
+	 * retention, from the least-likely to be retained to the most-likely.
 	 * <p>
-	 * The view's <tt>iterator</tt> is a "weakly consistent" iterator that will never throw
-	 *
-	 * @return the collection
-	 * {@link ConcurrentModificationException}, and guarantees to traverse elements as they existed
-	 * upon construction of the iterator, and may (but is not guaranteed to) reflect any
-	 * modifications subsequent to construction.
+	 * Beware that, unlike in {@link #keySet()}, obtaining the set is
+	 * <em>NOT</em> a constant-time operation. Because of the asynchronous
+	 * nature of the page replacement policy, determining the retention ordering
+	 * requires a traversal of the keys.
+	 * 
+	 * @return an ascending snapshot view of the keys in this map
 	 */
+	public Set<K> ascendingKeySet() {
+		return orderedKeySet(true, Integer.MAX_VALUE);
+	}
+
+	/**
+	 * Returns an unmodifiable snapshot {@link Set} view of the keys contained
+	 * in this map. The set's iterator returns the keys whose order of iteration
+	 * is the ascending order in which its entries are considered eligible for
+	 * retention, from the least-likely to be retained to the most-likely.
+	 * <p>
+	 * Beware that, unlike in {@link #keySet()}, obtaining the set is
+	 * <em>NOT</em> a constant-time operation. Because of the asynchronous
+	 * nature of the page replacement policy, determining the retention ordering
+	 * requires a traversal of the keys.
+	 * 
+	 * @param limit
+	 *            the maximum size of the returned set
+	 * @return a ascending snapshot view of the keys in this map
+	 * @throws IllegalArgumentException
+	 *             if the limit is negative
+	 */
+	public Set<K> ascendingKeySetWithLimit(int limit) {
+		return orderedKeySet(true, limit);
+	}
+
+	/**
+	 * Returns an unmodifiable snapshot {@link Set} view of the keys contained
+	 * in this map. The set's iterator returns the keys whose order of iteration
+	 * is the descending order in which its entries are considered eligible for
+	 * retention, from the most-likely to be retained to the least-likely.
+	 * <p>
+	 * Beware that, unlike in {@link #keySet()}, obtaining the set is
+	 * <em>NOT</em> a constant-time operation. Because of the asynchronous
+	 * nature of the page replacement policy, determining the retention ordering
+	 * requires a traversal of the keys.
+	 * 
+	 * @return a descending snapshot view of the keys in this map
+	 */
+	public Set<K> descendingKeySet() {
+		return orderedKeySet(false, Integer.MAX_VALUE);
+	}
+
+	/**
+	 * Returns an unmodifiable snapshot {@link Set} view of the keys contained
+	 * in this map. The set's iterator returns the keys whose order of iteration
+	 * is the descending order in which its entries are considered eligible for
+	 * retention, from the most-likely to be retained to the least-likely.
+	 * <p>
+	 * Beware that, unlike in {@link #keySet()}, obtaining the set is
+	 * <em>NOT</em> a constant-time operation. Because of the asynchronous
+	 * nature of the page replacement policy, determining the retention ordering
+	 * requires a traversal of the keys.
+	 * 
+	 * @param limit
+	 *            the maximum size of the returned set
+	 * @return a descending snapshot view of the keys in this map
+	 * @throws IllegalArgumentException
+	 *             if the limit is negative
+	 */
+	public Set<K> descendingKeySetWithLimit(int limit) {
+		return orderedKeySet(false, limit);
+	}
+
+	Set<K> orderedKeySet(boolean ascending, int limit) {
+		if (limit < 0) {
+			throw new IllegalArgumentException();
+		}
+		evictionLock.lock();
+		try {
+			drainBuffers(AMORTIZED_DRAIN_THRESHOLD);
+
+			int initialCapacity = (weigher == Weighers.singleton()) ? Math.min(limit, weightedSize()) : 16;
+			Set<K> keys = new LinkedHashSet<K>(initialCapacity);
+			Iterator<Node> iterator = ascending ? evictionDeque.iterator() : evictionDeque.descendingIterator();
+			while (iterator.hasNext() && (limit > keys.size())) {
+				keys.add(iterator.next().key);
+			}
+			return Collections.unmodifiableSet(keys);
+		} finally {
+			evictionLock.unlock();
+		}
+	}
+
+	@Override
 	public Collection<V> values() {
 		Collection<V> vs = values;
-		return (vs != null) ? vs : (values = new Values());
+		return (vs == null) ? (values = new Values()) : vs;
+	}
+
+	@Override
+	public Set<Entry<K, V>> entrySet() {
+		Set<Entry<K, V>> es = entrySet;
+		return (es == null) ? (entrySet = new EntrySet()) : es;
 	}
 
 	/**
-	 * Returns a {@link Set} view of the mappings contained in this map. The set is backed by the
-	 * map, so changes to the map are reflected in the set, and vice-versa. The set supports element
-	 * removal, which removes the corresponding mapping from the map, via the
-	 * <tt>Iterator.remove</tt>, <tt>Set.remove</tt>, <tt>removeAll</tt>, <tt>retainAll</tt>, and
-	 * <tt>clear</tt> operations. It does not support the <tt>add</tt> or <tt>addAll</tt>
-	 * operations.
-	 * 
+	 * Returns an unmodifiable snapshot {@link Map} view of the mappings
+	 * contained in this map. The map's collections return the mappings whose
+	 * order of iteration is the ascending order in which its entries are
+	 * considered eligible for retention, from the least-likely to be retained
+	 * to the most-likely.
 	 * <p>
-	 * The view's <tt>iterator</tt> is a "weakly consistent" iterator that will never throw
-	 *
-	 * @return the sets the
-	 * {@link ConcurrentModificationException}, and guarantees to traverse elements as they existed
-	 * upon construction of the iterator, and may (but is not guaranteed to) reflect any
-	 * modifications subsequent to construction.
-	 */
-	public Set<Map.Entry<K, V>> entrySet() {
-		Set<Map.Entry<K, V>> es = entrySet;
-		return (es != null) ? es : (entrySet = new EntrySet());
-	}
-
-	/**
-	 * Returns an enumeration of the keys in this table.
+	 * Beware that obtaining the mappings is <em>NOT</em> a constant-time
+	 * operation. Because of the asynchronous nature of the page replacement
+	 * policy, determining the retention ordering requires a traversal of the
+	 * entries.
 	 * 
-	 * @return an enumeration of the keys in this table
-	 * @see #keySet()
+	 * @return a ascending snapshot view of this map
 	 */
-	public Enumeration<K> keys() {
-		return new KeyIterator();
+	public Map<K, V> ascendingMap() {
+		return orderedMap(true, Integer.MAX_VALUE);
 	}
 
 	/**
-	 * Returns an enumeration of the values in this table.
+	 * Returns an unmodifiable snapshot {@link Map} view of the mappings
+	 * contained in this map. The map's collections return the mappings whose
+	 * order of iteration is the ascending order in which its entries are
+	 * considered eligible for retention, from the least-likely to be retained
+	 * to the most-likely.
+	 * <p>
+	 * Beware that obtaining the mappings is <em>NOT</em> a constant-time
+	 * operation. Because of the asynchronous nature of the page replacement
+	 * policy, determining the retention ordering requires a traversal of the
+	 * entries.
 	 * 
-	 * @return an enumeration of the values in this table
-	 * @see #values()
+	 * @param limit the maximum size of the returned map
+	 * @return a ascending snapshot view of this map
+	 * @throws IllegalArgumentException if the limit is negative
 	 */
-	public Enumeration<V> elements() {
-		return new ValueIterator();
+	public Map<K, V> ascendingMapWithLimit(int limit) {
+		return orderedMap(true, limit);
 	}
 
-	/* ---------------- Iterator Support -------------- */
+	/**
+	 * Returns an unmodifiable snapshot {@link Map} view of the mappings
+	 * contained in this map. The map's collections return the mappings whose
+	 * order of iteration is the descending order in which its entries are
+	 * considered eligible for retention, from the most-likely to be retained to
+	 * the least-likely.
+	 * <p>
+	 * Beware that obtaining the mappings is <em>NOT</em> a constant-time
+	 * operation. Because of the asynchronous nature of the page replacement
+	 * policy, determining the retention ordering requires a traversal of the
+	 * entries.
+	 * 
+	 * @return a descending snapshot view of this map
+	 */
+	public Map<K, V> descendingMap() {
+		return orderedMap(false, Integer.MAX_VALUE);
+	}
 
 	/**
-	 * The Class HashIterator.
+	 * Returns an unmodifiable snapshot {@link Map} view of the mappings
+	 * contained in this map. The map's collections return the mappings whose
+	 * order of iteration is the descending order in which its entries are
+	 * considered eligible for retention, from the most-likely to be retained to
+	 * the least-likely.
+	 * <p>
+	 * Beware that obtaining the mappings is <em>NOT</em> a constant-time
+	 * operation. Because of the asynchronous nature of the page replacement
+	 * policy, determining the retention ordering requires a traversal of the
+	 * entries.
+	 * 
+	 * @param limit the maximum size of the returned map
+	 * @return a descending snapshot view of this map
+	 * @throws IllegalArgumentException if the limit is negative
 	 */
-	abstract class HashIterator {
-		
-		/** The next segment index. */
-		int nextSegmentIndex;
-		
-		/** The next table index. */
-		int nextTableIndex;
-		
-		/** The current table. */
-		LinkedHashEntry<K, V>[] currentTable;
-		
-		/** The next entry. */
-		LinkedHashEntry<K, V> nextEntry;
-		
-		/** The last returned. */
-		LinkedHashEntry<K, V> lastReturned;
+	public Map<K, V> descendingMapWithLimit(int limit) {
+		return orderedMap(false, limit);
+	}
 
-		/**
-		 * Instantiates a new hash iterator.
-		 */
-		HashIterator() {
-			nextSegmentIndex = segments.length - 1;
-			nextTableIndex = -1;
-			advance();
+	Map<K, V> orderedMap(boolean ascending, int limit) {
+		if (limit < 0) {
+			throw new IllegalArgumentException();
+		}
+		evictionLock.lock();
+		try {
+			drainBuffers(AMORTIZED_DRAIN_THRESHOLD);
+
+			int initialCapacity = (weigher == Weighers.singleton()) ? Math.min(limit, weightedSize()) : 16;
+			Map<K, V> map = new LinkedHashMap<K, V>(initialCapacity);
+			Iterator<Node> iterator = ascending ? evictionDeque.iterator() : evictionDeque.descendingIterator();
+			while (iterator.hasNext() && (limit > map.size())) {
+				Node node = iterator.next();
+				map.put(node.key, node.getValue());
+			}
+			return Collections.unmodifiableMap(map);
+		} finally {
+			evictionLock.unlock();
+		}
+	}
+
+	/** A value, its weight, and the entry's status. */
+	static final class WeightedValue<V> {
+
+		final int weight;
+		final V value;
+
+		WeightedValue(V value, int weight) {
+			this.weight = weight;
+			this.value = value;
+		}
+
+		boolean hasValue(Object o) {
+			return (o == value) || value.equals(o);
 		}
 
 		/**
-		 * Set nextEntry to first node of next non-empty table (in backwards order, to simplify
-		 * checks).
+		 * If the entry is available in the hash-table and page replacement
+		 * policy.
 		 */
-		final void advance() {
+		boolean isAlive() {
+			return weight > 0;
+		}
+
+		/**
+		 * If the entry was removed from the hash-table and is awaiting removal
+		 * from the page replacement policy.
+		 */
+		boolean isRetired() {
+			return weight < 0;
+		}
+
+		/**
+		 * If the entry was removed from the hash-table and the page replacement
+		 * policy.
+		 */
+		boolean isDead() {
+			return weight == 0;
+		}
+	}
+
+	/**
+	 * A node contains the key, the weighted value, and the linkage pointers on
+	 * the page-replacement algorithm's data structures.
+	 */
+	@SuppressWarnings("serial")
+	final class Node extends AtomicReference<WeightedValue<V>> implements Linked<Node> {
+
+		final K key;
+
+		Node prev;
+		Node next;
+
+		/** Creates a new, unlinked node. */
+		Node(K key, WeightedValue<V> weightedValue) {
+			super(weightedValue);
+			this.key = key;
+		}
+
+		public Node getPrevious() {
+			return prev;
+		}
+
+		public void setPrevious(Node prev) {
+			this.prev = prev;
+		}
+
+		public Node getNext() {
+			return next;
+		}
+
+		public void setNext(Node next) {
+			this.next = next;
+		}
+
+		/** Retrieves the value held by the current <tt>WeightedValue</tt>. */
+		V getValue() {
+			return get().value;
+		}
+
+		/**
+		 * Attempts to transition the node from the <tt>alive</tt> state to the
+		 * <tt>retired</tt> state.
+		 * 
+		 * @param expect
+		 *            the expected weighted value
+		 * @return if successful
+		 */
+		boolean tryToRetire(WeightedValue<V> expect) {
+			if (expect.isAlive()) {
+				WeightedValue<V> retired = new WeightedValue<V>(expect.value, -expect.weight);
+				return compareAndSet(expect, retired);
+			}
+			return false;
+		}
+
+		/**
+		 * Atomically transitions the node from the <tt>alive</tt> state to the
+		 * <tt>retired</tt> state, if a valid transition.
+		 */
+		void makeRetired() {
 			for (;;) {
-				if (nextTableIndex >= 0) {
-					if ((nextEntry = entryAt(currentTable, nextTableIndex--)) != null)
-						break;
-				} else if (nextSegmentIndex >= 0) {
-					Segment<K, V> seg = segmentAt(segments, nextSegmentIndex--);
-					if (seg != null && (currentTable = seg.table) != null)
-						nextTableIndex = currentTable.length - 1;
-				} else
-					break;
+				WeightedValue<V> current = get();
+				if (!current.isAlive()) {
+					return;
+				}
+				WeightedValue<V> retired = new WeightedValue<V>(current.value, -current.weight);
+				if (compareAndSet(current, retired)) {
+					return;
+				}
 			}
 		}
 
 		/**
-		 * Next entry.
-		 *
-		 * @return the linked hash entry
+		 * Atomically transitions the node to the <tt>dead</tt> state and
+		 * decrements the <tt>weightedSize</tt>.
 		 */
-		final LinkedHashEntry<K, V> nextEntry() {
-			LinkedHashEntry<K, V> e = nextEntry;
-			if (e == null)
-				throw new NoSuchElementException();
-			lastReturned = e; // cannot assign until after null check
-			if ((nextEntry = e.next) == null)
-				advance();
-			return e;
-		}
-
-		/**
-		 * Checks for next.
-		 *
-		 * @return true, if successful
-		 */
-		public final boolean hasNext() {
-			return nextEntry != null;
-		}
-
-		/**
-		 * Checks for more elements.
-		 *
-		 * @return true, if successful
-		 */
-		public final boolean hasMoreElements() {
-			return nextEntry != null;
-		}
-
-		/**
-		 * Removes the.
-		 */
-		public final void remove() {
-			if (lastReturned == null)
-				throw new IllegalStateException();
-			ConcurrentLinkedHashMap.this.remove(lastReturned.key);
-			lastReturned = null;
+		void makeDead() {
+			for (;;) {
+				WeightedValue<V> current = get();
+				WeightedValue<V> dead = new WeightedValue<V>(current.value, 0);
+				if (compareAndSet(current, dead)) {
+					weightedSize -= Math.abs(current.weight);
+					return;
+				}
+			}
 		}
 	}
 
-	/**
-	 * The Class KeyIterator.
-	 */
-	final class KeyIterator extends HashIterator implements Iterator<K>, Enumeration<K> {
-		
-		/* (non-Javadoc)
-		 * @see java.util.Iterator#next()
-		 */
-		public final K next() {
-			return super.nextEntry().key;
-		}
-
-		/* (non-Javadoc)
-		 * @see java.util.Enumeration#nextElement()
-		 */
-		public final K nextElement() {
-			return super.nextEntry().key;
-		}
-	}
-
-	/**
-	 * The Class ValueIterator.
-	 */
-	final class ValueIterator extends HashIterator implements Iterator<V>, Enumeration<V> {
-		
-		/* (non-Javadoc)
-		 * @see java.util.Iterator#next()
-		 */
-		public final V next() {
-			return super.nextEntry().value;
-		}
-
-		/* (non-Javadoc)
-		 * @see java.util.Enumeration#nextElement()
-		 */
-		public final V nextElement() {
-			return super.nextEntry().value;
-		}
-	}
-
-	/**
-	 * Custom Entry class used by EntryIterator.next(), that relays setValue changes to the
-	 * underlying map.
-	 */
-	@SuppressWarnings("serial")
-	final class WriteThroughEntry extends AbstractMap.SimpleEntry<K, V> {
-		
-		/**
-		 * Instantiates a new write through entry.
-		 *
-		 * @param k the k
-		 * @param v the v
-		 */
-		WriteThroughEntry(K k, V v) {
-			super(k, v);
-		}
-
-		/**
-		 * Set our entry's value and write through to the map. The value to return is somewhat
-		 * arbitrary here. Since a WriteThroughEntry does not necessarily track asynchronous
-		 * changes, the most recent "previous" value could be different from what we return (or
-		 * could even have been removed in which case the put will re-establish). We do not and
-		 * cannot guarantee more.
-		 *
-		 * @param value the value
-		 * @return the v
-		 */
-		public V setValue(V value) {
-			if (value == null)
-				throw new NullPointerException();
-			V v = super.setValue(value);
-			ConcurrentLinkedHashMap.this.put(getKey(), value);
-			return v;
-		}
-	}
-
-	/**
-	 * The Class EntryIterator.
-	 */
-	final class EntryIterator extends HashIterator implements Iterator<Entry<K, V>> {
-		
-		/* (non-Javadoc)
-		 * @see java.util.Iterator#next()
-		 */
-		public Map.Entry<K, V> next() {
-			LinkedHashEntry<K, V> e = super.nextEntry();
-			return new WriteThroughEntry(e.key, e.value);
-		}
-	}
-
-	/**
-	 * The Class KeySet.
-	 */
+	/** An adapter to safely externalize the keys. */
 	final class KeySet extends AbstractSet<K> {
-		
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#iterator()
-		 */
+
+		final ConcurrentLinkedHashMap<K, V> map = ConcurrentLinkedHashMap.this;
+
+		@Override
+		public int size() {
+			return map.size();
+		}
+
+		@Override
+		public void clear() {
+			map.clear();
+		}
+
+		@Override
 		public Iterator<K> iterator() {
 			return new KeyIterator();
 		}
 
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#size()
-		 */
+		@Override
+		public boolean contains(Object obj) {
+			return containsKey(obj);
+		}
+
+		@Override
+		public boolean remove(Object obj) {
+			return (map.remove(obj) != null);
+		}
+
+		@Override
+		public Object[] toArray() {
+			return map.map.keySet().toArray();
+		}
+
+		@Override
+		public <T> T[] toArray(T[] array) {
+			return map.map.keySet().toArray(array);
+		}
+	}
+
+	/** An adapter to safely externalize the key iterator. */
+	final class KeyIterator implements Iterator<K> {
+
+		final Iterator<K> iterator = map.keySet().iterator();
+		K current;
+
+		public boolean hasNext() {
+			return iterator.hasNext();
+		}
+
+		public K next() {
+			current = iterator.next();
+			return current;
+		}
+
+		public void remove() {
+			if (current == null) {
+				throw new IllegalStateException();
+			}
+			ConcurrentLinkedHashMap.this.remove(current);
+			current = null;
+		}
+	}
+
+	/** An adapter to safely externalize the values. */
+	final class Values extends AbstractCollection<V> {
+
+		@Override
 		public int size() {
 			return ConcurrentLinkedHashMap.this.size();
 		}
 
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#isEmpty()
-		 */
-		public boolean isEmpty() {
-			return ConcurrentLinkedHashMap.this.isEmpty();
-		}
-
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#contains(java.lang.Object)
-		 */
-		public boolean contains(Object o) {
-			return ConcurrentLinkedHashMap.this.containsKey(o);
-		}
-
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#remove(java.lang.Object)
-		 */
-		public boolean remove(Object o) {
-			return ConcurrentLinkedHashMap.this.remove(o) != null;
-		}
-
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#clear()
-		 */
+		@Override
 		public void clear() {
 			ConcurrentLinkedHashMap.this.clear();
 		}
-	}
 
-	/**
-	 * The Class Values.
-	 */
-	final class Values extends AbstractCollection<V> {
-		
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#iterator()
-		 */
+		@Override
 		public Iterator<V> iterator() {
 			return new ValueIterator();
 		}
 
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#size()
-		 */
-		public int size() {
-			return ConcurrentLinkedHashMap.this.size();
-		}
-
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#isEmpty()
-		 */
-		public boolean isEmpty() {
-			return ConcurrentLinkedHashMap.this.isEmpty();
-		}
-
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#contains(java.lang.Object)
-		 */
+		@Override
 		public boolean contains(Object o) {
-			return ConcurrentLinkedHashMap.this.containsValue(o);
-		}
-
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#clear()
-		 */
-		public void clear() {
-			ConcurrentLinkedHashMap.this.clear();
+			return containsValue(o);
 		}
 	}
 
-	/**
-	 * The Class EntrySet.
-	 */
-	final class EntrySet extends AbstractSet<Map.Entry<K, V>> {
-		
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#iterator()
-		 */
-		public Iterator<Map.Entry<K, V>> iterator() {
+	/** An adapter to safely externalize the value iterator. */
+	final class ValueIterator implements Iterator<V> {
+
+		final Iterator<Node> iterator = map.values().iterator();
+		Node current;
+
+		public boolean hasNext() {
+			return iterator.hasNext();
+		}
+
+		public V next() {
+			current = iterator.next();
+			return current.getValue();
+		}
+
+		public void remove() {
+			if (current == null) {
+				throw new IllegalStateException();
+			}
+			ConcurrentLinkedHashMap.this.remove(current.key);
+			current = null;
+		}
+	}
+
+	/** An adapter to safely externalize the entries. */
+	final class EntrySet extends AbstractSet<Entry<K, V>> {
+
+		final ConcurrentLinkedHashMap<K, V> map = ConcurrentLinkedHashMap.this;
+
+		@Override
+		public int size() {
+			return map.size();
+		}
+
+		@Override
+		public void clear() {
+			map.clear();
+		}
+
+		@Override
+		public Iterator<Entry<K, V>> iterator() {
 			return new EntryIterator();
 		}
 
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#contains(java.lang.Object)
-		 */
-		public boolean contains(Object o) {
-			if (!(o instanceof Map.Entry))
+		@Override
+		public boolean contains(Object obj) {
+			if (!(obj instanceof Entry<?, ?>)) {
 				return false;
-			Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
-			V v = ConcurrentLinkedHashMap.this.get(e.getKey());
-			return v != null && v.equals(e.getValue());
+			}
+			Entry<?, ?> entry = (Entry<?, ?>) obj;
+			Node node = map.map.get(entry.getKey());
+			return (node != null) && (node.getValue().equals(entry.getValue()));
 		}
 
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#remove(java.lang.Object)
-		 */
-		public boolean remove(Object o) {
-			if (!(o instanceof Map.Entry))
+		@Override
+		public boolean add(Entry<K, V> entry) {
+			return (map.putIfAbsent(entry.getKey(), entry.getValue()) == null);
+		}
+
+		@Override
+		public boolean remove(Object obj) {
+			if (!(obj instanceof Entry<?, ?>)) {
 				return false;
-			Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
-			return ConcurrentLinkedHashMap.this.remove(e.getKey(), e.getValue());
+			}
+			Entry<?, ?> entry = (Entry<?, ?>) obj;
+			return map.remove(entry.getKey(), entry.getValue());
+		}
+	}
+
+	/** An adapter to safely externalize the entry iterator. */
+	final class EntryIterator implements Iterator<Entry<K, V>> {
+
+		final Iterator<Node> iterator = map.values().iterator();
+		Node current;
+
+		public boolean hasNext() {
+			return iterator.hasNext();
 		}
 
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#size()
-		 */
-		public int size() {
-			return ConcurrentLinkedHashMap.this.size();
+		public Entry<K, V> next() {
+			current = iterator.next();
+			return new WriteThroughEntry(current);
 		}
 
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#isEmpty()
-		 */
-		public boolean isEmpty() {
-			return ConcurrentLinkedHashMap.this.isEmpty();
+		public void remove() {
+			if (current == null) {
+				throw new IllegalStateException();
+			}
+			ConcurrentLinkedHashMap.this.remove(current.key);
+			current = null;
+		}
+	}
+
+	/** An entry that allows updates to write through to the map. */
+	final class WriteThroughEntry extends SimpleEntry<K, V> {
+
+		static final long serialVersionUID = 1;
+
+		WriteThroughEntry(Node node) {
+			super(node.key, node.getValue());
 		}
 
-		/* (non-Javadoc)
-		 * @see java.util.AbstractCollection#clear()
-		 */
-		public void clear() {
-			ConcurrentLinkedHashMap.this.clear();
+		@Override
+		public V setValue(V value) {
+			put(getKey(), value);
+			return super.setValue(value);
+		}
+
+		Object writeReplace() {
+			return new SimpleEntry<K, V>(this);
+		}
+	}
+
+	/** A weigher that enforces that the weight falls within a valid range. */
+	static final class BoundedWeigher<V> implements Weigher<V>, Serializable {
+
+		static final long serialVersionUID = 1;
+		final Weigher<? super V> weigher;
+
+		BoundedWeigher(Weigher<? super V> weigher) {
+			checkNotNull(weigher);
+			this.weigher = weigher;
+		}
+
+		public int weightOf(V value) {
+			int weight = weigher.weightOf(value);
+			if ((weight < 1) || (weight > MAXIMUM_WEIGHT)) {
+				throw new IllegalArgumentException("invalid weight");
+			}
+			return weight;
+		}
+
+		Object writeReplace() {
+			return weigher;
+		}
+	}
+
+	/** A task that catches up the page replacement policy. */
+	static final class CatchUpTask implements Runnable {
+
+		final WeakReference<ConcurrentLinkedHashMap<?, ?>> mapRef;
+
+		CatchUpTask(ConcurrentLinkedHashMap<?, ?> map) {
+			this.mapRef = new WeakReference<ConcurrentLinkedHashMap<?, ?>>(map);
+		}
+
+		public void run() {
+			ConcurrentLinkedHashMap<?, ?> map = mapRef.get();
+			if (map == null) {
+				throw new CancellationException();
+			}
+			int pendingTasks = 0;
+			for (int i = 0; i < map.buffers.length; i++) {
+				pendingTasks += map.bufferLengths.get(i);
+			}
+			if (pendingTasks != 0) {
+				map.tryToDrainBuffers(pendingTasks + BUFFER_THRESHOLD);
+			}
+		}
+	}
+
+	/** An operation that can be lazily applied to the page replacement policy. */
+	interface Task extends Runnable {
+
+		/** The priority order. */
+		int getOrder();
+
+		/** If the task represents an add, modify, or remove operation. */
+		boolean isWrite();
+
+		/** Returns the next task on the link chain. */
+		Task getNext();
+
+		/** Sets the next task on the link chain. */
+		void setNext(Task task);
+	}
+
+	/** A skeletal implementation of the <tt>Task</tt> interface. */
+	abstract class AbstractTask implements Task {
+
+		final int order;
+		Task task;
+
+		AbstractTask() {
+			order = nextOrdering();
+		}
+
+		public int getOrder() {
+			return order;
+		}
+
+		public Task getNext() {
+			return task;
+		}
+
+		public void setNext(Task task) {
+			this.task = task;
 		}
 	}
 
 	/* ---------------- Serialization Support -------------- */
 
-	/**
-	 * Save the state of the <tt>ConcurrentHashMap</tt> instance to a stream (i.e., serialize it).
-	 *
-	 * @param s the stream
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @serialData the key (Object) and value (Object) for each key-value mapping, followed by a
-	 * null pair. The key-value mappings are emitted in no particular order.
-	 */
-	private void writeObject(java.io.ObjectOutputStream s) throws IOException {
-		// force all segments for serialization compatibility
-		for (int k = 0; k < segments.length; ++k)
-			ensureSegment(k);
-		s.defaultWriteObject();
+	static final long serialVersionUID = 1;
 
-		final Segment<K, V>[] segments = this.segments;
-		for (int k = 0; k < segments.length; ++k) {
-			Segment<K, V> seg = segmentAt(segments, k);
-			seg.lock();
-			try {
-				LinkedHashEntry<K, V>[] tab = seg.table;
-				for (int i = 0; i < tab.length; ++i) {
-					LinkedHashEntry<K, V> e;
-					for (e = entryAt(tab, i); e != null; e = e.next) {
-						s.writeObject(e.key);
-						s.writeObject(e.value);
-					}
-				}
-			} finally {
-				seg.unlock();
-			}
-		}
-		s.writeObject(null);
-		s.writeObject(null);
+	Object writeReplace() {
+		return new SerializationProxy<K, V>(this);
+	}
+
+	private void readObject(ObjectInputStream stream) throws InvalidObjectException {
+		throw new InvalidObjectException("Proxy required");
 	}
 
 	/**
-	 * Reconstitute the <tt>ConcurrentHashMap</tt> instance from a stream (i.e., deserialize it).
-	 *
-	 * @param s the stream
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws ClassNotFoundException the class not found exception
+	 * A proxy that is serialized instead of the map. The page-replacement
+	 * algorithm's data structures are not serialized so the deserialized
+	 * instance contains only the entries. This is acceptable as caches hold
+	 * transient data that is recomputable and serialization would tend to be
+	 * used as a fast warm-up process.
 	 */
-	@SuppressWarnings("unchecked")
-	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException {
-		s.defaultReadObject();
+	static final class SerializationProxy<K, V> implements Serializable {
 
-		// Re-initialize segments to be minimally sized, and let grow.
-		int cap = MIN_SEGMENT_TABLE_CAPACITY;
-		final Segment<K, V>[] segments = this.segments;
-		for (int k = 0; k < segments.length; ++k) {
-			Segment<K, V> seg = segments[k];
-			if (seg != null) {
-				seg.threshold = (int) (cap * seg.loadFactor);
-				seg.table = (LinkedHashEntry<K, V>[]) new LinkedHashEntry[cap];
-			}
+		final EvictionListener<K, V> listener;
+		final Weigher<? super V> weigher;
+		final int concurrencyLevel;
+		final Map<K, V> data;
+		final int capacity;
+
+		SerializationProxy(ConcurrentLinkedHashMap<K, V> map) {
+			concurrencyLevel = map.concurrencyLevel;
+			data = new HashMap<K, V>(map);
+			capacity = map.capacity;
+			listener = map.evictionListener;
+			weigher = map.weigher;
 		}
 
-		// Read the keys and values, and put the mappings in the table
-		for (;;) {
-			K key = (K) s.readObject();
-			V value = (V) s.readObject();
-			if (key == null)
-				break;
-			put(key, value);
-		}
+		static final long serialVersionUID = 1;
 	}
 
-	// Unsafe mechanics
-	/** The Constant UNSAFE. */
-	private static final sun.misc.Unsafe UNSAFE;
-	
-	/** The Constant SBASE. */
-	private static final long SBASE;
-	
-	/** The Constant SSHIFT. */
-	private static final int SSHIFT;
-	
-	/** The Constant TBASE. */
-	private static final long TBASE;
-	
-	/** The Constant TSHIFT. */
-	private static final int TSHIFT;
+	// a class similar to AbstractMap.SimpleEntry. Needed for JDK 5
+	// compatibility. Java 6
+	// exposes it to external users.
+	static class SimpleEntry<K, V> implements Entry<K, V> {
 
-	static {
-		int ss, ts;
-		UNSAFE = getUnsafe();
+		K key;
+		V value;
+
+		public SimpleEntry(K key, V value) {
+			this.key = key;
+			this.value = value;
+		}
+
+		public SimpleEntry(Entry<K, V> e) {
+			this.key = e.getKey();
+			this.value = e.getValue();
+		}
+
+		public K getKey() {
+			return key;
+		}
+
+		public V getValue() {
+			return value;
+		}
+
+		public V setValue(V value) {
+			V oldValue = this.value;
+			this.value = value;
+			return oldValue;
+		}
+
 		@SuppressWarnings("rawtypes")
-		Class tc = LinkedHashEntry[].class;
-		@SuppressWarnings("rawtypes")
-		Class sc = Segment[].class;
-		TBASE = UNSAFE.arrayBaseOffset(tc);
-		SBASE = UNSAFE.arrayBaseOffset(sc);
-		ts = UNSAFE.arrayIndexScale(tc);
-		ss = UNSAFE.arrayIndexScale(sc);
-		if ((ss & (ss - 1)) != 0 || (ts & (ts - 1)) != 0)
-			throw new Error("data type scale not a power of two");
-		SSHIFT = 31 - Integer.numberOfLeadingZeros(ss);
-		TSHIFT = 31 - Integer.numberOfLeadingZeros(ts);
-	}
+		@Override
+		public boolean equals(Object o) {
+			if (!(o instanceof Entry))
+				return false;
+			Entry e = (Entry) o;
+			return eq(key, e.getKey()) && eq(value, e.getValue());
+		}
 
-	/**
-	 * Gets the unsafe.
-	 *
-	 * @return the unsafe
-	 */
-	public static sun.misc.Unsafe getUnsafe() {
-		try {
-			java.lang.reflect.Field f = sun.misc.Unsafe.class.getDeclaredField("theUnsafe");
-			f.setAccessible(true);
-			return (sun.misc.Unsafe) f.get(null);
-		} catch (Exception e) {
-			throw new Error(e);
+		@Override
+		public int hashCode() {
+			return ((key == null) ? 0 : key.hashCode()) ^ ((value == null) ? 0 : value.hashCode());
+		}
+
+		private static boolean eq(Object o1, Object o2) {
+			return (o1 == null ? o2 == null : o1.equals(o2));
 		}
 	}
-
+	
 }

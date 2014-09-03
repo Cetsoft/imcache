@@ -280,7 +280,7 @@ public class OffHeapCacheTest {
 		doNothing().when(cache).cleanBuffers(1);
 		cache.initCache(bufferStore, serializer, 1, 1, 1, 1);
 		try {
-			Thread.sleep(3);
+			Thread.sleep(10000);
 		} catch (InterruptedException e) {}
 		verify(cache, atLeast(1)).cleanBuffers(1);
 		verify(cache, atLeast(1)).doEviction(1);
