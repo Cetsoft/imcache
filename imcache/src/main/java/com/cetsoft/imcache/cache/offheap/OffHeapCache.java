@@ -149,7 +149,7 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 		}, bufferCleanerPeriod, bufferCleanerPeriod, TimeUnit.MILLISECONDS);
 		ScheduledExecutorService evictionService = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
 			public Thread newThread(Runnable runnable) {
-				return new Thread(runnable, "imcache:bufferCleaner(name="+getName()+",thread="+ NO_OF_EVICTORS.incrementAndGet() + ")");
+				return new Thread(runnable, "imcache:evictionService(name="+getName()+",thread="+ NO_OF_EVICTORS.incrementAndGet() + ")");
 			}
 		});
 		evictionService.scheduleAtFixedRate(new Runnable() {
