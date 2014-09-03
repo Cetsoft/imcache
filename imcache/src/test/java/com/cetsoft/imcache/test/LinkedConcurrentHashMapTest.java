@@ -23,9 +23,14 @@ package com.cetsoft.imcache.test;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.cetsoft.imcache.concurrent.ConcurrentLinkedHashMap;
+import com.cetsoft.imcache.concurrent.EvictionListener;
+import com.cetsoft.imcache.concurrent.Weigher;
+import com.cetsoft.imcache.concurrent.Weighers;
 
 /**
  * The Class LinkedConcurrentHashMapTest.
@@ -40,11 +45,23 @@ public class LinkedConcurrentHashMapTest {
 	 */
 	public static void main(String[] args) throws InterruptedException {
 		int noOfThreads = 30;
-		final int size = 10000;
+		final int size = 1000;
 		final int multiplier = 10;
 		final int noOfGets = 100;
-		final int noOfIterations = 100000;
-		final Map<Integer, Integer> myMap = new ConcurrentLinkedHashMap<Integer, Integer>(size);
+		final int noOfIterations = 1000;
+		Weigher<Integer> weigher = Weighers.singleton();
+		final Map<Integer, Integer> myMap = new ConcurrentLinkedHashMap<Integer, Integer>(16, 100, size, 
+				weigher, 2000,
+				Executors.newScheduledThreadPool(1, new ThreadFactory() {
+					public Thread newThread(Runnable runnable) {
+						return new Thread("imcache:evictionThread");
+					}
+				}),
+				new EvictionListener<Integer, Integer>() {
+					public void onEviction(Integer key, Integer value) {
+						
+					}
+				});
 		final Map<Integer, Integer> conMap = new ConcurrentHashMap<Integer, Integer>(size);
 		final AtomicLong myAtomicLong = new AtomicLong();
 		final AtomicLong conAtomicLong = new AtomicLong();

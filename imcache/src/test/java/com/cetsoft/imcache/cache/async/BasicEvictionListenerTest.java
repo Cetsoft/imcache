@@ -56,7 +56,7 @@ public class BasicEvictionListenerTest {
 		doNothing().when(asyncEvictionListener).save(key, value);
 		asyncEvictionListener.onEviction(key, value);
 		try {
-			Thread.sleep(5);
+			Thread.sleep(10);
 		} catch (InterruptedException e) {}
 		verify(asyncEvictionListener).save(key, value);
 	}

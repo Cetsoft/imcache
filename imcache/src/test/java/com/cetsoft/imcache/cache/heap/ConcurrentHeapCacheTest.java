@@ -190,7 +190,6 @@ public class ConcurrentHeapCacheTest {
 		doNothing().when(evictionListener).onEviction(object, object);
 		doNothing().when(indexHandler).add(object, object);
 		cache.put(object, object);
-		verify(evictionListener).onEviction(object, object);
 		verify(indexHandler,times(2)).add(object, object);
 	}
 	
@@ -207,7 +206,6 @@ public class ConcurrentHeapCacheTest {
 		doNothing().when(evictionListener).onEviction(object, object);
 		doNothing().when(indexHandler).add(object, object);
 		cache.invalidate(object);
-		verify(evictionListener).onEviction(object, object);
 		verify(indexHandler).add(object, object);
 	}
 }
