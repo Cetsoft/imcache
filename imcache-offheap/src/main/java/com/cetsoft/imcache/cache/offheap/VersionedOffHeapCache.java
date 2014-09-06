@@ -107,7 +107,7 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 		version++;
 		synchronized (value) {
 			if (value.getVersion() == version) {
-				throw new StaleItemException(version, exValue==null?version-1:exValue.getVersion());
+				throw new StaleItemException(version, exValue == null ? version - 1 : exValue.getVersion());
 			}
 			value.setVersion(version);
 			offHeapCache.put(key, value);

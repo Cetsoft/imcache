@@ -112,11 +112,13 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 	 * @param concurrencyLevel the concurrency level
 	 * @param evictionPeriod the eviction period
 	 */
-	public OffHeapCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,IndexHandler<K, V> indexHandler,
-			OffHeapByteBufferStore byteBufferStore, Serializer<V> serializer,long bufferCleanerPeriod, 
-			final float bufferCleanerThreshold, int concurrencyLevel, final long evictionPeriod) {
+	public OffHeapCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,
+			IndexHandler<K, V> indexHandler,OffHeapByteBufferStore byteBufferStore, Serializer<V> serializer,
+			long bufferCleanerPeriod, final float bufferCleanerThreshold, int concurrencyLevel, 
+			final long evictionPeriod) {
 		super(cacheLoader,evictionListener,indexHandler);
-		initCache(byteBufferStore, serializer, bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
+		initCache(byteBufferStore, serializer, bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, 
+				evictionPeriod);
 	}
 	
 	/**
@@ -129,8 +131,8 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 	 * @param concurrencyLevel the concurrency level
 	 * @param evictionPeriod the eviction period
 	 */
-	protected void initCache(OffHeapByteBufferStore byteBufferStore, Serializer<V> serializer,
-			long bufferCleanerPeriod, final float bufferCleanerThreshold, int concurrencyLevel, final long evictionPeriod) {
+	protected void initCache(OffHeapByteBufferStore byteBufferStore, Serializer<V> serializer, long bufferCleanerPeriod,
+			final float bufferCleanerThreshold, int concurrencyLevel, final long evictionPeriod) {
 		if(concurrencyLevel>11||concurrencyLevel<0){
 			throw new IllegalArgumentException("ConcurrencyLevel must be between 0 and 11 inclusive!");
 		}
@@ -353,5 +355,5 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 			}
 		}
 	}
-	
+
 }
