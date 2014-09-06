@@ -1,23 +1,23 @@
 /*
-* Copyright (C) 2013 Yusuf Aytas, http://www.yusufaytas.com
-*
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Library General Public
-* License as published by the Free Software Foundation; either
-* version 2 of the License, or (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Library General Public License for more details.
-*
-* You should have received a copy of the GNU Library General Public
-* License along with this library; if not, write to the Free
-* Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-* 
-* Author : Yusuf Aytas
-* Date   : Jan 6, 2014
-*/
+ * Copyright (C) 2013 Yusuf Aytas, http://www.yusufaytas.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * 
+ * Author : Yusuf Aytas
+ * Date   : Jan 6, 2014
+ */
 package com.cetsoft.imcache.cache.builder;
 
 import com.cetsoft.imcache.cache.CacheLoader;
@@ -30,18 +30,18 @@ import com.cetsoft.imcache.cache.search.index.IndexType;
 /**
  * The Class ConcurrentHeapCacheBuilder.
  */
-public class ConcurrentHeapCacheBuilder extends CacheBuilder{
-	
+public class ConcurrentHeapCacheBuilder extends CacheBuilder {
+
 	/** The capacity. */
 	private int capacity = 10000;
-	
+
 	/**
 	 * Instantiates a new concurrent heap cache builder.
 	 */
-	public ConcurrentHeapCacheBuilder(){
+	public ConcurrentHeapCacheBuilder() {
 		super();
 	}
-	
+
 	/**
 	 * Cache loader.
 	 *
@@ -51,11 +51,11 @@ public class ConcurrentHeapCacheBuilder extends CacheBuilder{
 	 * @return the concurrent heap cache builder
 	 */
 	@SuppressWarnings("unchecked")
-	public <K,V> ConcurrentHeapCacheBuilder cacheLoader(CacheLoader<K, V> cacheLoader){
+	public <K, V> ConcurrentHeapCacheBuilder cacheLoader(CacheLoader<K, V> cacheLoader) {
 		this.cacheLoader = (CacheLoader<Object, Object>) cacheLoader;
 		return this;
 	}
-	
+
 	/**
 	 * Eviction listener.
 	 *
@@ -65,11 +65,11 @@ public class ConcurrentHeapCacheBuilder extends CacheBuilder{
 	 * @return the concurrent heap cache builder
 	 */
 	@SuppressWarnings("unchecked")
-	public <K,V> ConcurrentHeapCacheBuilder evictionListener(EvictionListener<K, V> evictionListener){
+	public <K, V> ConcurrentHeapCacheBuilder evictionListener(EvictionListener<K, V> evictionListener) {
 		this.evictionListener = (EvictionListener<Object, Object>) evictionListener;
 		return this;
 	}
-	
+
 	/**
 	 * Query executer.
 	 *
@@ -79,23 +79,23 @@ public class ConcurrentHeapCacheBuilder extends CacheBuilder{
 	 * @return the concurrent heap cache builder
 	 */
 	@SuppressWarnings("unchecked")
-	public <K,V> ConcurrentHeapCacheBuilder indexHandler(IndexHandler<K, V> indexHandler){
+	public <K, V> ConcurrentHeapCacheBuilder indexHandler(IndexHandler<K, V> indexHandler) {
 		this.indexHandler = (IndexHandler<Object, Object>) indexHandler;
 		isSearchable = true;
 		return this;
 	}
-	
+
 	/**
 	 * Capacity.
 	 *
 	 * @param capacity the capacity
 	 * @return the concurrent heap cache builder
 	 */
-	public ConcurrentHeapCacheBuilder capacity(int capacity){
+	public ConcurrentHeapCacheBuilder capacity(int capacity) {
 		this.capacity = capacity;
 		return this;
 	}
-	
+
 	/**
 	 * Adds the index.
 	 *
@@ -103,12 +103,12 @@ public class ConcurrentHeapCacheBuilder extends CacheBuilder{
 	 * @param indexType the index type
 	 * @return the concurrent heap cache builder
 	 */
-	public ConcurrentHeapCacheBuilder addIndex(String attributeName, IndexType indexType){
+	public ConcurrentHeapCacheBuilder addIndex(String attributeName, IndexType indexType) {
 		searchable();
 		indexHandler.addIndex(attributeName, indexType);
 		return this;
 	}
-	
+
 	/**
 	 * Builds the cache.
 	 *
@@ -117,8 +117,8 @@ public class ConcurrentHeapCacheBuilder extends CacheBuilder{
 	 * @return the cache
 	 */
 	@SuppressWarnings("unchecked")
-	public <K,V> SearchableCache<K, V> build() {
-		return new ConcurrentHeapCache<K, V>((CacheLoader<K, V>)cacheLoader,(EvictionListener<K, V>) evictionListener,
-				(IndexHandler<K, V>) indexHandler, capacity);
+	public <K, V> SearchableCache<K, V> build() {
+		return new ConcurrentHeapCache<K, V>((CacheLoader<K, V>) cacheLoader,
+				(EvictionListener<K, V>) evictionListener, (IndexHandler<K, V>) indexHandler, capacity);
 	}
 }
