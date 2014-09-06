@@ -1,23 +1,23 @@
 /*
-* Copyright (C) 2014 Cetsoft, http://www.cetsoft.com
-*
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Library General Public
-* License as published by the Free Software Foundation; either
-* version 2 of the License, or (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Library General Public License for more details.
-*
-* You should have received a copy of the GNU Library General Public
-* License along with this library; if not, write to the Free
-* Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-* 
-* Author : Yusuf Aytas
-* Date   : Sep 23, 2013
-*/
+ * Copyright (C) 2014 Cetsoft, http://www.cetsoft.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * 
+ * Author : Yusuf Aytas
+ * Date   : Sep 23, 2013
+ */
 package com.cetsoft.imcache.examples;
 
 import java.io.ByteArrayInputStream;
@@ -32,18 +32,18 @@ import java.io.ObjectOutputStream;
  * The Class Serializer.
  */
 public class Serializer {
-	
+
 	/**
 	 * Serialize.
 	 *
 	 * @param object the object
 	 * @return the byte[]
 	 */
-	public static byte[] serialize(Object object){
+	public static byte[] serialize(Object object) {
 		byte[] objectBytes = null;
-		ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		try {
-			ObjectOutput out = new ObjectOutputStream(bos);  
+			ObjectOutput out = new ObjectOutputStream(bos);
 			out.writeObject(object);
 			objectBytes = bos.toByteArray();
 			out.close();
@@ -53,7 +53,7 @@ public class Serializer {
 		}
 		return objectBytes;
 	}
-	
+
 	/**
 	 * Deserialize.
 	 *
@@ -62,20 +62,19 @@ public class Serializer {
 	 * @return the c
 	 */
 	@SuppressWarnings("unchecked")
-	public static <C> C deserialize(byte [] bytes){
+	public static <C> C deserialize(byte[] bytes) {
 		Object object = null;
 		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
 		try {
 			ObjectInput in = new ObjectInputStream(bis);
-			object = in.readObject(); 
+			object = in.readObject();
 			bis.close();
 			in.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		catch(ClassNotFoundException e){
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		return (C)object;
+		return (C) object;
 	}
 }
