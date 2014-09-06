@@ -36,6 +36,7 @@
 package com.cetsoft.imcache.concurrent;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -194,7 +195,8 @@ public final class Weighers {
 				return ((Collection<?>) values).size();
 			}
 			int size = 0;
-			for (Object value : values) {
+			for (Iterator<?> iterator = values.iterator(); iterator.hasNext();) {
+				iterator.next();
 				size++;
 			}
 			return size;
