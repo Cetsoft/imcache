@@ -1,23 +1,23 @@
 /*
-* Copyright (C) 2013 Yusuf Aytas, http://www.yusufaytas.com
-*
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Library General Public
-* License as published by the Free Software Foundation; either
-* version 2 of the License, or (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Library General Public License for more details.
-*
-* You should have received a copy of the GNU Library General Public
-* License along with this library; if not, write to the Free
-* Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-* 
-* Author : Yusuf Aytas
-* Date   : Dec 29, 2013
-*/
+ * Copyright (C) 2014 Yusuf Aytas, http://www.yusufaytas.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * 
+ * Author : Yusuf Aytas
+ * Date   : Dec 29, 2013
+ */
 package com.cetsoft.imcache.spring;
 
 import java.util.Collection;
@@ -38,7 +38,7 @@ public class ImcacheCacheManager implements CacheManager, InitializingBean {
 
 	/** The cache builder. */
 	private CacheBuilder cacheBuilder;
-	
+
 	/** The caches. */
 	private final ConcurrentMap<String, Cache> caches = new ConcurrentHashMap<String, Cache>();
 
@@ -58,7 +58,9 @@ public class ImcacheCacheManager implements CacheManager, InitializingBean {
 		this.cacheBuilder = cacheBuilder;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.springframework.cache.CacheManager#getCache(java.lang.String)
 	 */
 	public Cache getCache(String name) {
@@ -68,26 +70,30 @@ public class ImcacheCacheManager implements CacheManager, InitializingBean {
 			final Cache exCache = caches.putIfAbsent(name, newCache);
 			if (exCache != null) {
 				cache = exCache;
-			}
-			else{
+			} else {
 				cache = newCache;
 			}
 		}
 		return cache;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.springframework.cache.CacheManager#getCacheNames()
 	 */
 	public Collection<String> getCacheNames() {
 		return Collections.unmodifiableCollection(caches.keySet());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() throws Exception {
-		
+
 	}
 
 	/**
