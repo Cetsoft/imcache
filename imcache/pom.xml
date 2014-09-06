@@ -9,6 +9,14 @@
 	</parent>
 	<dependencies>
 		<dependency>
+        	<groupId>com.cetsoft</groupId>
+			<artifactId>imcache-core</artifactId>
+    	</dependency>
+    	<dependency>
+        	<groupId>com.cetsoft</groupId>
+			<artifactId>imcache-offheap</artifactId>
+    	</dependency>
+		<dependency>
         	<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
         	<scope>test</scope>

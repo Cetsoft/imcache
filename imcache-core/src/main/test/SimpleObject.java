@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2013 Cetsoft, http://www.cetsoft.com
+* Copyright (C) 2013 Yusuf Aytas, http://www.yusufaytas.com
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Library General Public
@@ -16,30 +16,51 @@
 * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * 
 * Author : Yusuf Aytas
-* Date   : Sep 23, 2013
+* Date   : Jan 19, 2014
 */
-package com.cetsoft.imcache.serialization;
+package com.cetsoft.imcache.test;
+
+import java.io.Serializable;
 
 /**
- * The Interface Serializer.
- *
- * @param <V> the value type
+ * The Class SimpleObject.
  */
-public interface Serializer<V>{
+public class SimpleObject implements Serializable {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
 	
+	/** The y. */
+	private int x, y;
+
 	/**
-	 * Serialize.
-	 *
-	 * @param value the value
-	 * @return the byte[]
+	 * Instantiates a new simple object.
+	 * 
+	 * @param x
+	 *            the x
+	 * @param y
+	 *            the y
 	 */
-	byte[] serialize(V value);
-	
+	public SimpleObject(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+
 	/**
-	 * Deserialize.
-	 *
-	 * @param payload the payload
-	 * @return the v
+	 * Gets the x.
+	 * 
+	 * @return the x
 	 */
-	V deserialize(byte [] payload);
+	public int getX() {
+		return x;
+	}
+
+	/**
+	 * Gets the y.
+	 * 
+	 * @return the y
+	 */
+	public int getY() {
+		return y;
+	}
 }
