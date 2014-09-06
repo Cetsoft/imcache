@@ -1,23 +1,23 @@
 /*
-* Copyright (C) 2014 Cetsoft, http://www.cetsoft.com
-*
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Library General Public
-* License as published by the Free Software Foundation; either
-* version 2 of the License, or (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Library General Public License for more details.
-*
-* You should have received a copy of the GNU Library General Public
-* License along with this library; if not, write to the Free
-* Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-* 
-* Author : Yusuf Aytas
-* Date   : Sep 23, 2013
-*/
+ * Copyright (C) 2014 Cetsoft, http://www.cetsoft.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * 
+ * Author : Yusuf Aytas
+ * Date   : Sep 23, 2013
+ */
 package com.cetsoft.imcache.cache.builder;
 
 import java.io.ByteArrayInputStream;
@@ -41,37 +41,50 @@ import com.cetsoft.imcache.serialization.Serializer;
 /**
  * The Class CacheBuilder.
  */
-public abstract class CacheBuilder{
-	
+public abstract class CacheBuilder {
+
 	/** The is searchable. */
-	protected volatile boolean isSearchable = false; 
-	
+	protected volatile boolean isSearchable = false;
+
 	/** The Constant CACHE_LOADER. */
 	protected static final CacheLoader<Object, Object> CACHE_LOADER = new CacheLoader<Object, Object>() {
-		public Object load(Object key) {return null;}
-	}; 
-	
+		public Object load(Object key) {
+			return null;
+		}
+	};
+
 	/** The Constant EVICTION_LISTENER. */
 	protected static final EvictionListener<Object, Object> EVICTION_LISTENER = new EvictionListener<Object, Object>() {
-		public void onEviction(Object key, Object value) {}
-	}; 
-	
+		public void onEviction(Object key, Object value) {
+		}
+	};
+
 	/** The Constant QUERY_EXECUTER. */
 	protected static final IndexHandler<Object, Object> QUERY_EXECUTER = new IndexHandler<Object, Object>() {
-		public void addIndex(String attributeName, IndexType type) {}
-		public void remove(Object key, Object value) {}
-		public List<Object> execute(Query query) {return null;}
-		public void clear() {}
-		public void add(Object key, Object value) {}
+		public void addIndex(String attributeName, IndexType type) {
+		}
+
+		public void remove(Object key, Object value) {
+		}
+
+		public List<Object> execute(Query query) {
+			return null;
+		}
+
+		public void clear() {
+		}
+
+		public void add(Object key, Object value) {
+		}
 	};
-	
+
 	/** The Constant SERIALIZER. */
 	protected static final Serializer<Object> SERIALIZER = new Serializer<Object>() {
-		public byte[] serialize(Object object){
+		public byte[] serialize(Object object) {
 			byte[] objectBytes = null;
-			ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			try {
-				ObjectOutput out = new ObjectOutputStream(bos);  
+				ObjectOutput out = new ObjectOutputStream(bos);
 				out.writeObject(object);
 				objectBytes = bos.toByteArray();
 				out.close();
@@ -81,24 +94,24 @@ public abstract class CacheBuilder{
 			}
 			return objectBytes;
 		}
-		public Object deserialize(byte [] bytes){
+
+		public Object deserialize(byte[] bytes) {
 			Object object = null;
 			ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
 			try {
 				ObjectInput in = new ObjectInputStream(bis);
-				object = in.readObject(); 
+				object = in.readObject();
 				bis.close();
 				in.close();
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
-			catch(ClassNotFoundException e){
+			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
 			return object;
 		}
 	};
-	
+
 	/**
 	 * Builds the cache.
 	 *
@@ -106,8 +119,8 @@ public abstract class CacheBuilder{
 	 * @param <V> the value type
 	 * @return the searchable cache
 	 */
-	public abstract <K,V> SearchableCache<K, V> build();
-	
+	public abstract <K, V> SearchableCache<K, V> build();
+
 	/**
 	 * Builds the cache.
 	 *
@@ -116,26 +129,26 @@ public abstract class CacheBuilder{
 	 * @param cacheName the cache name
 	 * @return the searchable cache
 	 */
-	public <K,V> SearchableCache<K, V> build(String cacheName){
+	public <K, V> SearchableCache<K, V> build(String cacheName) {
 		SearchableCache<K, V> cache = build();
 		cache.setName(cacheName);
 		return cache;
 	}
-	
+
 	/** The cache loader. */
 	protected CacheLoader<Object, Object> cacheLoader;
-	
+
 	/** The eviction listener. */
 	protected EvictionListener<Object, Object> evictionListener;
-	
+
 	/** The query executer. */
 	protected IndexHandler<Object, Object> indexHandler;
-	
+
 	/**
 	 * Searchable.
 	 */
-	protected void searchable(){
-		if(!isSearchable){
+	protected void searchable() {
+		if (!isSearchable) {
 			indexHandler = new ConcurrentIndexHandler<Object, Object>();
 			isSearchable = true;
 		}
@@ -144,55 +157,55 @@ public abstract class CacheBuilder{
 	/**
 	 * Instantiates a new cache builder.
 	 */
-	protected CacheBuilder(){
+	protected CacheBuilder() {
 		cacheLoader = CACHE_LOADER;
 		evictionListener = EVICTION_LISTENER;
 		indexHandler = QUERY_EXECUTER;
 	}
-	
+
 	/**
 	 * Heap cache.
 	 *
 	 * @return the heap cache builder
 	 */
-	public static HeapCacheBuilder heapCache(){
+	public static HeapCacheBuilder heapCache() {
 		return new HeapCacheBuilder();
 	}
-	
+
 	/**
 	 * Transactional Heap cache.
 	 *
 	 * @return the transactional heap cache builder
 	 */
-	public static TransactionalHeapCacheBuilder transactionalHeapCache(){
+	public static TransactionalHeapCacheBuilder transactionalHeapCache() {
 		return new TransactionalHeapCacheBuilder();
 	}
-	
+
 	/**
 	 * Concurrent heap cache.
 	 *
 	 * @return the concurrent heap cache builder
 	 */
-	public static ConcurrentHeapCacheBuilder concurrentHeapCache(){
+	public static ConcurrentHeapCacheBuilder concurrentHeapCache() {
 		return new ConcurrentHeapCacheBuilder();
 	}
-	
+
 	/**
 	 * Off heap cache.
 	 *
 	 * @return the off heap cache builder
 	 */
-	public static OffHeapCacheBuilder offHeapCache(){
+	public static OffHeapCacheBuilder offHeapCache() {
 		return new OffHeapCacheBuilder();
 	}
-	
+
 	/**
 	 * Versioned Off heap cache.
 	 *
 	 * @return the off heap cache builder
 	 */
-	public static VersionedOffHeapCacheBuilder versionedOffHeapCache(){
+	public static VersionedOffHeapCacheBuilder versionedOffHeapCache() {
 		return new VersionedOffHeapCacheBuilder();
 	}
-	
+
 }
