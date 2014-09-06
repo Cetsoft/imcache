@@ -231,7 +231,7 @@ public class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V> implements 
 		this.weigher = weigher;
 		executorService.scheduleAtFixedRate(new CatchUpTask(this), INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
 		this.executorService = executorService;
-		
+
 		map = new ConcurrentHashMap<K, Node>(initialCapacity, 0.75f, concurrencyLevel);
 
 		nextOrder = Integer.MIN_VALUE;
@@ -1602,5 +1602,5 @@ public class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V> implements 
 			return (o1 == null ? o2 == null : o1.equals(o2));
 		}
 	}
-	
+
 }
