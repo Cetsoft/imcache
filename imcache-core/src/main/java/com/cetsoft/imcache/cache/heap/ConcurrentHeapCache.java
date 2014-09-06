@@ -45,7 +45,7 @@ import com.cetsoft.imcache.concurrent.Weighers;
  * @param <V> the value type
  */
 public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
-	
+
 	/** The Constant NO_OF_EVICTORS. */
 	protected static final AtomicInteger NO_OF_EVICTORS = new AtomicInteger();
 
@@ -158,12 +158,12 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 		 */
 		@SuppressWarnings("unchecked")
 		public ConcurrentLimitedHashMap(int capacity) {
-			super(DEFAULT_CONCURRENCY_LEVEL, DEFAULT_INITIAL_CAPACITY, capacity, (Weigher<V>) Weighers.singleton(), DEFAULT_PERIOD,
-					Executors.newScheduledThreadPool(1, new ThreadFactory() {
+			super(DEFAULT_CONCURRENCY_LEVEL, DEFAULT_INITIAL_CAPACITY, capacity, (Weigher<V>) Weighers.singleton(),
+					DEFAULT_PERIOD, Executors.newScheduledThreadPool(1, new ThreadFactory() {
 						public Thread newThread(Runnable runnable) {
 							return new Thread("imcache:evictionThread(thread=" + NO_OF_EVICTORS.incrementAndGet() + ")");
 						}
-					}),new com.cetsoft.imcache.concurrent.EvictionListener<K, V>() {
+					}), new com.cetsoft.imcache.concurrent.EvictionListener<K, V>() {
 						public void onEviction(K key, V value) {
 							ConcurrentHeapCache.this.evictionListener.onEviction(key, value);
 						}
@@ -174,7 +174,8 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 		 * (non-Javadoc)
 		 * 
 		 * @see
-		 * com.cetsoft.imcache.concurrent.ConcurrentLinkedHashMap#put(java.lang.Object, java.lang.Object)
+		 * com.cetsoft.imcache.concurrent.ConcurrentLinkedHashMap#put(java.lang
+		 * .Object, java.lang.Object)
 		 */
 		@Override
 		public V put(K key, V value) {
@@ -187,7 +188,8 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 		 * (non-Javadoc)
 		 * 
 		 * @see
-		 * com.cetsoft.imcache.concurrent.ConcurrentLinkedHashMap#get(java.lang.Object)
+		 * com.cetsoft.imcache.concurrent.ConcurrentLinkedHashMap#get(java.lang
+		 * .Object)
 		 */
 		@Override
 		@SuppressWarnings("unchecked")
@@ -209,7 +211,8 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 		 * (non-Javadoc)
 		 * 
 		 * @see
-		 * com.cetsoft.imcache.concurrent.ConcurrentLinkedHashMap#remove(java.lang.Object)
+		 * com.cetsoft.imcache.concurrent.ConcurrentLinkedHashMap#remove(java
+		 * .lang.Object)
 		 */
 		@Override
 		@SuppressWarnings("unchecked")

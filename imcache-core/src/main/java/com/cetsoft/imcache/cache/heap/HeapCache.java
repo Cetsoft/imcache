@@ -1,23 +1,23 @@
 /*
-* Copyright (C) 2014 Cetsoft, http://www.cetsoft.com
-*
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Library General Public
-* License as published by the Free Software Foundation; either
-* version 2 of the License, or (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Library General Public License for more details.
-*
-* You should have received a copy of the GNU Library General Public
-* License along with this library; if not, write to the Free
-* Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-* 
-* Author : Yusuf Aytas
-* Date   : Sep 16, 2013
-*/
+ * Copyright (C) 2014 Cetsoft, http://www.cetsoft.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * 
+ * Author : Yusuf Aytas
+ * Date   : Sep 16, 2013
+ */
 package com.cetsoft.imcache.cache.heap;
 
 import java.util.LinkedHashMap;
@@ -40,17 +40,17 @@ import com.cetsoft.imcache.cache.search.IndexHandler;
  * @param <K> the key type
  * @param <V> the value type
  */
-public class HeapCache<K,V> extends AbstractCache<K, V>{
-	
+public class HeapCache<K, V> extends AbstractCache<K, V> {
+
 	/** The hit. */
 	protected long hit;
-	
+
 	/** The miss. */
 	protected long miss;
-	
+
 	/** The cache. */
-	protected Map<K,V> cache;
-	
+	protected Map<K, V> cache;
+
 	/**
 	 * Instantiates a new heap cache.
 	 *
@@ -59,36 +59,44 @@ public class HeapCache<K,V> extends AbstractCache<K, V>{
 	 * @param indexHandler the query executer
 	 * @param capacity the capacity
 	 */
-	public HeapCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,IndexHandler<K, V> indexHandler,int capacity) {
-		super(cacheLoader,evictionListener,indexHandler);
+	public HeapCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,
+			IndexHandler<K, V> indexHandler, int capacity) {
+		super(cacheLoader, evictionListener, indexHandler);
 		initCache(capacity);
 	}
-	
+
 	/**
 	 * Inits the cache.
 	 *
 	 * @param capacity the capacity
 	 */
-	private void initCache(int capacity){
+	private void initCache(int capacity) {
 		cache = new LimitedHashMap(capacity);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.cache.Cache#put(java.lang.Object, java.lang.Object)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.cetsoft.imcache.cache.Cache#put(java.lang.Object,
+	 * java.lang.Object)
 	 */
 	public void put(K key, V value) {
 		cache.put(key, value);
 		indexHandler.add(key, value);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cetsoft.imcache.cache.Cache#get(java.lang.Object)
 	 */
 	public V get(K key) {
 		return cache.get(key);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cetsoft.imcache.cache.Cache#invalidate(java.lang.Object)
 	 */
 	public V invalidate(K key) {
@@ -97,14 +105,18 @@ public class HeapCache<K,V> extends AbstractCache<K, V>{
 		return value;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cetsoft.imcache.cache.Cache#contains(java.lang.Object)
 	 */
 	public boolean contains(K key) {
 		return cache.containsKey(key);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cetsoft.imcache.cache.Cache#clear()
 	 */
 	public void clear() {
@@ -113,25 +125,27 @@ public class HeapCache<K,V> extends AbstractCache<K, V>{
 		}
 		indexHandler.clear();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cetsoft.imcache.cache.Cache#hitRatio()
 	 */
 	public double hitRatio() {
-		return hit/(hit+miss);
+		return hit / (hit + miss);
 	}
-	
+
 	/**
 	 * The Class LimitedHashMap.
 	 */
-	protected class LimitedHashMap extends LinkedHashMap<K,V>{
+	protected class LimitedHashMap extends LinkedHashMap<K, V> {
 
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = -831411504252696399L;
-		
+
 		/** The capacity. */
 		private int capacity;
-		
+
 		/**
 		 * Instantiates a new limited hash map.
 		 *
@@ -141,52 +155,57 @@ public class HeapCache<K,V> extends AbstractCache<K, V>{
 			super(capacity, 0.75f, true);
 			this.capacity = capacity;
 		}
-		
-		/* (non-Javadoc)
+
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.LinkedHashMap#get(java.lang.Object)
 		 */
 		@Override
 		@SuppressWarnings("unchecked")
-		public V get(Object key){
+		public V get(Object key) {
 			V value = super.get(key);
-			if(value==null){
+			if (value == null) {
 				miss++;
-				value = HeapCache.this.cacheLoader.load((K)key);
-				if(value!=null){
+				value = HeapCache.this.cacheLoader.load((K) key);
+				if (value != null) {
 					cache.put((K) key, value);
 				}
-			}
-			else{
+			} else {
 				hit++;
 			}
 			return value;
 		}
-		
-		/* (non-Javadoc)
+
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.HashMap#remove(java.lang.Object)
 		 */
 		@Override
 		@SuppressWarnings("unchecked")
-		public V remove(Object key){
+		public V remove(Object key) {
 			V value = super.remove(key);
-			if(value!=null){
+			if (value != null) {
 				HeapCache.this.evictionListener.onEviction((K) key, value);
 			}
 			return value;
 		}
-		
-		/* (non-Javadoc)
+
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.LinkedHashMap#removeEldestEntry(java.util.Map.Entry)
 		 */
 		@Override
 		protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
 			boolean shouldRemove = size() > this.capacity;
-			if(shouldRemove){
+			if (shouldRemove) {
 				HeapCache.this.evictionListener.onEviction(eldest.getKey(), eldest.getValue());
 			}
 			return shouldRemove;
 		}
-		
+
 	}
 
 }

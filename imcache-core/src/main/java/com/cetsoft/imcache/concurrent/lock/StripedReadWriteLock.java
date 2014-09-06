@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * When a lock requested, this lock gives a lock associated with the given id. 
  */
 public class StripedReadWriteLock {
-	
+
 	private final ReentrantReadWriteLock[] locks;
 
 	/**
@@ -31,7 +31,7 @@ public class StripedReadWriteLock {
 
 		int lockSize = (int) Math.pow(2, storagePower);
 		locks = new ReentrantReadWriteLock[lockSize];
-		for (int i = 0; i < locks.length; i++){
+		for (int i = 0; i < locks.length; i++) {
 			locks[i] = new ReentrantReadWriteLock();
 		}
 	}
@@ -80,7 +80,8 @@ public class StripedReadWriteLock {
 	 */
 	private ReentrantReadWriteLock getLock(int id) {
 		// locks.length-1 is a string of ones since lock.length is power of 2,
-		// thus ending cancels out the higher bits of id and leaves the lower bits
+		// thus ending cancels out the higher bits of id and leaves the lower
+		// bits
 		// to determine the lock.
 		return locks[id & (locks.length - 1)];
 	}

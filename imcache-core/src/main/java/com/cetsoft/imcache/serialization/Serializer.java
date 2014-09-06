@@ -1,23 +1,23 @@
 /*
-* Copyright (C) 2014 Cetsoft, http://www.cetsoft.com
-*
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Library General Public
-* License as published by the Free Software Foundation; either
-* version 2 of the License, or (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Library General Public License for more details.
-*
-* You should have received a copy of the GNU Library General Public
-* License along with this library; if not, write to the Free
-* Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-* 
-* Author : Yusuf Aytas
-* Date   : Sep 23, 2013
-*/
+ * Copyright (C) 2014 Cetsoft, http://www.cetsoft.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * 
+ * Author : Yusuf Aytas
+ * Date   : Sep 23, 2013
+ */
 package com.cetsoft.imcache.serialization;
 
 /**
@@ -25,8 +25,8 @@ package com.cetsoft.imcache.serialization;
  *
  * @param <V> the value type
  */
-public interface Serializer<V>{
-	
+public interface Serializer<V> {
+
 	/**
 	 * Serialize.
 	 *
@@ -34,12 +34,12 @@ public interface Serializer<V>{
 	 * @return the byte[]
 	 */
 	byte[] serialize(V value);
-	
+
 	/**
 	 * Deserialize.
 	 *
 	 * @param payload the payload
 	 * @return the v
 	 */
-	V deserialize(byte [] payload);
+	V deserialize(byte[] payload);
 }

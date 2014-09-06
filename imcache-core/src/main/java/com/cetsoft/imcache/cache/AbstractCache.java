@@ -1,23 +1,23 @@
 /*
-* Copyright (C) 2014 Cetsoft, http://www.cetsoft.com
-*
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Library General Public
-* License as published by the Free Software Foundation; either
-* version 2 of the License, or (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Library General Public License for more details.
-*
-* You should have received a copy of the GNU Library General Public
-* License along with this library; if not, write to the Free
-* Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-* 
-* Author : Yusuf Aytas
-* Date   : Sep 16, 2013
-*/
+ * Copyright (C) 2014 Cetsoft, http://www.cetsoft.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * 
+ * Author : Yusuf Aytas
+ * Date   : Sep 16, 2013
+ */
 package com.cetsoft.imcache.cache;
 
 import java.util.ArrayList;
@@ -33,19 +33,19 @@ import com.cetsoft.imcache.cache.search.IndexHandler;
  * @param <V> the value type
  */
 public abstract class AbstractCache<K, V> implements SearchableCache<K, V> {
-	
+
 	/** The name. */
 	private String name;
 
 	/** The cache loader. */
 	protected CacheLoader<K, V> cacheLoader;
-	
+
 	/** The eviction listener. */
 	protected EvictionListener<K, V> evictionListener;
-	
+
 	/** The Query Executer.*/
 	protected IndexHandler<K, V> indexHandler;
-	
+
 	/**
 	 * Instantiates a new abstract cache.
 	 *
@@ -53,26 +53,31 @@ public abstract class AbstractCache<K, V> implements SearchableCache<K, V> {
 	 * @param evictionListener the eviction listener
 	 * @param indexHandler the query executer
 	 */
-	public AbstractCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,IndexHandler<K, V> indexHandler) {
+	public AbstractCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,
+			IndexHandler<K, V> indexHandler) {
 		this.cacheLoader = cacheLoader;
 		this.evictionListener = evictionListener;
 		this.indexHandler = indexHandler;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.cetsoft.imcache.cache.SearchableCache#get(com.cetsoft.imcache.cache.search.Query)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cetsoft.imcache.cache.SearchableCache#get(com.cetsoft.imcache.cache
+	 * .search.Query)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<V> execute(Query query){
+	public List<V> execute(Query query) {
 		List<K> keys = indexHandler.execute(query);
 		List<V> values = new ArrayList<V>(keys.size());
 		for (K key : keys) {
 			V value = get(key);
-			if(value!=null){
+			if (value != null) {
 				values.add(value);
 			}
 		}
-		if(query.getFilter()!=null){
+		if (query.getFilter() != null) {
 			values = (List<V>) query.getFilter().filter((List<Object>) values);
 		}
 		return values;
@@ -131,18 +136,22 @@ public abstract class AbstractCache<K, V> implements SearchableCache<K, V> {
 	public void setIndexHandler(IndexHandler<K, V> indexHandler) {
 		this.indexHandler = indexHandler;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cetsoft.imcache.cache.Cache#getName()
 	 */
-	public String getName(){
-		if(name!=null){
+	public String getName() {
+		if (name != null) {
 			return name;
 		}
 		return this.getClass().getName();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cetsoft.imcache.cache.Cache#setName(java.lang.String)
 	 */
 	public void setName(String name) {
