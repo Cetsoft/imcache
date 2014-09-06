@@ -12,6 +12,10 @@
 		<module>imcache</module>
 		<module>imcache-examples</module>
 		<module>imcache-spring</module>
+		<module>imcache-offheap</module>
+		<module>imcache-core</module>
+		<module>imcache-redis</module>
+		<module>imcache-memcache</module>
 	</modules>
 	<properties>
 		<org.springframework.version>4.0.0.RELEASE</org.springframework.version>
@@ -168,6 +172,16 @@
 			<dependency>
 				<groupId>com.cetsoft</groupId>
 				<artifactId>imcache-spring</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cetsoft</groupId>
+				<artifactId>imcache-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cetsoft</groupId>
+				<artifactId>imcache-offheap</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
