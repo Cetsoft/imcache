@@ -23,9 +23,12 @@ package com.cetsoft.imcache.cache.redis;
 import com.cetsoft.imcache.cache.AbstractCache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
+import com.cetsoft.imcache.cache.redis.client.RedisClient;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 
 public class RedisCache<K, V> extends AbstractCache<K, V> {
+
+    protected RedisClient client = null;
 
 	public RedisCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,
 			IndexHandler<K, V> indexHandler) {

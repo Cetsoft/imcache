@@ -18,3 +18,7 @@ imcache-examples/imcache-examples.iml
 imcache-parent.iml
 imcache-spring/imcache-spring.iml
 imcache/imcache.iml
+imcache-memcache.iml
+imcache-offheap.iml
+imcache-redis.iml
+imcache-core.iml
