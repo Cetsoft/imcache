@@ -1,4 +1,4 @@
-package com.cetsoft.imcache.cache.redis.client;
+package com.cetsoft.imcache.cache.redis.client.util;
 
 
 import java.io.FilterOutputStream;
