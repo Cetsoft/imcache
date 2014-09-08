@@ -3,7 +3,9 @@ package com.cetsoft.imcache.cache.redis.client.exception;
 
 public class RedisCacheException extends RuntimeException {
 
-    public RedisCacheException(String message) {
+	private static final long serialVersionUID = 7379846444846442221L;
+
+	public RedisCacheException(String message) {
         super(message);
     }
 
