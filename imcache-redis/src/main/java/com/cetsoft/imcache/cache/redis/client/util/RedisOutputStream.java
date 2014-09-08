@@ -1,3 +1,23 @@
+/*
+* Copyright (C) 2014 Cetsoft, http://www.cetsoft.com
+*
+* This library is free software; you can redistribute it and/or
+* modify it under the terms of the GNU Library General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This library is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+* Library General Public License for more details.
+*
+* You should have received a copy of the GNU Library General Public
+* License along with this library; if not, write to the Free
+* Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+* 
+* Author : Yusuf Aytas
+* Date   : Sep 8, 2014
+*/
 package com.cetsoft.imcache.cache.redis.client.util;
 
 
@@ -5,73 +25,124 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * The Class RedisOutputStream.
+ */
 public final class RedisOutputStream extends FilterOutputStream {
-    protected final byte buf[];
+    
+    /** The buffer. */
+    protected final byte buffer[];
 
+    /** The count. */
     protected int count;
 
+    /**
+     * Instantiates a new redis output stream.
+     *
+     * @param out the out
+     */
     public RedisOutputStream(final OutputStream out) {
         this(out, 8192);
     }
 
+    /**
+     * Instantiates a new redis output stream.
+     *
+     * @param out the out
+     * @param size the size
+     */
     public RedisOutputStream(final OutputStream out, final int size) {
         super(out);
         if (size <= 0) {
             throw new IllegalArgumentException("Buffer size <= 0");
         }
-        buf = new byte[size];
+        buffer = new byte[size];
     }
 
+    /**
+     * Flush buffer.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private void flushBuffer() throws IOException {
         if (count > 0) {
-            out.write(buf, 0, count);
+            out.write(buffer, 0, count);
             count = 0;
         }
     }
 
+    /**
+     * Writes the byte to the buffer.
+     *
+     * @param b the b
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public void write(final byte b) throws IOException {
-        if (count == buf.length) {
+        if (count == buffer.length) {
             flushBuffer();
         }
-        buf[count++] = b;
+        buffer[count++] = b;
     }
 
+    /* (non-Javadoc)
+     * @see java.io.FilterOutputStream#write(byte[])
+     */
     public void write(final byte[] b) throws IOException {
         write(b, 0, b.length);
     }
 
+    /* (non-Javadoc)
+     * @see java.io.FilterOutputStream#write(byte[], int, int)
+     */
     public void write(final byte b[], final int off, final int len)
             throws IOException {
-        if (len >= buf.length) {
+        if (len >= buffer.length) {
             flushBuffer();
             out.write(b, off, len);
         } else {
-            if (len >= buf.length - count) {
+            if (len >= buffer.length - count) {
                 flushBuffer();
             }
 
-            System.arraycopy(b, off, buf, count, len);
+            System.arraycopy(b, off, buffer, count, len);
             count += len;
         }
     }
 
+    /**
+     * Write ascii cr lf.
+     *
+     * @param in the in
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public void writeAsciiCrLf(final String in) throws IOException {
         final int size = in.length();
 
         for (int i = 0; i != size; ++i) {
-            if (count == buf.length) {
+            if (count == buffer.length) {
                 flushBuffer();
             }
-            buf[count++] = (byte) in.charAt(i);
+            buffer[count++] = (byte) in.charAt(i);
         }
-
         writeCrLf();
     }
 
+    /**
+     * Checks if is surrogate.
+     *
+     * @param ch the ch
+     * @return true, if is surrogate
+     */
     public static boolean isSurrogate(final char ch) {
         return ch >= Character.MIN_SURROGATE && ch <= Character.MAX_SURROGATE;
     }
 
+    /**
+     * Utf8 length.
+     *
+     * @param str the str
+     * @return the int
+     */
     public static int utf8Length(final String str) {
         int strLen = str.length(), utfLen = 0;
         for (int i = 0; i != strLen; ++i) {
@@ -90,15 +161,25 @@ public final class RedisOutputStream extends FilterOutputStream {
         return utfLen;
     }
 
+    /**
+     * Write cr lf.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public void writeCrLf() throws IOException {
-        if (2 >= buf.length - count) {
+        if (2 >= buffer.length - count) {
             flushBuffer();
         }
-
-        buf[count++] = '\r';
-        buf[count++] = '\n';
+        buffer[count++] = '\r';
+        buffer[count++] = '\n';
     }
 
+    /**
+     * Write utf8 cr lf.
+     *
+     * @param str the str
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public void writeUtf8CrLf(final String str) throws IOException {
         int strLen = str.length();
 
@@ -107,50 +188,52 @@ public final class RedisOutputStream extends FilterOutputStream {
             char c = str.charAt(i);
             if (!(c < 0x80))
                 break;
-            if (count == buf.length) {
+            if (count == buffer.length) {
                 flushBuffer();
             }
-            buf[count++] = (byte) c;
+            buffer[count++] = (byte) c;
         }
 
         for (; i < strLen; i++) {
             char c = str.charAt(i);
             if (c < 0x80) {
-                if (count == buf.length) {
+                if (count == buffer.length) {
                     flushBuffer();
                 }
-                buf[count++] = (byte) c;
+                buffer[count++] = (byte) c;
             } else if (c < 0x800) {
-                if (2 >= buf.length - count) {
+                if (2 >= buffer.length - count) {
                     flushBuffer();
                 }
-                buf[count++] = (byte) (0xc0 | (c >> 6));
-                buf[count++] = (byte) (0x80 | (c & 0x3f));
+                buffer[count++] = (byte) (0xc0 | (c >> 6));
+                buffer[count++] = (byte) (0x80 | (c & 0x3f));
             } else if (isSurrogate(c)) {
-                if (4 >= buf.length - count) {
+                if (4 >= buffer.length - count) {
                     flushBuffer();
                 }
                 int uc = Character.toCodePoint(c, str.charAt(i++));
-                buf[count++] = ((byte) (0xf0 | ((uc >> 18))));
-                buf[count++] = ((byte) (0x80 | ((uc >> 12) & 0x3f)));
-                buf[count++] = ((byte) (0x80 | ((uc >> 6) & 0x3f)));
-                buf[count++] = ((byte) (0x80 | (uc & 0x3f)));
+                buffer[count++] = ((byte) (0xf0 | ((uc >> 18))));
+                buffer[count++] = ((byte) (0x80 | ((uc >> 12) & 0x3f)));
+                buffer[count++] = ((byte) (0x80 | ((uc >> 6) & 0x3f)));
+                buffer[count++] = ((byte) (0x80 | (uc & 0x3f)));
             } else {
-                if (3 >= buf.length - count) {
+                if (3 >= buffer.length - count) {
                     flushBuffer();
                 }
-                buf[count++] = ((byte) (0xe0 | ((c >> 12))));
-                buf[count++] = ((byte) (0x80 | ((c >> 6) & 0x3f)));
-                buf[count++] = ((byte) (0x80 | (c & 0x3f)));
+                buffer[count++] = ((byte) (0xe0 | ((c >> 12))));
+                buffer[count++] = ((byte) (0x80 | ((c >> 6) & 0x3f)));
+                buffer[count++] = ((byte) (0x80 | (c & 0x3f)));
             }
         }
 
         writeCrLf();
     }
 
+    /** The Constant sizeTable. */
     private final static int[] sizeTable = { 9, 99, 999, 9999, 99999, 999999,
             9999999, 99999999, 999999999, Integer.MAX_VALUE };
 
+    /** The Constant DigitTens. */
     private final static byte[] DigitTens = { '0', '0', '0', '0', '0', '0',
             '0', '0', '0', '0', '1', '1', '1', '1', '1', '1', '1', '1', '1',
             '1', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '3', '3',
@@ -161,6 +244,7 @@ public final class RedisOutputStream extends FilterOutputStream {
             '8', '8', '8', '8', '8', '8', '9', '9', '9', '9', '9', '9', '9',
             '9', '9', '9', };
 
+    /** The Constant DigitOnes. */
     private final static byte[] DigitOnes = { '0', '1', '2', '3', '4', '5',
             '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8',
             '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1',
@@ -171,11 +255,18 @@ public final class RedisOutputStream extends FilterOutputStream {
             '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6',
             '7', '8', '9', };
 
+    /** The Constant digits. */
     private final static byte[] digits = { '0', '1', '2', '3', '4', '5', '6',
             '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
             'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
             'x', 'y', 'z' };
 
+    /**
+     * Write int cr lf.
+     *
+     * @param value the value
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public void writeIntCrLf(int value) throws IOException {
         if (value < 0) {
             write((byte) '-');
@@ -187,7 +278,7 @@ public final class RedisOutputStream extends FilterOutputStream {
             size++;
 
         size++;
-        if (size >= buf.length - count) {
+        if (size >= buffer.length - count) {
             flushBuffer();
         }
 
@@ -198,14 +289,14 @@ public final class RedisOutputStream extends FilterOutputStream {
             q = value / 100;
             r = value - ((q << 6) + (q << 5) + (q << 2));
             value = q;
-            buf[--charPos] = DigitOnes[r];
-            buf[--charPos] = DigitTens[r];
+            buffer[--charPos] = DigitOnes[r];
+            buffer[--charPos] = DigitTens[r];
         }
 
         for (;;) {
             q = (value * 52429) >>> (16 + 3);
             r = value - ((q << 3) + (q << 1));
-            buf[--charPos] = digits[r];
+            buffer[--charPos] = digits[r];
             value = q;
             if (value == 0)
                 break;
@@ -215,6 +306,9 @@ public final class RedisOutputStream extends FilterOutputStream {
         writeCrLf();
     }
 
+    /* (non-Javadoc)
+     * @see java.io.FilterOutputStream#flush()
+     */
     public void flush() throws IOException {
         flushBuffer();
         out.flush();
