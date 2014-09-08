@@ -158,7 +158,6 @@ public class Connection implements Closeable {
         }
     }
 
-    @Override
     public void close() throws IOException {
         disconnect();
     }
