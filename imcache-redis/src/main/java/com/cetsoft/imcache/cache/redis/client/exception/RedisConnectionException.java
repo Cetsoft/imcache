@@ -26,7 +26,9 @@ package com.cetsoft.imcache.cache.redis.client.exception;
  */
 public class RedisConnectionException extends RedisCacheException {
 
-    /**
+	private static final long serialVersionUID = 6609362487613486027L;
+
+	/**
      * Instantiates a new redis connection exception.
      *
      * @param message the message
