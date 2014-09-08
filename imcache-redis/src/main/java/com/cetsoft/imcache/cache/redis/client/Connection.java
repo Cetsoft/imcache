@@ -54,9 +54,6 @@ public class Connection implements Closeable {
     /** The input stream. */
     private RedisInputStream inputStream;
 
-    /** The broken. */
-    private boolean broken = false;
-
     /**
      * Instantiates a new connection.
      */
@@ -159,7 +156,6 @@ public class Connection implements Closeable {
             socket.setKeepAlive(true);
             socket.setSoTimeout(0);
         } catch (SocketException e) {
-            broken = true;
             throw new RedisConnectionException(e);
         }
     }
@@ -195,7 +191,6 @@ public class Connection implements Closeable {
                 outputStream = new RedisOutputStream(socket.getOutputStream());
                 inputStream = new RedisInputStream(socket.getInputStream());
             } catch (IOException e) {
-                broken = true;
                 throw new RedisConnectionException(e);
             }
         }
@@ -224,7 +219,6 @@ public class Connection implements Closeable {
                     socket.close();
                 }
             } catch (IOException e) {
-                broken = true;
                 throw new RedisConnectionException(e);
             }
         }
@@ -259,7 +253,6 @@ public class Connection implements Closeable {
 
             return this;
         } catch (RedisConnectionException e) {
-            broken = true;
             throw e;
         }
     }
@@ -276,7 +269,6 @@ public class Connection implements Closeable {
 
             return this;
         } catch (RedisConnectionException e) {
-            broken = true;
             throw e;
         }
     }
@@ -295,7 +287,6 @@ public class Connection implements Closeable {
         try {
             outputStream.flush();
         } catch (IOException e) {
-            broken = true;
             throw new RedisConnectionException(e);
         }
     }
