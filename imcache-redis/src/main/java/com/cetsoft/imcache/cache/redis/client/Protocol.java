@@ -20,6 +20,12 @@
  */
 package com.cetsoft.imcache.cache.redis.client;
 
+import com.cetsoft.imcache.cache.redis.client.exception.RedisConnectionException;
+import com.cetsoft.imcache.cache.redis.client.util.RedisOutputStream;
+import com.cetsoft.imcache.cache.redis.client.util.SafeEncoder;
+
+import java.io.IOException;
+
 /**
  * The Class Protocol.
  */
@@ -39,6 +45,9 @@ public final class Protocol {
 
 	/** The Constant CHARSET. */
 	public static final String CHARSET = "UTF-8";
+
+    public static final byte DOLLAR_BYTE = '$';
+    public static final byte ASTERISK_BYTE = '*';
 
 	/**
 	 * The Enum Command.
@@ -77,7 +86,32 @@ public final class Protocol {
 		 * Instantiates a new command.
 		 */
 		Command() {
-			raw = null;
+			raw = SafeEncoder.encode(this.name());
 		}
 	}
+
+    public static void sendCommand(final RedisOutputStream os, final Command command, final byte[]... args) {
+        sendCommand(os, command.raw, args);
+    }
+
+    public static void sendCommand(final RedisOutputStream os, final byte[] command, final byte[]... args) {
+        try {
+            os.write(ASTERISK_BYTE);
+            os.writeIntCrLf(args.length);
+            os.write(DOLLAR_BYTE);
+            os.writeIntCrLf(command.length);
+            os.write(command);
+            os.writeCrLf();
+
+            for (final byte[] arg : args) {
+                os.write(DOLLAR_BYTE);
+                os.writeIntCrLf(arg.length);
+                os.write(arg);
+                os.writeCrLf();
+            }
+        } catch (IOException e) {
+            throw new RedisConnectionException(e);
+        }
+    }
+
 }
