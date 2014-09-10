@@ -250,7 +250,7 @@ public class Connection implements Closeable {
     protected Connection sendCommand(final Protocol.Command cmd, final byte[]... args) {
         try {
             connect();
-
+            Protocol.sendCommand(outputStream, cmd, args);
             return this;
         } catch (RedisConnectionException e) {
             throw e;
