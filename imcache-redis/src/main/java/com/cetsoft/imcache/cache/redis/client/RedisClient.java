@@ -37,6 +37,6 @@ public class RedisClient extends BinaryClient {
 
     public String set(final String key, final String value) {
         set(SafeEncoder.encode(key), SafeEncoder.encode(value));
-        return null;
+        return getStatusCodeReply();
     }
 }

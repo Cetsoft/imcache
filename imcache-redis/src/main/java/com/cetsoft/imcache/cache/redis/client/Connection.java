@@ -54,6 +54,8 @@ public class Connection implements Closeable {
     /** The input stream. */
     private RedisInputStream inputStream;
 
+    private boolean broken = false;
+
     /**
      * Instantiates a new connection.
      */
@@ -253,6 +255,7 @@ public class Connection implements Closeable {
             Protocol.sendCommand(outputStream, cmd, args);
             return this;
         } catch (RedisConnectionException e) {
+            broken = true;
             throw e;
         }
     }
@@ -266,10 +269,35 @@ public class Connection implements Closeable {
     protected Connection sendCommand(final Protocol.Command cmd) {
         try {
             connect();
-
+            Protocol.sendCommand(outputStream, cmd, new byte[0][]);
             return this;
         } catch (RedisConnectionException e) {
+            broken = true;
             throw e;
+        }
+    }
+
+    protected String getStatusCodeReply() {
+        flush();
+        final byte[] resp = (byte[]) readProtocolWithCheckingBroken();
+        if (resp == null) {
+            return null;
+        } else {
+            return SafeEncoder.encode(resp);
+        }
+    }
+
+    public byte[] getBinaryBulkReply() {
+        flush();
+        return (byte[]) readProtocolWithCheckingBroken();
+    }
+
+    protected Object readProtocolWithCheckingBroken() {
+        try {
+            return Protocol.read(inputStream);
+        } catch (RedisConnectionException ex) {
+            broken = true;
+            throw ex;
         }
     }
 
@@ -287,6 +315,7 @@ public class Connection implements Closeable {
         try {
             outputStream.flush();
         } catch (IOException e) {
+            broken = true;
             throw new RedisConnectionException(e);
         }
     }
