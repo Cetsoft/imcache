@@ -18,8 +18,23 @@
 */
 package com.cetsoft.imcache.cache.redis.client;
 
+import com.cetsoft.imcache.cache.redis.client.util.SafeEncoder;
+
 /**
  * A light weight implementation of Redis Client.
  */
-public class RedisClient {
+public class RedisClient extends BinaryClient {
+
+    public RedisClient(String host) {
+        super(host);
+    }
+
+    public RedisClient(String host, int port) {
+        super(host, port);
+    }
+
+    public String set(final String key, final String value) {
+        set(SafeEncoder.encode(key), SafeEncoder.encode(value));
+        return getStatusCodeReply();
+    }
 }
