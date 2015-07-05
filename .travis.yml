@@ -1,0 +1,12 @@
+language: java
+
+jdk:
+  - oraclejdk8
+
+# whitelist
+branches:
+  only:
+    - master
+
+after_success:
+  - mvn clean test
