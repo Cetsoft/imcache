@@ -16,7 +16,7 @@
 * Author : Yusuf Aytas
 * Date   : Jan 4, 2014
 */
-package com.cetsoft.imcache.cache.pupulator;
+package com.cetsoft.imcache.cache.populator;
 
 import java.util.List;
 

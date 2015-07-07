@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import com.cetsoft.imcache.cache.populator.SimpleCachePopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -30,7 +31,6 @@ import org.springframework.stereotype.Component;
 
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheEntry;
-import com.cetsoft.imcache.cache.pupulator.SimpleCachePupulator;
 import com.cetsoft.imcache.cache.util.CacheUtils;
 
 /**
@@ -61,7 +61,7 @@ public class SpringConfigurationExample {
 	 */
 	@PostConstruct
 	public void initCache() {
-		new SimpleCachePupulator<String, String>(cache) {
+		new SimpleCachePopulator<String, String>(cache) {
 			public List<CacheEntry<String, String>> loadEntries() {
 				List<CacheEntry<String, String>> cacheEntries = new ArrayList<CacheEntry<String, String>>();
 				for (String cacheEntry : cacheDao.getAll()) {

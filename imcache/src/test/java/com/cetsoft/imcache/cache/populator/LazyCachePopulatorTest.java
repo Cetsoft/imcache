@@ -30,8 +30,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheEntry;
-import com.cetsoft.imcache.cache.pupulator.LazyCachePupulator;
-	
+
 /**
  * The Class LazyCachePopulatorTest.
  */
@@ -46,7 +45,7 @@ public class LazyCachePopulatorTest {
 	CacheEntry<Object, Object> entry;
 	
 	/** The populator. */
-	LazyCachePupulator<Object, Object> populator;
+	LazyCachePopulator<Object, Object> populator;
 	
 	/**
 	 * Setup.
@@ -54,7 +53,7 @@ public class LazyCachePopulatorTest {
 	@Before
 	public void setup(){
 		MockitoAnnotations.initMocks(this);
-		populator = spy(new LazyCachePupulator<Object, Object>(cache) {
+		populator = spy(new LazyCachePopulator<Object, Object>(cache) {
 			public List<CacheEntry<Object, Object>> loadEntries() {
 				return null;
 			}
