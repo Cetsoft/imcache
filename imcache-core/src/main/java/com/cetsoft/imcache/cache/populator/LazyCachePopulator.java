@@ -16,7 +16,7 @@
 * Author : Yusuf Aytas
 * Date   : Jan 4, 2014
 */
-package com.cetsoft.imcache.cache.pupulator;
+package com.cetsoft.imcache.cache.populator;
 
 import java.util.List;
 
@@ -24,19 +24,19 @@ import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheEntry;
 
 /**
- * The Class LazyCachePupulator populates the cache slowly after it is called.
+ * The Class LazyCachePopulator populates the cache slowly after it is called.
  *
  * @param <K> the key type
  * @param <V> the value type
  */
-public abstract class LazyCachePupulator<K, V> extends AbstractCachePopulator<K, V> {
+public abstract class LazyCachePopulator<K, V> extends AbstractCachePopulator<K, V> {
 
 	/**
-	 * Instantiates a new lazy cache pupulator.
+	 * Instantiates a new lazy cache populator.
 	 *
 	 * @param cache the cache
 	 */
-	public LazyCachePupulator(Cache<K, V> cache) {
+	public LazyCachePopulator(Cache<K, V> cache) {
 		super(cache);
 	}
 

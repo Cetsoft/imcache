@@ -24,7 +24,7 @@ import java.util.List;
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheEntry;
 import com.cetsoft.imcache.cache.builder.CacheBuilder;
-import com.cetsoft.imcache.cache.pupulator.ConcurrentCachePopulator;
+import com.cetsoft.imcache.cache.populator.ConcurrentCachePopulator;
 import com.cetsoft.imcache.cache.util.CacheUtils;
 
 /**

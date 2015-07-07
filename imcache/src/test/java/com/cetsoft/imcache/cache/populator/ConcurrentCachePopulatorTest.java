@@ -30,7 +30,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheEntry;
-import com.cetsoft.imcache.cache.pupulator.ConcurrentCachePopulator;
 
 /**
  * The Class ConcurrentCachePopulatorTest.
