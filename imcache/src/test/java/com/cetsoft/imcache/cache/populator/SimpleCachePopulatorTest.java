@@ -30,7 +30,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheEntry;
-import com.cetsoft.imcache.cache.pupulator.SimpleCachePupulator;
 
 /**
  * The Class SimpleCachePopulatorTest.
@@ -46,7 +45,7 @@ public class SimpleCachePopulatorTest {
 	CacheEntry<Object, Object> entry;
 	
 	/** The populator. */
-	SimpleCachePupulator<Object, Object> populator;
+	SimpleCachePopulator<Object, Object> populator;
 	
 	/**
 	 * Setup.
@@ -54,7 +53,7 @@ public class SimpleCachePopulatorTest {
 	@Before
 	public void setup(){
 		MockitoAnnotations.initMocks(this);
-		populator = spy(new SimpleCachePupulator<Object, Object>(cache) {
+		populator = spy(new SimpleCachePopulator<Object, Object>(cache) {
 			public List<CacheEntry<Object, Object>> loadEntries() {
 				return null;
 			}
