@@ -45,7 +45,6 @@ import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.concurrent.lock.StripedReadWriteLock;
 import com.cetsoft.imcache.serialization.Serializer;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OffHeapCache is a cache that uses offheap byte buffers
  * to store or retrieve data by serializing items into bytes. To do so,
