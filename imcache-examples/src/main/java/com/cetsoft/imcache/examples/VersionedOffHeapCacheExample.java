@@ -61,7 +61,7 @@ public class VersionedOffHeapCacheExample {
 								value.update(newValue);
 								cache.put("apple", value);
 							}
-							System.out.println(value.getValue());
+							System.out.println(cache.get("apple").getValue());
 							break;
 						} catch (StaleItemException ex) {
 							ex.printStackTrace();
