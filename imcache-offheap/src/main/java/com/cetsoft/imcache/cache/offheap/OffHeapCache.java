@@ -45,6 +45,7 @@ import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.concurrent.lock.StripedReadWriteLock;
 import com.cetsoft.imcache.serialization.Serializer;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class OffHeapCache is a cache that uses offheap byte buffers
  * to store or retrieve data by serializing items into bytes. To do so,
@@ -139,7 +140,8 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 		this.readWriteLock = new StripedReadWriteLock(concurrencyLevel);
 		ScheduledExecutorService cleanerService = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
 			public Thread newThread(Runnable runnable) {
-				return new Thread(runnable, "imcache:bufferCleaner(name="+getName()+",thread="+ NO_OF_CLEANERS.incrementAndGet() + ")");
+				String threadName = "imcache:bufferCleaner(name="+getName()+",thread="+ NO_OF_CLEANERS.incrementAndGet() + ")";
+				return createDaemonThread(runnable, threadName);
 			}
 		});
 		cleanerService.scheduleAtFixedRate(new Runnable() {
@@ -149,7 +151,8 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 		}, bufferCleanerPeriod, bufferCleanerPeriod, TimeUnit.MILLISECONDS);
 		ScheduledExecutorService evictionService = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
 			public Thread newThread(Runnable runnable) {
-				return new Thread(runnable, "imcache:evictionService(name="+getName()+",thread="+ NO_OF_EVICTORS.incrementAndGet() + ")");
+				String threadName = "imcache:evictionService(name="+getName()+",thread="+ NO_OF_EVICTORS.incrementAndGet() + ")";
+				return createDaemonThread(runnable, threadName);
 			}
 		});
 		evictionService.scheduleAtFixedRate(new Runnable() {
@@ -352,6 +355,19 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Creates a daemon thread.
+	 *
+	 * @param runnable the runnable
+	 * @param threadName the thread name
+	 * @return the thread
+	 */
+	private Thread createDaemonThread(Runnable runnable, String threadName){
+		Thread daemonThread = new Thread(runnable, threadName);
+		daemonThread.setDaemon(true);
+		return daemonThread;
 	}
 
 }
