@@ -42,6 +42,7 @@ import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBuffer;
 import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
 import com.cetsoft.imcache.cache.offheap.bytebuffer.Pointer;
 import com.cetsoft.imcache.cache.search.IndexHandler;
+import com.cetsoft.imcache.cache.util.ThreadUtils;
 import com.cetsoft.imcache.concurrent.lock.StripedReadWriteLock;
 import com.cetsoft.imcache.serialization.Serializer;
 
@@ -140,7 +141,7 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 		ScheduledExecutorService cleanerService = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
 			public Thread newThread(Runnable runnable) {
 				String threadName = "imcache:bufferCleaner(name="+getName()+",thread="+ NO_OF_CLEANERS.incrementAndGet() + ")";
-				return createDaemonThread(runnable, threadName);
+				return ThreadUtils.createDaemonThread(runnable, threadName);
 			}
 		});
 		cleanerService.scheduleAtFixedRate(new Runnable() {
@@ -151,7 +152,7 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 		ScheduledExecutorService evictionService = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
 			public Thread newThread(Runnable runnable) {
 				String threadName = "imcache:evictionService(name="+getName()+",thread="+ NO_OF_EVICTORS.incrementAndGet() + ")";
-				return createDaemonThread(runnable, threadName);
+				return ThreadUtils.createDaemonThread(runnable, threadName);
 			}
 		});
 		evictionService.scheduleAtFixedRate(new Runnable() {
@@ -356,17 +357,4 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 		}
 	}
 	
-	/**
-	 * Creates a daemon thread.
-	 *
-	 * @param runnable the runnable
-	 * @param threadName the thread name
-	 * @return the thread
-	 */
-	private Thread createDaemonThread(Runnable runnable, String threadName){
-		Thread daemonThread = new Thread(runnable, threadName);
-		daemonThread.setDaemon(true);
-		return daemonThread;
-	}
-
 }
