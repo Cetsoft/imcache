@@ -25,6 +25,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.cetsoft.imcache.cache.util.ThreadUtils;
+
 /**
  * The scheduled eviction listener interface for receiving eviction events. 
  * This class drains cache task queue and executes saveAll function in a
@@ -70,7 +72,7 @@ public abstract class ScheduledEvictionListener<K, V> extends QueuingEvictionLis
 		cacheTasks = new ArrayBlockingQueue<CacheTask<K, V>>(queueSize);
 		ScheduledExecutorService drainerService = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
 			public Thread newThread(Runnable runnable) {
-				return new Thread(runnable, "imcache:batchAsyncEvictionDrainer(thread="
+				return ThreadUtils.createDaemonThread(runnable, "imcache:batchAsyncEvictionDrainer(thread="
 						+ NO_OF_EVICTION_DRAINERS.incrementAndGet() + ")");
 			}
 		});

@@ -20,6 +20,8 @@ package com.cetsoft.imcache.cache.async;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.cetsoft.imcache.cache.util.ThreadUtils;
+
 /**
  * The basic eviction listener interface for receiving eviction events. 
  * When eviction occurs, this class creates a thread to save the data.
@@ -40,11 +42,12 @@ public abstract class BasicEvictionListener<K, V> implements AsyncEvictionListen
 	 * java.lang.Object)
 	 */
 	public void onEviction(final K key, final V value) {
-		new Thread(new Runnable() {
+		ThreadUtils.createDaemonThread(new Runnable() {
 			public void run() {
 				save(key, value);
 			}
-		}, "imcache:basicAsyncEvictionListener(thread=" + NO_OF_EVICTION_LISTENERS.incrementAndGet() + ")").start();
+		}, "imcache:basicAsyncEvictionListener(thread=" + NO_OF_EVICTION_LISTENERS.incrementAndGet() + ")")
+		.start();
 	}
 
 	/**
