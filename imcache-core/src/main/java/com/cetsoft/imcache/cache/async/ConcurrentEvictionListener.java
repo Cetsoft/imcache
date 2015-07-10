@@ -24,6 +24,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.cetsoft.imcache.cache.util.ThreadUtils;
+
 /**
  * The concurrent eviction listener interface for receiving eviction events. 
  * This class drains cache task queue and executes saveAll function for
@@ -69,7 +71,7 @@ public abstract class ConcurrentEvictionListener<K, V> extends QueuingEvictionLi
 		cacheTasks = new ArrayBlockingQueue<CacheTask<K, V>>(queueSize);
 		ExecutorService drainerService = Executors.newFixedThreadPool(concurrencyLevel, new ThreadFactory() {
 			public Thread newThread(Runnable runnable) {
-				return new Thread(runnable, "imcache:concurrentAsyncEvictionDrainer(thread="
+				return ThreadUtils.createDaemonThread(runnable, "imcache:concurrentAsyncEvictionDrainer(thread="
 						+ NO_OF_EVICTION_DRAINERS.incrementAndGet() + ")");
 			}
 		});
