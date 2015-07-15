@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2014 Cetsoft, http://www.cetsoft.com
+ * Copyright (C) 2014 Cetsoft, http://www.cetsoft.com
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public class ScheduledEvictionListenerTest {
 		long period = 1;
 		doNothing().when(asyncEvictionListener).drainQueue();
 		asyncEvictionListener.init(period, 3);
-		Thread.sleep(period*3);
+		Thread.sleep(period*50);
 		verify(asyncEvictionListener, atLeast(1)).drainQueue();
 	}
 	
