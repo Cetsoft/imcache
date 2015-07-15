@@ -76,7 +76,7 @@ public class ConcurrentCachePopulatorTest<populator> {
 		doNothing().when(cache).put(object, object);
 		populator.pupulate();
 		try {
-			Thread.sleep(10);
+			Thread.sleep(100);
 		} catch (InterruptedException e) {}
 		verify(cache, atLeast(1)).put(object, object);
 		verify(populator).loadEntries();
