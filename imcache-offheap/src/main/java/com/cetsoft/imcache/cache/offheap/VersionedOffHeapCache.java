@@ -30,6 +30,7 @@ import com.cetsoft.imcache.cache.search.Query;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 import com.cetsoft.imcache.cache.util.SerializationUtils;
+import com.cetsoft.imcache.concurrent.lock.StripedReadWriteLock;
 import com.cetsoft.imcache.serialization.Serializer;
 
 /**
@@ -46,6 +47,9 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 
 	/** The off heap cache. */
 	protected OffHeapCache<K, VersionedItem<V>> offHeapCache;
+	
+	/** The read write lock. */
+	private StripedReadWriteLock readWriteLock;
 
 	/**
 	 * Instantiates a new versioned off heap cache.
@@ -67,6 +71,7 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 		offHeapCache = new OffHeapCache<K, VersionedItem<V>>(cacheLoader, evictionListener, indexHandler,
 				byteBufferStore, serializer, bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel,
 				evictionPeriod);
+		this.readWriteLock = new StripedReadWriteLock(concurrencyLevel);
 	}
 
 	/**
@@ -103,13 +108,35 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 			throw new StaleItemException(version, exValue.getVersion());
 		}
 		version++;
-		synchronized (value) {
+		writeLock(key);
+		try{
+			exValue = get(key);
 			if (value.getVersion() == version) {
 				throw new StaleItemException(version, exValue == null ? version - 1 : exValue.getVersion());
 			}
 			value.setVersion(version);
 			offHeapCache.put(key, value);
+		}finally{
+			writeUnlock(key);
 		}
+	}
+	
+	/**
+	 * Write Lock for key is locked.
+	 * 
+	 * @param key the key
+	 */
+	protected void writeLock(K key) {
+		readWriteLock.writeLock(Math.abs(key.hashCode()));
+	}
+
+	/**
+	 * Write Lock for key is unlocked.
+	 * 
+	 * @param key the key
+	 */
+	protected void writeUnlock(K key) {
+		readWriteLock.writeUnlock(Math.abs(key.hashCode()));
 	}
 
 	/*
