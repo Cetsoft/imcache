@@ -4,6 +4,7 @@ Imcache is a Java Caching Library.Imcache intends to speed up applications by pr
 
 [![Build Status](https://travis-ci.org/Cetsoft/imcache.svg)](https://travis-ci.org/Cetsoft/imcache)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.cetsoft/imcache/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.cetsoft/imcache/)
+[![License](http://img.shields.io/:license-apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 ###Pom Reference
 ```xml
