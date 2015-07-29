@@ -40,6 +40,7 @@ public interface Cache<K, V> {
     V invalidate(K key);
     void clear()
     double hitRatio();
+    String getName();
 }
 ```
 ###The Cache Builder
