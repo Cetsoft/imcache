@@ -28,6 +28,7 @@ import com.cetsoft.imcache.cache.AbstractCache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.search.IndexHandler;
+import com.cetsoft.imcache.cache.util.ThreadUtils;
 import com.cetsoft.imcache.concurrent.ConcurrentLinkedHashMap;
 import com.cetsoft.imcache.concurrent.Weigher;
 import com.cetsoft.imcache.concurrent.Weighers;
@@ -159,7 +160,8 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 			super(DEFAULT_CONCURRENCY_LEVEL, DEFAULT_INITIAL_CAPACITY, capacity, (Weigher<V>) Weighers.singleton(),
 					DEFAULT_PERIOD, Executors.newScheduledThreadPool(1, new ThreadFactory() {
 						public Thread newThread(Runnable runnable) {
-							return new Thread("imcache:evictionThread(thread=" + NO_OF_EVICTORS.incrementAndGet() + ")");
+							String threadName = "imcache:evictionThread(thread=" + NO_OF_EVICTORS.incrementAndGet() + ")";
+							return ThreadUtils.createDaemonThread(runnable, threadName);
 						}
 					}), new com.cetsoft.imcache.concurrent.EvictionListener<K, V>() {
 						public void onEviction(K key, V value) {
