@@ -51,7 +51,8 @@ public final class SingletonCacheCoordinator extends GlobalCacheCoordinator {
         /**
          * Clear all caches.
          */
-        public synchronized void clearAll() {
+        @SuppressWarnings("rawtypes")
+		public synchronized void clearAll() {
                 for (Cache cache : cacheMap.values()) {
                     cache.clear();
                 }
