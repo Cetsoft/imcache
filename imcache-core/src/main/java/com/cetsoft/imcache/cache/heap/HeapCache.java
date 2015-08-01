@@ -18,8 +18,9 @@
 */
 package com.cetsoft.imcache.cache.heap;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.cetsoft.imcache.cache.AbstractCache;
@@ -119,12 +120,10 @@ public class HeapCache<K, V> extends AbstractCache<K, V> {
 	 * @see com.cetsoft.imcache.cache.Cache#clear()
 	 */
 	public void clear() {
-        Iterator<Map.Entry<K, V>> iterator = cache.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<K, V> entry = iterator.next();
-            ((LimitedHashMap) cache).remove(entry);
-            iterator.remove();
-        }
+        List<Object> list = new ArrayList<Object>(cache.keySet());
+        for (Object object : list) {
+        	cache.remove(object);
+		}
 		indexHandler.clear();
 	}
 
@@ -194,14 +193,6 @@ public class HeapCache<K, V> extends AbstractCache<K, V> {
 			return value;
 		}
 
-        public V remove(Map.Entry<K, V> entry) {
-            V value = entry.getValue();
-            if (value != null) {
-                HeapCache.this.evictionListener.onEviction(entry.getKey(), value);
-            }
-            return value;
-        }
-        
 		/*
 		 * (non-Javadoc)
 		 * 
