@@ -12,7 +12,7 @@ Imcache is a Java Caching Library.Imcache intends to speed up applications by pr
 <dependency>
   <groupId>com.cetsoft</groupId>
   <artifactId>imcache</artifactId>
-  <version>0.1.2</version><!--Can be updated for later versions-->
+  <version>0.1.3</version><!--Can be updated for later versions-->
 </dependency>
 ```
 ###Simple Application
