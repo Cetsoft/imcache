@@ -18,6 +18,7 @@
 */
 package com.cetsoft.imcache.cache.heap;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -125,13 +126,12 @@ public class HeapCacheTest {
 	 */
 	@Test
 	public void clear(){
-		Set<Object> keySet = new HashSet<Object>();
-		keySet.add(1);
-		keySet.add(2);
-		doReturn(keySet).when(limitedMap).keySet();
+		limitedMap.put(1, new Object());
+		limitedMap.put(2, new Object());
 		doNothing().when(indexHandler).clear();
 		cache.clear();
 		verify(limitedMap, times(2)).remove(any());
+		verify(indexHandler).clear();
 	}
 	
 	/**
