@@ -262,7 +262,16 @@ public class OffHeapCache<K, V> extends AbstractCache<K, V> {
 	public double hitRatio() {
 		return hit.get() / (hit.get() + miss.get());
 	}
-
+        
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.cetsoft.imcache.cache.Cache#size()
+	 */
+        public int size() {
+                return pointerMap.size();
+        }
+        
 	/**
 	 * Read Lock for key is locked.
 	 * 

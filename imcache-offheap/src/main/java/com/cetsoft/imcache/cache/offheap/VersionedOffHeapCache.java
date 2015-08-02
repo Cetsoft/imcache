@@ -187,6 +187,15 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see com.cetsoft.imcache.cache.Cache#size()
+	 */        
+        public int size() {
+                return offHeapCache.size();
+        }
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see
 	 * com.cetsoft.imcache.cache.SearchableCache#execute(com.cetsoft.imcache
 	 * .cache.search.Query)

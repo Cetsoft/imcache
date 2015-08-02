@@ -56,4 +56,8 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
 	public double hitRatio() {
 		throw new UnsupportedOperationException();
 	}
+        
+	public int size() {
+		throw new UnsupportedOperationException();
+	}        
 }
