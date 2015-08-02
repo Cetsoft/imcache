@@ -44,6 +44,7 @@ public interface Cache<K, V> {
     void clear()
     double hitRatio();
     String getName();
+    int size();
 }
 ```
 ###The Cache Builder
