@@ -84,4 +84,11 @@ public interface Cache<K, V> {
 	 * @param name the new name
 	 */
 	void setName(String name);
+        
+        /**
+         * Returns the number of elements in this cache.
+         * 
+         * @return the number of elements
+         */
+        int size();
 }

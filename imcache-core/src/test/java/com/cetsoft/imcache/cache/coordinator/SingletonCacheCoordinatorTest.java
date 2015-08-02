@@ -47,10 +47,6 @@ public class SingletonCacheCoordinatorTest {
 	/** The index handler. */
 	@Mock
 	IndexHandler<Object, Object> indexHandler;
-
-        /** Test data. */
-        private static final String KEY = "key";
-        private static final String VALUE = "value";
         
         /**
          * Setup.
@@ -78,24 +74,28 @@ public class SingletonCacheCoordinatorTest {
         public void clearAll() {
                 HeapCache<Object, Object> c1 =
                         new HeapCache<Object, Object>(cacheLoader, evictionListener, indexHandler, 100);
-                c1.put(KEY, VALUE);
+                c1.put(1, new Object());
+                c1.put(2, new Object());
+                c1.put(3, new Object());
 
                 HeapCache<Object, Object> c2 =
                         new HeapCache<Object, Object>(cacheLoader, evictionListener, indexHandler, 100);
-                c2.put(KEY, VALUE);
+                c2.put(1, new Object());
+                c2.put(2, new Object());
+                c2.put(3, new Object());
 
                 SingletonCacheCoordinator coordinator = SingletonCacheCoordinator.getInstance();
                 
                 coordinator.addCache(new ImcacheType(), c1);
                 coordinator.addCache(new ImcacheType(), c2);
 
-                assertEquals(VALUE, c1.get(KEY));
-                assertEquals(VALUE, c2.get(KEY));
+                assertEquals(3, c1.size());
+                assertEquals(3, c2.size());
 
                 coordinator.clearAll();
 
-                assertNull(c1.get(KEY));
-                assertNull(c2.get(KEY));
+                assertEquals(0, c1.size());
+                assertEquals(0, c2.size());
         }
 
 }

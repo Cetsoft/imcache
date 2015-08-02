@@ -147,6 +147,17 @@ public class HeapCacheTest {
 		assertEquals(expectedHitRatio, actualHitRatio, 0);
 	}
 	
+        /**
+         * Size.
+         */
+        @Test
+        public void size() {
+                cache.put(1, new Object());
+                cache.put(2, new Object());
+                cache.put(3, new Object());                
+                assertEquals(3, cache.size());
+        }
+        
 	/**
 	 * Gets the limited map value in map.
 	 *

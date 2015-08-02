@@ -138,6 +138,15 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 		return hit.get() / (hit.get() + miss.get());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.cetsoft.imcache.cache.Cache#size()
+	 */        
+        public int size() {
+                return cache.size();
+        }
+       
 	/**
 	 * The Class ConcurrentLimitedHashMap.
 	 */
