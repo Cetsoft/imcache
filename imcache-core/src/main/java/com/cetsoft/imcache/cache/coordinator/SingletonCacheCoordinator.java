@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2014 Cetsoft, http://www.cetsoft.com
+* Copyright (C) 2015 Cetsoft, http://www.cetsoft.com
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -51,7 +51,8 @@ public final class SingletonCacheCoordinator extends GlobalCacheCoordinator {
         /**
          * Clear all caches.
          */
-        public synchronized void clearAll() {
+        @SuppressWarnings("rawtypes")
+		public synchronized void clearAll() {
                 for (Cache cache : cacheMap.values()) {
                     cache.clear();
                 }
