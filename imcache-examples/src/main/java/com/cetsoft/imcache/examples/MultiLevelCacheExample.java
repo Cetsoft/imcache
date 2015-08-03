@@ -29,13 +29,8 @@ import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
  */
 public class MultiLevelCacheExample {
 
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
 	@SuppressWarnings("null")
-	public static void main(String[] args) {
+	public static void example() {
 		final CacheDao cacheDao = null;// This is just for example purposes.
 		OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(10000, 10);
 		final Cache<String, String> offHeapCache = CacheBuilder.offHeapCache().storage(bufferStore)
@@ -59,6 +54,7 @@ public class MultiLevelCacheExample {
 		}).capacity(10000).build();
 		multiLevelCache.put("red", "apple");
 	}
+	
 
 	/**
 	 * The Interface CacheDao.
@@ -80,5 +76,9 @@ public class MultiLevelCacheExample {
 		 * @param value the value
 		 */
 		void store(String key, String value);
+	}
+	
+	public static void main(String[] args) {
+		example();
 	}
 }

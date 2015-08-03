@@ -46,15 +46,11 @@ public class SpringConfigurationExample {
 	/** The cache dao. */
 	final CacheDao cacheDao = new CacheDaoImpl();
 
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String[] args) {
+	public static void example() {
 		@SuppressWarnings({ "resource", "unused" })
 		ApplicationContext context = new ClassPathXmlApplicationContext("exampleContext.xml");
 	}
+	
 
 	/**
 	 * Inits the cache.
@@ -105,5 +101,9 @@ public class SpringConfigurationExample {
 			fruits.add("kiwi");
 			return fruits;
 		}
+	}
+	
+	public static void main(String[] args) {
+		example();
 	}
 }

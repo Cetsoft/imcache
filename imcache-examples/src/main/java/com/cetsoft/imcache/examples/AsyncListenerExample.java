@@ -30,12 +30,7 @@ import com.cetsoft.imcache.cache.builder.CacheBuilder;
  */
 public class AsyncListenerExample {
 
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String[] args) {
+	public static void example() {
 		final StringDAO stringDAO = new StringDAO();
 		Cache<String, String> cache = CacheBuilder.concurrentHeapCache()
 				.evictionListener(new ScheduledEvictionListener<String, String>() {
@@ -48,20 +43,17 @@ public class AsyncListenerExample {
 				}).build();
 		cache.put("key", "value");
 	}
-
+	
 	/**
 	 * The Class StringDAO.
 	 */
 	private static class StringDAO {
 
-		/**
-		 * Update.
-		 *
-		 * @param key the key
-		 * @param value the value
-		 */
-		public void update(String key, String value) {
-		}
+		public void update(String key, String value) {}
+	}
+	
+	public static void main(String[] args) {
+		example();
 	}
 
 }

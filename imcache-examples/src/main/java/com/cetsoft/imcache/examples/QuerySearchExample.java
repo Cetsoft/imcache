@@ -33,12 +33,7 @@ import com.cetsoft.imcache.cache.search.index.IndexType;
  */
 public class QuerySearchExample {
 
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String[] args) {
+	public static void example() {
 		SearchableCache<Integer, SimpleObject> cache = CacheBuilder.heapCache().addIndex("j", IndexType.RANGE_INDEX)
 				.build();
 		cache.put(0, createObject(1, 1));
@@ -51,6 +46,7 @@ public class QuerySearchExample {
 			System.out.println(simpleObject);
 		}
 	}
+	
 
 	/**
 	 * Creates the object.
@@ -160,5 +156,9 @@ public class QuerySearchExample {
 		public String toString() {
 			return "SimpleObject [i=" + i + ", j=" + j + ", k=" + k + ", name=" + name + "]";
 		}
+	}
+	
+	public static void main(String[] args) {
+		example();
 	}
 }

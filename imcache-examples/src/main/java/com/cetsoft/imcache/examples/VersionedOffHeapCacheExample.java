@@ -33,12 +33,7 @@ import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
  */
 public class VersionedOffHeapCacheExample {
 
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String[] args) {
+	public static void example() {
 		OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(10000, 10);
 		final Cache<String, VersionedItem<String>> cache = CacheBuilder.versionedOffHeapCache().storage(bufferStore)
 				.build();
@@ -85,5 +80,9 @@ public class VersionedOffHeapCacheExample {
 			chars[i] = (char) (Math.random() * 25 + 65);
 		}
 		return new String(chars);
+	}
+	
+	public static void main(String[] args) {
+		example();
 	}
 }

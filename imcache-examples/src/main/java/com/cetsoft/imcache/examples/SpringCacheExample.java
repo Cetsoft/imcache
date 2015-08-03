@@ -35,18 +35,14 @@ public class SpringCacheExample {
 	@Autowired
 	CacheManager cacheManager;
 
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String[] args) {
+	public static void example() {
 		@SuppressWarnings("resource")
 		ApplicationContext context = new ClassPathXmlApplicationContext("exampleContext.xml");
 		SpringCacheExample example = context.getBean(SpringCacheExample.class);
 		example.getBook(0);
 		example.getBook(0);
 	}
+	
 
 	/**
 	 * Gets the book.
@@ -107,4 +103,7 @@ public class SpringCacheExample {
 		}
 	}
 
+	public static void main(String[] args) {
+		example();
+	}
 }
