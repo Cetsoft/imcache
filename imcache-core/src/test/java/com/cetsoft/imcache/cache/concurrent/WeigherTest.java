@@ -14,21 +14,24 @@
 * limitations under the License.
 * 
 * Author : Yusuf Aytas
-* Date   : Aug 3, 2015
+* Date   : Aug 4, 2015
 */
-package com.cetsoft.imcache.cache.util;
+package com.cetsoft.imcache.cache.concurrent;
 
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
-import com.cetsoft.imcache.cache.CacheEntry;
+import com.cetsoft.imcache.concurrent.Weighers;
 
-public class CacheUtilsTest {
-
+public class WeigherTest {
+	
 	@Test
-	public void createEntry(){
-		CacheEntry<Integer, Integer>  cacheEntry = CacheUtils.createEntry(1, 2);
-		assertEquals(new Integer(1), cacheEntry.getKey());
-		assertEquals(new Integer(2), cacheEntry.getValue());
+	public void weigherTest(){
+		Weighers.byteArray();
+		Weighers.collection();
+		Weighers.iterable();
+		Weighers.iterable();
+		Weighers.list();
+		Weighers.map();
+		Weighers.set();
 	}
 }

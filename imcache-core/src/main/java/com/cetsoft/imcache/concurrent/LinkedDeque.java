@@ -56,7 +56,7 @@ import java.util.NoSuchElementException;
  * 
  * @param <E> the type of elements held in this collection
  */
-class LinkedDeque<E extends Linked<E>> extends AbstractCollection<E> {
+public class LinkedDeque<E extends Linked<E>> extends AbstractCollection<E> {
 
 	// This class provides a doubly-linked list that is optimized for the
 	// virtual
@@ -613,28 +613,4 @@ class LinkedDeque<E extends Linked<E>> extends AbstractCollection<E> {
 		 */
 		abstract E computeNext();
 	}
-}
-
-/**
- * An element that is linked on the Deque.
- */
-interface Linked<T extends Linked<T>> {
-
-	/**
-	 * Retrieves the previous element or <tt>null</tt> if either the element is unlinked
-	 * or the first element on the deque.
-	 */
-	T getPrevious();
-
-	/** Sets the previous element or <tt>null</tt> if there is no link. */
-	void setPrevious(T prev);
-
-	/**
-	 * Retrieves the next element or <tt>null</tt> if either the element is unlinked or
-	 * the last element on the deque.
-	 */
-	T getNext();
-
-	/** Sets the next element or <tt>null</tt> if there is no link. */
-	void setNext(T next);
 }

@@ -19,33 +19,34 @@
 package com.cetsoft.imcache.cache.builder;
 
 import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 
 public class CacheBuilderTest {
 	
 	@Test
 	public void heapCache(){
-		assert(CacheBuilder.heapCache() instanceof HeapCacheBuilder);
+		assertTrue(CacheBuilder.heapCache() instanceof HeapCacheBuilder);
 	}
 	
 	@Test
 	public void transactionalHeapCache(){
-		assert(CacheBuilder.transactionalHeapCache() instanceof TransactionalHeapCacheBuilder);
+		assertTrue(CacheBuilder.transactionalHeapCache() instanceof TransactionalHeapCacheBuilder);
 	}
 	
 	@Test
 	public void concurrentHeapCache(){
-		assert(CacheBuilder.concurrentHeapCache() instanceof ConcurrentHeapCacheBuilder);
+		assertTrue(CacheBuilder.concurrentHeapCache() instanceof ConcurrentHeapCacheBuilder);
 	}
 	
 	@Test
 	public void offHeapCache(){
-		assert(CacheBuilder.offHeapCache() instanceof OffHeapCacheBuilder);
+		assertTrue(CacheBuilder.offHeapCache() instanceof OffHeapCacheBuilder);
 	}
 	
 	@Test
 	public void versionedOffHeapCache(){
-		assert(CacheBuilder.versionedOffHeapCache() instanceof VersionedOffHeapCacheBuilder);
+		assertTrue(CacheBuilder.versionedOffHeapCache() instanceof VersionedOffHeapCacheBuilder);
 	}
 	
 }

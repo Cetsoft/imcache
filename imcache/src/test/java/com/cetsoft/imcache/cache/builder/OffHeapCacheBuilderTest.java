@@ -19,6 +19,7 @@
 package com.cetsoft.imcache.cache.builder;
 
 import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.SearchableCache;
@@ -43,8 +44,8 @@ public class OffHeapCacheBuilderTest {
 		.concurrencyLevel(10)
 		.evictionPeriod(100)
 		.build();
-		assert(cache instanceof SearchableCache);
-		assert(cache instanceof OffHeapCache);
+		assertTrue(cache instanceof SearchableCache);
+		assertTrue(cache instanceof OffHeapCache);
 	}
 	
 	@Test(expected=NecessaryArgumentException.class)
