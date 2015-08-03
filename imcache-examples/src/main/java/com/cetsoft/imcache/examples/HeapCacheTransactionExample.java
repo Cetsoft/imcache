@@ -30,13 +30,7 @@ import com.cetsoft.imcache.cache.heap.tx.TransactionException;
  */
 public class HeapCacheTransactionExample {
 
-	/**
-	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
-	 */
-	public static void main(String[] args) {
+	public static void example() {
 		Cache<Integer, Integer> cache = CacheBuilder.transactionalHeapCache()
 				.transactionCommitter(new TransactionCommitter<Integer, Integer>() {
 					int counter = 0;
@@ -76,5 +70,9 @@ public class HeapCacheTransactionExample {
 		}
 		System.out.println("Value for the key 1 is " + cache.get(1));
 		System.out.println("Value for the key 10 is " + cache.get(10));
+	}
+	
+	public static void main(String[] args) {
+		example();
 	}
 }

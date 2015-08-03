@@ -54,17 +54,16 @@ public class CachePopulatorExample extends ConcurrentCachePopulator<String, Stri
 		}
 		return cacheEntries;
 	}
-
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String[] args) {
+	
+	public static void example() {
 		Cache<String, String> cache = CacheBuilder.concurrentHeapCache().build();
 		CachePopulatorExample populatorExample = new CachePopulatorExample(cache);
 		populatorExample.pupulate();
 		System.out.println(cache.get("0"));
+	}
+
+	public static void main(String[] args) {
+		example();
 	}
 
 }

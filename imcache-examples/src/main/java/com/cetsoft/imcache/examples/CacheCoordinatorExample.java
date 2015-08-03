@@ -41,12 +41,7 @@ public class CacheCoordinatorExample {
 		}
 	};
 
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String[] args) {
+	public static void example() {
 		final CacheCoordinator cacheCoordinator = new LocalCacheCoordinator(factory);
 		final CacheTypeTest test = new CacheTypeTest(cacheCoordinator);
 		for (int i = 0; i < 3; i++) {
@@ -97,6 +92,10 @@ public class CacheCoordinatorExample {
 		public String getValue(CacheType<String, String> type, String key) {
 			return cacheCoordinator.getCache(type).get(key);
 		}
+	}
+	
+	public static void main(String[] args) {
+		example();
 	}
 
 }
