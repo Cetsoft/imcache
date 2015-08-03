@@ -42,4 +42,9 @@ public class TransactionalHeapCacheBuilderTest {
 		assert(cache instanceof SearchableCache);
 		assert(cache instanceof TransactionalHeapCache);
 	}
+	
+	@Test(expected=NecessaryArgumentException.class)
+	public void buildThrowsNecessaryArgumentException(){
+		CacheBuilder.transactionalHeapCache().build();
+	}
 }

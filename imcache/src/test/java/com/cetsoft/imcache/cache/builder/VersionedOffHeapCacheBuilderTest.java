@@ -31,7 +31,7 @@ public class VersionedOffHeapCacheBuilderTest {
 	@Test
 	public void build(){
 		OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
-		Cache<Object, Object> cache = CacheBuilder.offHeapCache()
+		Cache<Object, Object> cache = CacheBuilder.versionedOffHeapCache()
 		.storage(bufferStore)
 		.cacheLoader(CacheBuilder.CACHE_LOADER)
 		.evictionListener(CacheBuilder.EVICTION_LISTENER)
@@ -45,5 +45,10 @@ public class VersionedOffHeapCacheBuilderTest {
 		.build();
 		assert(cache instanceof SearchableCache);
 		assert(cache instanceof OffHeapCache);
+	}
+	
+	@Test(expected=NecessaryArgumentException.class)
+	public void buildThrowsNecessaryArgumentException(){
+		CacheBuilder.transactionalHeapCache().build();
 	}
 }

@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.SearchableCache;
-import com.cetsoft.imcache.cache.offheap.VersionedOffHeapCache;
+import com.cetsoft.imcache.cache.offheap.OffHeapCache;
 import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 
@@ -31,7 +31,7 @@ public class OffHeapCacheBuilderTest {
 	@Test
 	public void build(){
 		OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
-		Cache<Object, Object> cache = CacheBuilder.versionedOffHeapCache()
+		Cache<Object, Object> cache = CacheBuilder.offHeapCache()
 		.storage(bufferStore)
 		.cacheLoader(CacheBuilder.CACHE_LOADER)
 		.evictionListener(CacheBuilder.EVICTION_LISTENER)
@@ -44,6 +44,11 @@ public class OffHeapCacheBuilderTest {
 		.evictionPeriod(100)
 		.build();
 		assert(cache instanceof SearchableCache);
-		assert(cache instanceof VersionedOffHeapCache);
+		assert(cache instanceof OffHeapCache);
+	}
+	
+	@Test(expected=NecessaryArgumentException.class)
+	public void buildThrowsNecessaryArgumentException(){
+		CacheBuilder.offHeapCache().build();
 	}
 }
