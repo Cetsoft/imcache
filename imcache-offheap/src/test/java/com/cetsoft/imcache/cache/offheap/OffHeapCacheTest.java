@@ -207,7 +207,27 @@ public class OffHeapCacheTest {
 		verify(pointerMap).clear();
 		verify(bufferStore).free();
 	}
-	
+
+        /**
+         * Size.
+         */
+        @Test
+        public void size() {
+		int size = 100;
+		byte[] bytes = new byte[size];
+		random.nextBytes(bytes);
+		Object object = new Object();
+		doReturn(null).when(pointerMap).get(object);
+		doReturn(pointer).when(bufferStore).store(bytes);
+		doReturn(bytes).when(serializer).serialize(object);
+		doReturn(null).when(pointerMap).put(object, pointer);
+                doReturn(1).when(pointerMap).size();
+		cache.put(object, object);
+		verify(pointerMap).put(object, pointer);
+                assertEquals(1, cache.size());
+                verify(pointerMap).size();
+        }
+        
 	/**
 	 * Do eviction.
 	 */

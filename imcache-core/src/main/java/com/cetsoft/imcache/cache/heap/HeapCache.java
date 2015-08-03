@@ -136,6 +136,15 @@ public class HeapCache<K, V> extends AbstractCache<K, V> {
 		return hit / (hit + miss);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.cetsoft.imcache.cache.Cache#size()
+	 */
+        public int size() {
+                return cache.size();
+        }
+        
 	/**
 	 * The Class LimitedHashMap.
 	 */
@@ -208,5 +217,5 @@ public class HeapCache<K, V> extends AbstractCache<K, V> {
 		}
 
 	}
-
+        
 }
