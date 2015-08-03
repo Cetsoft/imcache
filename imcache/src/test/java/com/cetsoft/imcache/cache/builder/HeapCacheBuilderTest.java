@@ -20,32 +20,21 @@ package com.cetsoft.imcache.cache.builder;
 
 import org.junit.Test;
 
+import com.cetsoft.imcache.cache.Cache;
+import com.cetsoft.imcache.cache.SearchableCache;
+import com.cetsoft.imcache.cache.heap.ConcurrentHeapCache;
+import com.cetsoft.imcache.cache.search.index.IndexType;
 
-public class CacheBuilderTest {
+public class HeapCacheBuilderTest {
 	
 	@Test
-	public void heapCache(){
-		assert(CacheBuilder.heapCache() instanceof HeapCacheBuilder);
+	public void build(){
+		Cache<Object, Object> cache = CacheBuilder.concurrentHeapCache()
+		.cacheLoader(CacheBuilder.CACHE_LOADER)
+		.evictionListener(CacheBuilder.EVICTION_LISTENER)
+		.indexHandler(DummyIndexHandler.getInstance())
+		.addIndex("age", IndexType.RANGE_INDEX).capacity(1000).build();
+		assert(cache instanceof SearchableCache);
+		assert(cache instanceof ConcurrentHeapCache);
 	}
-	
-	@Test
-	public void transactionalHeapCache(){
-		assert(CacheBuilder.transactionalHeapCache() instanceof TransactionalHeapCacheBuilder);
-	}
-	
-	@Test
-	public void concurrentHeapCache(){
-		assert(CacheBuilder.concurrentHeapCache() instanceof ConcurrentHeapCacheBuilder);
-	}
-	
-	@Test
-	public void offHeapCache(){
-		assert(CacheBuilder.offHeapCache() instanceof OffHeapCacheBuilder);
-	}
-	
-	@Test
-	public void versionedOffHeapCache(){
-		assert(CacheBuilder.versionedOffHeapCache() instanceof VersionedOffHeapCacheBuilder);
-	}
-	
 }
