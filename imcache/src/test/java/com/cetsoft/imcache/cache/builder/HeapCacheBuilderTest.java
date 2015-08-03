@@ -29,7 +29,7 @@ public class HeapCacheBuilderTest {
 	
 	@Test
 	public void build(){
-		Cache<Object, Object> cache = CacheBuilder.concurrentHeapCache()
+		Cache<Object, Object> cache = CacheBuilder.heapCache()
 		.cacheLoader(CacheBuilder.CACHE_LOADER)
 		.evictionListener(CacheBuilder.EVICTION_LISTENER)
 		.indexHandler(DummyIndexHandler.getInstance())
