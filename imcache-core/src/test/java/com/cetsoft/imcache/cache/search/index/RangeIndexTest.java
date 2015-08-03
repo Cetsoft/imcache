@@ -34,7 +34,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class RangeIndexTest.
  */
