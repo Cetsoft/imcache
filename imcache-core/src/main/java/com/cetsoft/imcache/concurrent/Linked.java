@@ -16,19 +16,28 @@
 * Author : Yusuf Aytas
 * Date   : Aug 3, 2015
 */
-package com.cetsoft.imcache.cache.util;
+package com.cetsoft.imcache.concurrent;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+/**
+ * An element that is linked on the Deque.
+ */
+public interface Linked<T extends Linked<T>> {
 
-import com.cetsoft.imcache.cache.CacheEntry;
+	/**
+	 * Retrieves the previous element or <tt>null</tt> if either the element is unlinked
+	 * or the first element on the deque.
+	 */
+	T getPrevious();
 
-public class CacheUtilsTest {
+	/** Sets the previous element or <tt>null</tt> if there is no link. */
+	void setPrevious(T prev);
 
-	@Test
-	public void createEntry(){
-		CacheEntry<Integer, Integer>  cacheEntry = CacheUtils.createEntry(1, 2);
-		assertEquals(new Integer(1), cacheEntry.getKey());
-		assertEquals(new Integer(2), cacheEntry.getValue());
-	}
+	/**
+	 * Retrieves the next element or <tt>null</tt> if either the element is unlinked or
+	 * the last element on the deque.
+	 */
+	T getNext();
+
+	/** Sets the next element or <tt>null</tt> if there is no link. */
+	void setNext(T next);
 }

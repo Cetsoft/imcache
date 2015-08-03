@@ -19,6 +19,7 @@
 package com.cetsoft.imcache.cache.builder;
 
 import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.SearchableCache;
@@ -39,8 +40,8 @@ public class TransactionalHeapCacheBuilderTest {
 			public void doPut(Object key, Object value) {}
 		})
 		.addIndex("age", IndexType.RANGE_INDEX).capacity(1000).build();
-		assert(cache instanceof SearchableCache);
-		assert(cache instanceof TransactionalHeapCache);
+		assertTrue(cache instanceof SearchableCache);
+		assertTrue(cache instanceof TransactionalHeapCache);
 	}
 	
 	@Test(expected=NecessaryArgumentException.class)

@@ -18,11 +18,13 @@
 */
 package com.cetsoft.imcache.cache.builder;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.SearchableCache;
-import com.cetsoft.imcache.cache.offheap.OffHeapCache;
+import com.cetsoft.imcache.cache.offheap.VersionedOffHeapCache;
 import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 
@@ -43,8 +45,8 @@ public class VersionedOffHeapCacheBuilderTest {
 		.concurrencyLevel(10)
 		.evictionPeriod(100)
 		.build();
-		assert(cache instanceof SearchableCache);
-		assert(cache instanceof OffHeapCache);
+		assertTrue(cache instanceof SearchableCache);
+		assertTrue(cache instanceof VersionedOffHeapCache);
 	}
 	
 	@Test(expected=NecessaryArgumentException.class)
