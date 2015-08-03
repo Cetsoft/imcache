@@ -18,34 +18,33 @@
 */
 package com.cetsoft.imcache.cache.builder;
 
-import org.junit.Test;
+import java.util.List;
 
+import com.cetsoft.imcache.cache.search.IndexHandler;
+import com.cetsoft.imcache.cache.search.Query;
+import com.cetsoft.imcache.cache.search.index.IndexType;
 
-public class CacheBuilderTest {
+public class DummyIndexHandler implements IndexHandler<Object, Object>{
 	
-	@Test
-	public void heapCache(){
-		assert(CacheBuilder.heapCache() instanceof HeapCacheBuilder);
+	public static DummyIndexHandler getInstance(){
+		return new DummyIndexHandler();
 	}
-	
-	@Test
-	public void transactionalHeapCache(){
-		assert(CacheBuilder.transactionalHeapCache() instanceof TransactionalHeapCacheBuilder);
+
+	@Override
+	public void addIndex(String attributeName, IndexType type) {}
+
+	@Override
+	public void add(Object key, Object value) {}
+
+	@Override
+	public void remove(Object key, Object value) {}
+
+	@Override
+	public void clear() {}
+
+	@Override
+	public List<Object> execute(Query query) {
+		return null;
 	}
-	
-	@Test
-	public void concurrentHeapCache(){
-		assert(CacheBuilder.concurrentHeapCache() instanceof ConcurrentHeapCacheBuilder);
-	}
-	
-	@Test
-	public void offHeapCache(){
-		assert(CacheBuilder.offHeapCache() instanceof OffHeapCacheBuilder);
-	}
-	
-	@Test
-	public void versionedOffHeapCache(){
-		assert(CacheBuilder.versionedOffHeapCache() instanceof VersionedOffHeapCacheBuilder);
-	}
-	
+
 }
