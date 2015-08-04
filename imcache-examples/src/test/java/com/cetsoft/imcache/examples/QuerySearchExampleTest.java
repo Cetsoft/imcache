@@ -6,6 +6,6 @@ public class QuerySearchExampleTest {
 	
 	@Test
 	public void example(){
-		CachePopulatorExample.example();
+		QuerySearchExample.example();
 	}
 }
