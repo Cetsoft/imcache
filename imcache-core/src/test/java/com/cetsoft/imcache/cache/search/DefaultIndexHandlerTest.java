@@ -148,6 +148,22 @@ public class DefaultIndexHandlerTest {
 		verify(indexes).get(attributeName);
 		verify(handler).getIndexedKey(attributeName, object);
 	}
+	
+	/**
+	 * Adds the.
+	 */
+	@Test(expected=AttributeException.class)
+	public void addThrowsAttributeException() {
+		String attributeName = "name";
+		Object object = new Object();
+		Set<String> keySet = new HashSet<String>();
+		keySet.add(attributeName);
+		doReturn(keySet).when(indexes).keySet();
+		doThrow(new AttributeException(new Exception())).when(handler).getIndexedKey(attributeName, object);
+		doReturn(cacheIndex).when(indexes).get(attributeName);
+		doNothing().when(cacheIndex).put(object, object);
+		handler.add(object, object);
+	}
 
 	/**
 	 * Adds the indexed key null.
