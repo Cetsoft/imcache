@@ -22,11 +22,7 @@ import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.SearchableCache;
 import com.cetsoft.imcache.cache.builder.CacheBuilder;
-import com.cetsoft.imcache.cache.builder.ConcurrentHeapCacheBuilder;
-import com.cetsoft.imcache.cache.builder.HeapCacheBuilder;
-import com.cetsoft.imcache.cache.builder.OffHeapCacheBuilder;
-import com.cetsoft.imcache.cache.builder.TransactionalHeapCacheBuilder;
-import com.cetsoft.imcache.cache.builder.VersionedOffHeapCacheBuilder;
+import com.cetsoft.imcache.cache.heap.tx.TransactionCommitter;
 import com.cetsoft.imcache.cache.offheap.OffHeapCache;
 import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
 import com.cetsoft.imcache.cache.search.IndexHandler;
@@ -38,7 +34,9 @@ import com.cetsoft.imcache.serialization.Serializer;
 public class SpringCacheBuilder extends CacheBuilder {
 
 	/** The type. */
-	private String type;
+	protected String type;
+	
+	private static final String DEFAULT_CACHE_TYPE = "concurrentheap";
 
 	/** The concurrency level. */
 	private int concurrencyLevel = OffHeapCache.DEFAULT_CONCURRENCY_LEVEL;
@@ -58,11 +56,21 @@ public class SpringCacheBuilder extends CacheBuilder {
 	/** The buffer store. */
 	private OffHeapByteBufferStore bufferStore;
 
+	private TransactionCommitter<Object, Object> transactionCommitter;
+
 	/**
 	 * Instantiates a new spring cache builder.
 	 */
 	public SpringCacheBuilder() {
+		this(DEFAULT_CACHE_TYPE);
+	}
+
+	/**
+	 * Instantiates a new spring cache builder.
+	 */
+	public SpringCacheBuilder(String type) {
 		super();
+		this.type = type;
 	}
 
 	/*
@@ -72,35 +80,31 @@ public class SpringCacheBuilder extends CacheBuilder {
 	 */
 	@Override
 	public <K, V> SearchableCache<K, V> build() {
-		SearchableCache<K, V> cache = null;
+		CacheBuilder builder = null;
 		if (type == null || type.equals("concurrentheap")) {
-			ConcurrentHeapCacheBuilder builder = CacheBuilder.concurrentHeapCache();
-			builder.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler);
-			cache = builder.build();
+			builder = CacheBuilder.concurrentHeapCache()
+					.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler);
 		} else if (type.equals("heap")) {
-			HeapCacheBuilder builder = CacheBuilder.heapCache();
-			builder.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler);
-			cache = builder.build();
+			builder = CacheBuilder.heapCache()
+					.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler);
 		} else if (type.equals("transactionalheap")) {
-			TransactionalHeapCacheBuilder builder = CacheBuilder.transactionalHeapCache();
-			builder.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler);
-			cache = builder.build();
+			builder = CacheBuilder.transactionalHeapCache()
+					.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler)
+					.transactionCommitter(transactionCommitter);
 		} else if (type.equals("offheap")) {
-			OffHeapCacheBuilder builder = CacheBuilder.offHeapCache();
-			builder.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler)
+			builder = CacheBuilder.offHeapCache()
+					.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler)
 					.concurrencyLevel(concurrencyLevel).bufferCleanerPeriod(bufferCleanerPeriod)
 					.bufferCleanerThreshold(bufferCleanerThreshold).evictionPeriod(evictionPeriod)
 					.serializer(serializer).storage(bufferStore);
-			cache = builder.build();
 		} else if (type.equals("versionedoffheap")) {
-			VersionedOffHeapCacheBuilder builder = CacheBuilder.versionedOffHeapCache();
-			builder.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler)
+			builder = CacheBuilder.versionedOffHeapCache()
+					.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler)
 					.concurrencyLevel(concurrencyLevel).bufferCleanerPeriod(bufferCleanerPeriod)
 					.bufferCleanerThreshold(bufferCleanerThreshold).evictionPeriod(evictionPeriod)
 					.serializer(serializer).storage(bufferStore);
-			cache = builder.build();
 		}
-		return cache;
+		return builder.build();
 	}
 
 	/**
@@ -191,6 +195,15 @@ public class SpringCacheBuilder extends CacheBuilder {
 	 */
 	public void setBufferStore(OffHeapByteBufferStore bufferStore) {
 		this.bufferStore = bufferStore;
+	}
+	
+	/**
+	 * Sets the transaction committer.
+	 *
+	 * @param transactionCommitter the transaction committer
+	 */
+	public void setTransactionCommitter(TransactionCommitter<Object, Object> transactionCommitter) {
+		this.transactionCommitter = transactionCommitter;
 	}
 
 }

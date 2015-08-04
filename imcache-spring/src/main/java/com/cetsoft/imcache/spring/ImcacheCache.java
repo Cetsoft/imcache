@@ -99,6 +99,9 @@ public class ImcacheCache implements org.springframework.cache.Cache {
 		cache.clear();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.springframework.cache.Cache#get(java.lang.Object, java.lang.Class)
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> T get(Object key, Class<T> clazz) {
 		if (key == null) {
