@@ -21,6 +21,7 @@ package com.cetsoft.imcache.cache.offheap.bytebuffer;
 /**
  * The Class DirectByteBuffer.
  */
+@SuppressWarnings("restriction")
 public class DirectByteBuffer implements ByteBuffer {
 
 	/** The address. */

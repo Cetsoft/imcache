@@ -75,4 +75,14 @@ public class DirectByteBufferTest {
 		buffer.get(0, actualBytes, 0, actualBytes.length);
 		assertArrayEquals(expectedBytes, actualBytes);
 	}
+	
+	@Test
+	public void free(){
+		buffer.free();
+		int size = 1024*1024*2;
+		byte[] expectedBytes = new byte[size];
+		byte[] actualBytes = new byte[size];
+		buffer.get(0, actualBytes, 0, actualBytes.length);
+		assertArrayEquals(expectedBytes, actualBytes);
+	}
 }
