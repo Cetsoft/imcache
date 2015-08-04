@@ -96,6 +96,7 @@ public class DefaultIndexHandlerTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		handler = spy(new DefaultIndexHandler<Object, Object>());
+		handler = spy(new ConcurrentIndexHandler<Object, Object>());
 		handler.indexes = indexes;
 	}
 
