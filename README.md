@@ -1,7 +1,7 @@
 imcache
 =======
 
-Imcache is a Java Caching Library.Imcache intends to speed up applications by providing a means to manage cached data. It offers solutions ranging from small applications to large scale applications. It supports n-level caching hierarchy where it supports various kind of caching methods like heap, offheap, and more. Imcache will also support well-known caching solutions like memcache and redis. To extend, you can define a heapcache backed by offheap cache which is also backed by database. If a key is not found in heap, it will be asked to offheap and so on. In order to use imcache, you need to specify your dependency as follows.
+Imcache is a Java Caching Library.Imcache intends to speed up applications by providing a means to manage cached data. It offers solutions ranging from small applications to large scale applications. It supports n-level caching hierarchy where it supports various kind of caching methods like heap, offheap, and more. Imcache will also support well-known caching solutions like memcache and redis. To extend, you can define a heapcache backed by offheap cache which is also backed by database. If a key is not found in heap, it will be asked to offheap and so on. 
 
 [![Build Status](https://travis-ci.org/Cetsoft/imcache.svg)](https://travis-ci.org/Cetsoft/imcache)
 [![Coverage Status](https://coveralls.io/repos/Cetsoft/imcache/badge.svg?branch=master&service=github)](https://coveralls.io/github/Cetsoft/imcache?branch=master)
@@ -9,6 +9,7 @@ Imcache is a Java Caching Library.Imcache intends to speed up applications by pr
 [![License](http://img.shields.io/:license-apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html) [![Join the chat at https://gitter.im/Cetsoft/imcache](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Cetsoft/imcache?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ###Pom Reference
+In order to use imcache, you need to specify your dependency as follows.
 ```xml
 <dependency>
   <groupId>com.cetsoft</groupId>
