@@ -82,6 +82,5 @@ public class DirectByteBufferTest {
 		byte[] bytes = new byte[size];
 		random.nextBytes(bytes);
 		buffer.free();
-		buffer.put(0, bytes, 0, bytes.length);
 	}
 }
