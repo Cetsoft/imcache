@@ -78,11 +78,10 @@ public class DirectByteBufferTest {
 	
 	@Test
 	public void free(){
-		buffer.free();
 		int size = 1024*1024*2;
-		byte[] expectedBytes = new byte[size];
-		byte[] actualBytes = new byte[size];
-		buffer.get(0, actualBytes, 0, actualBytes.length);
-		assertArrayEquals(expectedBytes, actualBytes);
+		byte[] bytes = new byte[size];
+		random.nextBytes(bytes);
+		buffer.free();
+		buffer.put(0, bytes, 0, bytes.length);
 	}
 }
