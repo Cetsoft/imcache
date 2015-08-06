@@ -1,131 +1,124 @@
 <!DOCTYPE html>
 <html>
-
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Imcache : Imcache is a Java Caching Library.">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-    <title>Imcache</title>
+    <title>Imcache by Cetsoft</title>
   </head>
 
   <body>
+    <header>
+      <div class="inner">
+        <h1>Imcache</h1>
+        <h2>Imcache is a Java Caching Library.</h2>
+        <a href="https://github.com/Cetsoft/imcache" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/Cetsoft/imcache">View on GitHub</a>
-
-          <h1 id="project_title">Imcache</h1>
-          <h2 id="project_tagline">Imcache is a Java Caching Library.</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/Cetsoft/imcache/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/Cetsoft/imcache/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>
-<a name="imcache" class="anchor" href="#imcache"><span class="octicon octicon-link"></span></a>imcache</h1>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="imcache" class="anchor" href="#imcache" aria-hidden="true"><span class="octicon octicon-link"></span></a>imcache</h1>
 
 <p>Imcache is a Java Caching Library.Imcache intends to speed up applications by providing a means to manage cached data. It offers solutions ranging from small applications to large scale applications. It supports n-level caching hierarchy where it supports various kind of caching methods like heap, offheap, and more. Imcache will also support well-known caching solutions like memcache and redis. To extend, you can define a heapcache backed by offheap cache which is also backed by database. If a key is not found in heap, it will be asked to offheap and so on. In order to use imcache, you need to specify your dependency as follows.</p>
 
 <h3>
-<a name="pom-reference" class="anchor" href="#pom-reference"><span class="octicon octicon-link"></span></a>Pom Reference</h3>
+<a id="pom-reference" class="anchor" href="#pom-reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pom Reference</h3>
 
-<div class="highlight highlight-xml"><pre><span class="nt">&lt;dependency&gt;</span>
-  <span class="nt">&lt;groupId&gt;</span>com.cetsoft<span class="nt">&lt;/groupId&gt;</span>
-  <span class="nt">&lt;artifactId&gt;</span>imcache<span class="nt">&lt;/artifactId&gt;</span>
-  <span class="nt">&lt;version&gt;</span>0.1.1<span class="nt">&lt;/version&gt;</span><span class="c">&lt;!--Can be updated for later versions--&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-</pre></div>
-
-<h3>
-<a name="simple-application" class="anchor" href="#simple-application"><span class="octicon octicon-link"></span></a>Simple Application</h3>
-
-<div class="highlight highlight-java"><pre><span class="n">Cache</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">User</span><span class="o">&gt;</span> <span class="n">cache</span> <span class="o">=</span> <span class="n">CacheBuilder</span><span class="o">.</span><span class="na">heapCache</span><span class="o">().</span>
-<span class="n">cacheLoader</span><span class="o">(</span><span class="k">new</span> <span class="n">CacheLoader</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">User</span><span class="o">&gt;()</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="n">User</span> <span class="nf">load</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="n">userDAO</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}).</span><span class="na">evictionListener</span><span class="o">(</span><span class="k">new</span> <span class="n">EvictionListener</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">User</span><span class="o">&gt;{</span>
-    <span class="kd">public</span> <span class="nf">onEviction</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">User</span> <span class="n">user</span><span class="o">){</span>
-        <span class="n">userDAO</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">user</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}).</span><span class="na">capacity</span><span class="o">(</span><span class="mi">10000</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
-<span class="c1">//If there is not a user in the heap cache it'll be loaded via userDAO.</span>
-<span class="n">User</span> <span class="n">user</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"#unique identifier"</span><span class="o">);</span> 
-<span class="n">User</span> <span class="n">newUser</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">User</span><span class="o">(</span><span class="s">"email"</span><span class="o">,</span> <span class="s">"Richard"</span><span class="o">,</span> <span class="s">"Murray"</span><span class="o">)</span>
-<span class="c1">//When maximum value for cache size is reached, eviction event occurs.</span>
-<span class="c1">//In case of eviction, newUser will be saved to db.</span>
-<span class="n">cache</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">newUser</span><span class="o">.</span><span class="na">getEmail</span><span class="o">(),</span> <span class="n">newUser</span><span class="o">);</span>
-</pre></div>
+<div class="highlight highlight-xml"><pre>&lt;<span class="pl-ent">dependency</span>&gt;
+  &lt;<span class="pl-ent">groupId</span>&gt;com.cetsoft&lt;/<span class="pl-ent">groupId</span>&gt;
+  &lt;<span class="pl-ent">artifactId</span>&gt;imcache&lt;/<span class="pl-ent">artifactId</span>&gt;
+  &lt;<span class="pl-ent">version</span>&gt;0.1.1&lt;/<span class="pl-ent">version</span>&gt;<span class="pl-c">&lt;!--Can be updated for later versions--&gt;</span>
+&lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
 
 <h3>
-<a name="the-cache-interface" class="anchor" href="#the-cache-interface"><span class="octicon octicon-link"></span></a>The Cache Interface</h3>
+<a id="simple-application" class="anchor" href="#simple-application" aria-hidden="true"><span class="octicon octicon-link"></span></a>Simple Application</h3>
+
+<div class="highlight highlight-java"><pre><span class="pl-k">Cache&lt;<span class="pl-smi">String</span>,<span class="pl-smi">User</span>&gt;</span> cache <span class="pl-k">=</span> <span class="pl-smi">CacheBuilder</span><span class="pl-k">.</span>heapCache()<span class="pl-c1">.</span>
+cacheLoader(<span class="pl-k">new</span> <span class="pl-k">CacheLoader&lt;<span class="pl-smi">String</span>, <span class="pl-smi">User</span>&gt;</span>() {
+    <span class="pl-k">public</span> <span class="pl-smi">User</span> <span class="pl-en">load</span>(<span class="pl-smi">String</span> <span class="pl-v">key</span>) {
+        <span class="pl-k">return</span> userDAO<span class="pl-k">.</span>get(key);
+    }
+})<span class="pl-k">.</span>evictionListener(<span class="pl-k">new</span> EvictionListener&lt;String, User&gt;{
+    <span class="pl-k">public</span> <span class="pl-en">onEviction</span>(<span class="pl-smi">String</span> <span class="pl-v">key</span>, <span class="pl-smi">User</span> <span class="pl-v">user</span>){
+        userDAO<span class="pl-k">.</span>save(key, user);
+    }
+})<span class="pl-k">.</span>capacity(<span class="pl-c1">10000</span>)<span class="pl-k">.</span>build();
+<span class="pl-c">//If there is not a user in the heap cache it'll be loaded via userDAO.</span>
+<span class="pl-smi">User</span> user <span class="pl-k">=</span> cache<span class="pl-k">.</span>get(<span class="pl-s"><span class="pl-pds">"</span>#unique identifier<span class="pl-pds">"</span></span>); 
+<span class="pl-smi">User</span> newUser <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">User</span>(<span class="pl-s"><span class="pl-pds">"</span>email<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Richard<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Murray<span class="pl-pds">"</span></span>)
+<span class="pl-c">//When maximum value for cache size is reached, eviction event occurs.</span>
+<span class="pl-c">//In case of eviction, newUser will be saved to db.</span>
+cache<span class="pl-k">.</span>put(newUser<span class="pl-k">.</span>getEmail(), newUser);</pre></div>
+
+<h3>
+<a id="the-cache-interface" class="anchor" href="#the-cache-interface" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Cache Interface</h3>
 
 <p>Imcache supports simple operation defined by the cache interface. Cache interface provides general methods that is implemented by all imcache caches. See the methods below.</p>
 
-<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Cache</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="o">{</span>
-    <span class="kt">void</span> <span class="nf">put</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">,</span> <span class="n">V</span> <span class="n">value</span><span class="o">);</span>
-    <span class="n">V</span> <span class="nf">get</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">);</span>
-    <span class="n">V</span> <span class="nf">invalidate</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">);</span>
-    <span class="kt">void</span> <span class="nf">clear</span><span class="o">()</span>
-    <span class="kt">double</span> <span class="nf">hitRatio</span><span class="o">();</span>
-<span class="o">}</span>
-</pre></div>
+<div class="highlight highlight-java"><pre><span class="pl-k">public</span> <span class="pl-k">interface</span> <span class="pl-en">Cache</span>&lt;K, V&gt; {
+    <span class="pl-k">void</span> <span class="pl-en">put</span>(<span class="pl-smi">K</span> <span class="pl-v">key</span>, <span class="pl-smi">V</span> <span class="pl-v">value</span>);
+    <span class="pl-smi">V</span> <span class="pl-en">get</span>(<span class="pl-smi">K</span> <span class="pl-v">key</span>);
+    <span class="pl-smi">V</span> <span class="pl-en">invalidate</span>(<span class="pl-smi">K</span> <span class="pl-v">key</span>);
+    <span class="pl-k">void</span> <span class="pl-en">clear</span>()
+    <span class="pl-k">double</span> <span class="pl-en">hitRatio</span>();
+}</pre></div>
 
 <h3>
-<a name="the-cache-builder" class="anchor" href="#the-cache-builder"><span class="octicon octicon-link"></span></a>The Cache Builder</h3>
+<a id="the-cache-builder" class="anchor" href="#the-cache-builder" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Cache Builder</h3>
 
 <p>Cache Builder is one of the core asset of the imcache. You can create simple heapCaches to complexOffHeapCaches via 
 Cache Builder. Let's see Cache Builder in action below.</p>
 
-<div class="highlight highlight-java"><pre><span class="kt">void</span> <span class="nf">example</span><span class="o">(){</span>
-    <span class="n">Cache</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">cache</span> <span class="o">=</span> <span class="n">CacheBuilder</span><span class="o">.</span><span class="na">heapCache</span><span class="o">().</span>
-    <span class="n">cacheLoader</span><span class="o">(</span><span class="k">new</span> <span class="n">CacheLoader</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;()</span> <span class="o">{</span>
-    <span class="c1">//Here you can load the key from another cache like offheapcache</span>
-        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">load</span><span class="o">(</span><span class="n">Integer</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
-            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-        <span class="o">}</span>
-    <span class="o">}).</span><span class="na">capacity</span><span class="o">(</span><span class="mi">10000</span><span class="o">).</span><span class="na">build</span><span class="o">();</span> 
-<span class="o">}</span>
-</pre></div>
+<div class="highlight highlight-java"><pre><span class="pl-k">void</span> example(){
+    <span class="pl-k">Cache&lt;<span class="pl-smi">Integer</span>,<span class="pl-smi">Integer</span>&gt;</span> cache <span class="pl-k">=</span> <span class="pl-smi">CacheBuilder</span><span class="pl-k">.</span>heapCache()<span class="pl-c1">.</span>
+    cacheLoader(<span class="pl-k">new</span> <span class="pl-k">CacheLoader&lt;<span class="pl-smi">Integer</span>, <span class="pl-smi">Integer</span>&gt;</span>() {
+    <span class="pl-c">//Here you can load the key from another cache like offheapcache</span>
+        <span class="pl-k">public</span> <span class="pl-smi">Integer</span> <span class="pl-en">load</span>(<span class="pl-smi">Integer</span> <span class="pl-v">key</span>) {
+            <span class="pl-k">return</span> <span class="pl-c1">null</span>;
+        }
+    })<span class="pl-k">.</span>capacity(<span class="pl-c1">10000</span>)<span class="pl-k">.</span>build(); 
+}</pre></div>
 
 <h3>
-<a name="the-cache-loader" class="anchor" href="#the-cache-loader"><span class="octicon octicon-link"></span></a>The Cache Loader</h3>
+<a id="the-cache-loader" class="anchor" href="#the-cache-loader" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Cache Loader</h3>
 
 <p>The CacheLoader interface for loading values with specified keys. The class that is interested in loading values 
 from a resource implements this interface. When data is not found the cache, load method of CacheLoader is called.</p>
 
 <h3>
-<a name="the-eviction-listener" class="anchor" href="#the-eviction-listener"><span class="octicon octicon-link"></span></a>The Eviction Listener</h3>
+<a id="the-eviction-listener" class="anchor" href="#the-eviction-listener" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Eviction Listener</h3>
 
 <p>The listener interface for receiving eviction events. The class that is interested in processing a eviction event
 implements this interface. When the eviction event occurs,that object's onEviction method is invoked.</p>
 
 <h3>
-<a name="the-heap-cache" class="anchor" href="#the-heap-cache"><span class="octicon octicon-link"></span></a>The Heap Cache</h3>
+<a id="the-heap-cache" class="anchor" href="#the-heap-cache" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Heap Cache</h3>
 
 <p>HeapCache uses LRU(Least Recently Used) as eviction strategy by the help of LinkedHashMap. As a result, 
 HeapCache discards the least recently used items first when eviction required. Eviction occurs if the size of
 the cache is equal to the cache capacity in a put operation.</p>
 
 <h3>
-<a name="the-concurrent-heap-cache" class="anchor" href="#the-concurrent-heap-cache"><span class="octicon octicon-link"></span></a>The Concurrent Heap Cache</h3>
+<a id="the-concurrent-heap-cache" class="anchor" href="#the-concurrent-heap-cache" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Concurrent Heap Cache</h3>
 
 <p>ConcurrentHeapCache uses LRU(Least Recently Used) as eviction strategy by the help of ConcurrentLinkedHashMap. 
 As a result, ConcurrentHeapCache discards the least recently used items firstwhen eviction required.
 Eviction occurs if the size of the cache is equal to the cache capacity in a put operation</p>
 
 <h3>
-<a name="the-off-heap-cache" class="anchor" href="#the-off-heap-cache"><span class="octicon octicon-link"></span></a>The Off Heap Cache</h3>
+<a id="the-off-heap-cache" class="anchor" href="#the-off-heap-cache" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Off Heap Cache</h3>
 
 <p>The Class OffHeapCache is a cache that uses offheap byte buffers to store or retrieve data by serializing
 items into bytes. To do so, OffHeapCache uses pointers to point array location of an item. OffHeapCache clears
@@ -134,68 +127,72 @@ access time to the objects.
 To make offheap cache work to JVM Parameters <b>"-XX:MaxDirectMemorySize=4g"</b> must be set. Buffer capacity of 8 mb 
 is a good choice to start OffHeapCache. Let's see sample OffHeapCache use.</p>
 
-<div class="highlight highlight-java"><pre><span class="kt">void</span> <span class="nf">example</span><span class="o">(){</span>
-    <span class="c1">//8388608 is 8 MB and 10 buffers. 8MB*10 = 80 MB.</span>
-    <span class="n">OffHeapByteBufferStore</span> <span class="n">bufferStore</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">OffHeapByteBufferStore</span><span class="o">(</span><span class="mi">8388608</span><span class="o">,</span> <span class="mi">10</span><span class="o">);</span>
-    <span class="kd">final</span> <span class="n">Cache</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span><span class="n">SimpleObject</span><span class="o">&gt;</span> <span class="n">offHeapCache</span> <span class="o">=</span> <span class="n">CacheBuilder</span><span class="o">.</span><span class="na">offHeapCache</span><span class="o">().</span>
-    <span class="n">storage</span><span class="o">(</span><span class="n">bufferStore</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
-<span class="o">}</span>
-</pre></div>
+<div class="highlight highlight-java"><pre><span class="pl-k">void</span> example(){
+    <span class="pl-c">//8388608 is 8 MB and 10 buffers. 8MB*10 = 80 MB.</span>
+    <span class="pl-smi">OffHeapByteBufferStore</span> bufferStore <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">OffHeapByteBufferStore</span>(<span class="pl-c1">8388608</span>, <span class="pl-c1">10</span>);
+    <span class="pl-k">final</span> <span class="pl-k">Cache&lt;<span class="pl-smi">Integer</span>,<span class="pl-smi">SimpleObject</span>&gt;</span> offHeapCache <span class="pl-k">=</span> <span class="pl-smi">CacheBuilder</span><span class="pl-k">.</span>offHeapCache()<span class="pl-c1">.</span>
+    storage(bufferStore)<span class="pl-k">.</span>build();
+}</pre></div>
 
 <p>By default configuration, OffHeapCache will try to clean the places which are not used and marked as 
 dirty periodically. What is more, it will do eviction periodically, too.</p>
 
 <h3>
-<a name="the-versioned-off-heap-cache" class="anchor" href="#the-versioned-off-heap-cache"><span class="octicon octicon-link"></span></a>The Versioned Off Heap Cache</h3>
+<a id="the-versioned-off-heap-cache" class="anchor" href="#the-versioned-off-heap-cache" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Versioned Off Heap Cache</h3>
 
 <p>The Class VersionedOffHeapCache is a type of offheap cache where cache items have versions that are incremented for each update.
 To make versioned off heap cache work to JVM Parameters <b>"-XX:MaxDirectMemorySize=4g"</b> must be set. Buffer capacity of 8 mb 
 is a good choice to start VersionedOffHeapCache. Let's see sample VersionedOffHeapCache use.</p>
 
-<div class="highlight highlight-java"><pre><span class="kt">void</span> <span class="nf">example</span><span class="o">(){</span>
-    <span class="c1">//8388608 is 8 MB and 10 buffers. 8MB*10 = 80 MB.</span>
-    <span class="n">OffHeapByteBufferStore</span> <span class="n">bufferStore</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">OffHeapByteBufferStore</span><span class="o">(</span><span class="mi">8388608</span><span class="o">,</span> <span class="mi">10</span><span class="o">);</span>
-    <span class="kd">final</span> <span class="n">Cache</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span><span class="n">VersionedItem</span><span class="o">&lt;</span><span class="n">SimpleObject</span><span class="o">&gt;&gt;</span> <span class="n">offHeapCache</span> <span class="o">=</span> 
-    <span class="n">CacheBuilder</span><span class="o">.</span><span class="na">versionedOffHeapCache</span><span class="o">().</span><span class="na">storage</span><span class="o">(</span><span class="n">bufferStore</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
-    <span class="n">VersionedItem</span><span class="o">&lt;</span><span class="n">SimpleObject</span><span class="o">&gt;</span> <span class="n">versionedItem</span> <span class="o">=</span> <span class="n">offHeapCache</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">12</span><span class="o">);</span>
-<span class="o">}</span>
-</pre></div>
+<div class="highlight highlight-java"><pre><span class="pl-k">void</span> example(){
+    <span class="pl-c">//8388608 is 8 MB and 10 buffers. 8MB*10 = 80 MB.</span>
+    <span class="pl-smi">OffHeapByteBufferStore</span> bufferStore <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">OffHeapByteBufferStore</span>(<span class="pl-c1">8388608</span>, <span class="pl-c1">10</span>);
+    <span class="pl-k">final</span> <span class="pl-k">Cache&lt;<span class="pl-smi">Integer</span>,<span class="pl-k">VersionedItem&lt;<span class="pl-smi">SimpleObject</span>&gt;</span>&gt;</span> offHeapCache <span class="pl-k">=</span> 
+    <span class="pl-smi">CacheBuilder</span><span class="pl-k">.</span>versionedOffHeapCache()<span class="pl-k">.</span>storage(bufferStore)<span class="pl-k">.</span>build();
+    <span class="pl-k">VersionedItem&lt;<span class="pl-smi">SimpleObject</span>&gt;</span> versionedItem <span class="pl-k">=</span> offHeapCache<span class="pl-k">.</span>get(<span class="pl-c1">12</span>);
+}</pre></div>
 
 <h3>
-<a name="searching-indexing-and-query-execution" class="anchor" href="#searching-indexing-and-query-execution"><span class="octicon octicon-link"></span></a>Searching, Indexing and Query Execution</h3>
+<a id="searching-indexing-and-query-execution" class="anchor" href="#searching-indexing-and-query-execution" aria-hidden="true"><span class="octicon octicon-link"></span></a>Searching, Indexing and Query Execution</h3>
 
 <p>imcache provides searching for all the caches by default. Searching is done by execute method of SearchableCache.
 Execute method takes a Query as an input and returns results as list. A query consists of criteria and filter. Here
 is an example use for queries.</p>
 
-<div class="highlight highlight-java"><pre><span class="kt">void</span> <span class="nf">example</span><span class="o">(){</span>
-    <span class="n">SearchableCache</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">SimpleObject</span><span class="o">&gt;</span> <span class="n">cache</span> <span class="o">=</span> <span class="n">CacheBuilder</span><span class="o">.</span><span class="na">heapCache</span><span class="o">().</span>
-    <span class="n">addIndex</span><span class="o">(</span><span class="s">"j"</span><span class="o">,</span> <span class="n">IndexType</span><span class="o">.</span><span class="na">RANGE_INDEX</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
-    <span class="n">cache</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">createObject</span><span class="o">());</span>
-    <span class="n">cache</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">createObject</span><span class="o">());</span>
-    <span class="n">cache</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">createObject</span><span class="o">());</span>
-    <span class="n">List</span><span class="o">&lt;</span><span class="n">SimpleObject</span><span class="o">&gt;</span> <span class="n">objects</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">CacheQuery</span><span class="o">.</span><span class="na">newQuery</span><span class="o">().</span>
-    <span class="n">setCriteria</span><span class="o">(</span><span class="k">new</span> <span class="nf">BetweenCriteria</span><span class="o">(</span><span class="s">"j"</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">).</span><span class="na">or</span><span class="o">(</span><span class="k">new</span> <span class="nf">ETCriteria</span><span class="o">(</span><span class="s">"j"</span><span class="o">,</span> <span class="mi">3</span><span class="o">))).</span>
-    <span class="n">setFilter</span><span class="o">(</span><span class="k">new</span> <span class="nf">LEFilter</span><span class="o">(</span><span class="s">"k"</span><span class="o">,</span> <span class="mi">3</span><span class="o">)));</span>
-    <span class="k">for</span> <span class="o">(</span><span class="n">SimpleObject</span> <span class="n">simpleObject</span> <span class="o">:</span> <span class="n">objects</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">simpleObject</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</pre></div>
+<div class="highlight highlight-java"><pre><span class="pl-k">void</span> example(){
+    <span class="pl-k">SearchableCache&lt;<span class="pl-smi">Integer</span>, <span class="pl-smi">SimpleObject</span>&gt;</span> cache <span class="pl-k">=</span> <span class="pl-smi">CacheBuilder</span><span class="pl-k">.</span>heapCache()<span class="pl-c1">.</span>
+    addIndex(<span class="pl-s"><span class="pl-pds">"</span>j<span class="pl-pds">"</span></span>, <span class="pl-smi">IndexType</span><span class="pl-c1"><span class="pl-k">.</span>RANGE_INDEX</span>)<span class="pl-k">.</span>build();
+    cache<span class="pl-k">.</span>put(<span class="pl-c1">0</span>, createObject());
+    cache<span class="pl-k">.</span>put(<span class="pl-c1">1</span>, createObject());
+    cache<span class="pl-k">.</span>put(<span class="pl-c1">2</span>, createObject());
+    <span class="pl-k">List&lt;<span class="pl-smi">SimpleObject</span>&gt;</span> objects <span class="pl-k">=</span> cache<span class="pl-k">.</span>execute(<span class="pl-smi">CacheQuery</span><span class="pl-k">.</span>newQuery()<span class="pl-c1">.</span>
+    setCriteria(<span class="pl-k">new</span> <span class="pl-smi">BetweenCriteria</span>(<span class="pl-s"><span class="pl-pds">"</span>j<span class="pl-pds">"</span></span>,<span class="pl-c1">1</span>,<span class="pl-c1">3</span>)<span class="pl-k">.</span>or(<span class="pl-k">new</span> <span class="pl-smi">ETCriteria</span>(<span class="pl-s"><span class="pl-pds">"</span>j<span class="pl-pds">"</span></span>, <span class="pl-c1">3</span>)))<span class="pl-c1">.</span>
+    setFilter(<span class="pl-k">new</span> <span class="pl-smi">LEFilter</span>(<span class="pl-s"><span class="pl-pds">"</span>k<span class="pl-pds">"</span></span>, <span class="pl-c1">3</span>)));
+    <span class="pl-k">for</span> (<span class="pl-smi">SimpleObject</span> simpleObject <span class="pl-k">:</span> objects) {
+        <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(simpleObject);
+    }
+}</pre></div>
 
 <p><i>To learn more about imcache please look at examples provided.</i></p>
-      </section>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/Cetsoft/imcache/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/Cetsoft/imcache/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/Cetsoft/imcache"></a> is maintained by <a href="https://github.com/Cetsoft">Cetsoft</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
     </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Imcache maintained by <a href="https://github.com/Cetsoft">Cetsoft</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
+  
   </body>
 </html>
