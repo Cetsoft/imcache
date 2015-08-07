@@ -16,35 +16,25 @@
 * Author : Yusuf Aytas
 * Date   : Aug 5, 2015
 */
-package com.cetsoft.imcache.redis;
+package com.cetsoft.imcache.redis.client;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
 
 /**
- * The Class RedisOutputStream.
+ * The Class RedisInputStream.
  */
-public class RedisOutputStream {
+public class RedisInputStream {
 
-	/** The output stream. */
-	private OutputStream outputStream;
-
-	/**
-	 * Instantiates a new redis output stream.
-	 *
-	 * @param outputStream the output stream
-	 */
-	public RedisOutputStream(OutputStream outputStream) {
-		this.outputStream = outputStream;
-	}
+	/** The input stream. */
+	private InputStream inputStream;
 
 	/**
-	 * Flushes output stream.
+	 * Instantiates a new redis input stream.
 	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param inputStream the input stream
 	 */
-	public void flush() throws IOException {
-		outputStream.flush();
+	public RedisInputStream(InputStream inputStream) {
+		this.inputStream = inputStream;
 	}
 
 }
