@@ -16,7 +16,7 @@
 * Author : Yusuf Aytas
 * Date   : Aug 5, 2015
 */
-package com.cetsoft.imcache.redis;
+package com.cetsoft.imcache.redis.client;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -27,6 +27,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import com.cetsoft.imcache.redis.client.Connection;
+import com.cetsoft.imcache.redis.client.ConnectionException;
+import com.cetsoft.imcache.redis.client.RedisOutputStream;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;

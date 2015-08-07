@@ -16,7 +16,7 @@
 * Author : Yusuf Aytas
 * Date   : Aug 5, 2015
 */
-package com.cetsoft.imcache.redis;
+package com.cetsoft.imcache.redis.client;
 
 import java.io.IOException;
 
