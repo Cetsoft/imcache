@@ -128,5 +128,6 @@ void example(){
     }
 }
 ```
+Note that queries to caches that live outside of JVM can't be executed. Thus, querying redis and memcache isn't possible.
 
 <i>To learn more about imcache please look at examples provided.</i>
