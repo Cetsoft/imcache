@@ -39,7 +39,7 @@ public interface Client {
 	 * @param key the key
 	 * @param value the value
 	 */
-	byte[] set(byte[] key, byte[] value);
+	void set(byte[] key, byte[] value);
 
 	/**
 	 * Get the value of key. If the key does not exist the special
