@@ -37,4 +37,13 @@ public class ConnectionException extends Exception {
 		super(ex);
 	}
 
+	/**
+	 * Instantiates a new connection exception.
+	 *
+	 * @param string the string
+	 */
+	public ConnectionException(String string) {
+		super(string);
+	}
+
 }
