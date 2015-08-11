@@ -22,3 +22,4 @@ imcache-memcache.iml
 imcache-offheap.iml
 imcache-redis.iml
 imcache-core.iml
+*.rdb
