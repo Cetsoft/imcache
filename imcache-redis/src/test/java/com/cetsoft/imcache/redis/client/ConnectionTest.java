@@ -30,7 +30,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.cetsoft.imcache.redis.client.Connection;
 import com.cetsoft.imcache.redis.client.ConnectionException;
-import com.cetsoft.imcache.redis.client.RedisOutputStream;
+import com.cetsoft.imcache.redis.client.RedisStreamWriter;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -46,14 +46,14 @@ public class ConnectionTest {
 	InetSocketAddress inetSocketAddress;
 	
 	@Mock
-	RedisOutputStream redisOutputStream;
+	RedisStreamWriter redisOutputStream;
 	
 	@Before
 	public void setup(){
 		MockitoAnnotations.initMocks(this);
 		connection = spy(new Connection());
 		connection.socket = socket;
-		connection.outputStream = redisOutputStream;
+		connection.streamWriter = redisOutputStream;
 	}
 	
 	@Test
@@ -61,8 +61,8 @@ public class ConnectionTest {
 		doReturn(false).when(connection).isConnected();
 		doReturn(socket).when(connection).createSocket();
 		connection.open();
-		assertNotNull(connection.getInputStream());
-		assertNotNull(connection.getOutputStream());
+		assertNotNull(connection.getStreamReader());
+		assertNotNull(connection.getStreamWriter());
 		verify(socket).setSoTimeout(Connection.DEFAULT_SOCKET_TIMEOUT);
 	}
 	
