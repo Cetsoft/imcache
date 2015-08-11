@@ -54,11 +54,11 @@ public class Connection {
 	/** The socket. */
 	Socket socket;
 	
-	/** The output stream. */
-	RedisOutputStream outputStream;
+	/** The stream writer. */
+	RedisStreamWriter streamWriter;
 	
-	/** The input stream. */
-	RedisInputStream inputStream;
+	/** The stream reader. */
+	RedisStreamReader streamReader;
 
 	/**
 	 * Instantiates a new connection.
@@ -153,8 +153,8 @@ public class Connection {
 
 				socket.connect(getInetSocketAddress(), timeout);
 				socket.setSoTimeout(socketTimeout);
-				outputStream = new RedisOutputStream(socket.getOutputStream());
-				inputStream = new RedisInputStream(socket.getInputStream());
+				streamWriter = new RedisStreamWriter(socket.getOutputStream());
+				streamReader = new RedisStreamReader(socket.getInputStream());
 			} catch (IOException ex) {
 				throw new ConnectionException(ex);
 			}
@@ -187,7 +187,7 @@ public class Connection {
 	public void close() throws ConnectionException {
 		if (isConnected()) {
 			try {
-				outputStream.flush();
+				streamWriter.flush();
 				socket.close();
 			} catch (IOException ex) {
 				throw new ConnectionException(ex);
@@ -202,21 +202,21 @@ public class Connection {
 	}
 	
 	/**
-	 * Gets the output stream.
+	 * Gets the stream writer.
 	 *
 	 * @return the output stream
 	 */
-	public RedisOutputStream getOutputStream() {
-		return outputStream;
+	public RedisStreamWriter getStreamWriter() {
+		return streamWriter;
 	}
 
 	/**
-	 * Gets the input stream.
+	 * Gets the stream reader.
 	 *
 	 * @return the input stream
 	 */
-	public RedisInputStream getInputStream() {
-		return inputStream;
+	public RedisStreamReader getStreamReader() {
+		return streamReader;
 	}
 
 }
