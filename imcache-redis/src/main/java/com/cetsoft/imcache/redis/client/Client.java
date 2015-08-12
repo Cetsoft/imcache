@@ -18,6 +18,8 @@
 */
 package com.cetsoft.imcache.redis.client;
 
+import java.io.IOException;
+
 /**
  * The Interface Client provides redis commands. Methods in this 
  * interface have corresponding redis command with the same name. 
@@ -29,8 +31,10 @@ public interface Client {
 	/**
 	 * Ping the server. This command is often used to test if a connection
 	 * is still alive.
+	 * @throws ConnectionException 
+	 * @throws IOException 
 	 */
-	void ping();
+	void ping() throws ConnectionException, IOException;
 
 	/**
 	 * Set key to hold the value. If key already holds a value, 
@@ -38,8 +42,10 @@ public interface Client {
 	 *
 	 * @param key the key
 	 * @param value the value
+	 * @throws IOException 
+	 * @throws ConnectionException 
 	 */
-	void set(byte[] key, byte[] value);
+	void set(byte[] key, byte[] value) throws ConnectionException, IOException;
 
 	/**
 	 * Get the value of key. If the key does not exist the special
@@ -47,8 +53,10 @@ public interface Client {
 	 *
 	 * @param key the key
 	 * @return the byte[]
+	 * @throws IOException 
+	 * @throws ConnectionException 
 	 */
-	byte[] get(byte[] key);
+	byte[] get(byte[] key) throws ConnectionException, IOException;
 
 	/**
 	 * Set a timeout on key. After the timeout has expired, the key will 
@@ -56,19 +64,25 @@ public interface Client {
 	 *
 	 * @param key the key
 	 * @return the byte[]
+	 * @throws IOException 
+	 * @throws ConnectionException 
 	 */
-	byte[] expire(byte[] key);
+	byte[] expire(byte[] key) throws ConnectionException, IOException;
 
 	/**
 	 * Delete all the keys of the currently selected DB.
+	 * @throws IOException 
+	 * @throws ConnectionException 
 	 */
-	void flushdb();
+	void flushdb() throws ConnectionException, IOException;
 	
 	/**
 	 * Return the number of keys.
 	 *
 	 * @return the int
+	 * @throws IOException 
+	 * @throws ConnectionException 
 	 */
-	int dbsize();
+	int dbsize() throws ConnectionException, IOException;
 	
 }
