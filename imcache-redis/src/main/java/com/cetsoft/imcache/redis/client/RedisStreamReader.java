@@ -110,6 +110,8 @@ public class RedisStreamReader{
 	public byte[] read(int length) throws IOException {
 		byte [] bytes = new byte[length];
 		inputStream.read(bytes);
+		//Remove Carriage Return and Line Feed
+		inputStream.read(new byte[2]);
 		return bytes;
 	}
 
