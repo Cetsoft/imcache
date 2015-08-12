@@ -43,7 +43,7 @@ public class RedisStreamReader{
 	}
 
 	/**
-	 * Read byte.
+	 * Reads byte.
 	 *
 	 * @return the byte
 	 * @throws IOException Signals that an I/O exception has occurred.
@@ -67,10 +67,10 @@ public class RedisStreamReader{
 		byte[] tempBytes = new byte[bufferSize];
 		do{
 			noOfBytesRead = inputStream.read(tempBytes);
-			newLength = noOfBytesRead + bytes.length
-				- (noOfBytesRead > 0 && tempBytes[noOfBytesRead-1] == RedisBytes.CARRIAGE_RETURN_BYTE ? 0 : 1)
-				- (noOfBytesRead > 1 && tempBytes[noOfBytesRead-2] == RedisBytes.LINE_FEED_BYTE ? 0 : 1);
-			byte[] newBytes = new byte[newLength];
+			newLength = noOfBytesRead
+				- (noOfBytesRead > 1 && tempBytes[noOfBytesRead-2] == RedisBytes.CARRIAGE_RETURN_BYTE ? 2 : 0)
+				- (noOfBytesRead > 0 && tempBytes[noOfBytesRead-1] == RedisBytes.CARRIAGE_RETURN_BYTE ? 1 : 0);
+			byte[] newBytes = new byte[newLength + bytes.length];
 			System.arraycopy(bytes, 0, newBytes, 0, bytes.length);
 			System.arraycopy(tempBytes, 0, newBytes, bytes.length, newLength);
 			bytes = newBytes;
@@ -86,13 +86,14 @@ public class RedisStreamReader{
 	 */
 	public int readInt() throws IOException {
 		int length = 0;
-		byte[] allIntBytes = new byte[11]; // maximum integer length + minus symbol = 11
+		byte[] allIntBytes = new byte[13]; // maximum integer length + minus symbol + CR + LF = 13
 		while((allIntBytes[length++] = readByte()) != RedisBytes.CARRIAGE_RETURN_BYTE);
 		//Read Line feed byte
 		readByte();
 		int number = 0;
 		boolean negative = allIntBytes.length > 0 && allIntBytes[0] == RedisBytes.DASH_BYTE;
-		for (int i = length-2, j=0; i > -1; i--, j++) {
+		//We don't read last value if it's negative
+		for (int i = length-2, j=0; i > (negative ? 0 : -1); i--, j++) {
 			number += (int) (Math.pow(10, j) * (allIntBytes[i] - RedisBytes.ZERO_BYTE));
 		}
 		number = number * (negative ? -1 : 1);
