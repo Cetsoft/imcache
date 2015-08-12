@@ -121,7 +121,7 @@ public class RedisStreamWriter{
 	 *
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void flushBuffer() throws IOException {
+	protected void flushBuffer() throws IOException {
 		outputStream.write(buffer, 0, position);
 		position = 0;
 	}
