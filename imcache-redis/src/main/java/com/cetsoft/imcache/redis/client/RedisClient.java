@@ -117,7 +117,8 @@ public class RedisClient implements Client{
 	@Override
 	public byte[] expire(byte[] key) throws ConnectionException, IOException {
 		byte[] value = get(key);
-		runVoidCommand(RedisCommands.EXPIRE, key, new byte[]{'0'});
+		commandExecutor.execute(RedisCommands.EXPIRE, key, new byte[]{'0'});
+		commandResult.getInt();
 		return value;
 	}
 

@@ -114,10 +114,10 @@ public class RedisClientTest {
 		byte[] key = { '1' };
 		byte[] value = { '1' };
 		doReturn(value).when(commandResult).getBytes();
-		doReturn("OK").when(commandResult).getStatus();
+		doReturn(1).when(commandResult).getInt();
 		byte[] actualValue = redisClient.expire(key);
 		verify(commandExecutor).execute(RedisCommands.GET, key);
-		verify(redisClient).runVoidCommand(RedisCommands.EXPIRE, key, new byte[]{'0'});
+		verify(commandExecutor).execute(RedisCommands.EXPIRE, key, new byte[]{'0'});
 		assertEquals(value, actualValue);
 	}
 }
