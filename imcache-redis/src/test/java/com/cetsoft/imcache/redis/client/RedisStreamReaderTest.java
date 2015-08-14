@@ -57,6 +57,10 @@ public class RedisStreamReaderTest {
 		assertArrayEquals(bytes, actualBytes);
 	}
 	
+	@Test
+	public void readNull() throws IOException{
+		assertArrayEquals(null, reader.read(-1));
+	}
 	
 	@Test
 	public void readByte() throws IOException{

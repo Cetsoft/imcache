@@ -108,6 +108,9 @@ public class RedisStreamReader{
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public byte[] read(int length) throws IOException {
+		if(length == -1){
+			return null;
+		}
 		byte [] bytes = new byte[length];
 		inputStream.read(bytes);
 		//Remove Carriage Return and Line Feed
