@@ -1,5 +1,6 @@
 package com.cetsoft.imcache.redis;
 
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.cetsoft.imcache.cache.AbstractCache;
@@ -7,6 +8,7 @@ import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.redis.client.Client;
+import com.cetsoft.imcache.redis.client.ConnectionException;
 import com.cetsoft.imcache.serialization.Serializer;
 
 /**
@@ -55,7 +57,9 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
 	public void put(K key, V value) {
 		try {
 			client.set(serializer.serialize(key), serializer.serialize(value));
-		} catch (Exception e) {
+		} catch (ConnectionException e) {
+			throw new RedisCacheException(e);
+		} catch (IOException e) {
 			throw new RedisCacheException(e);
 		}
 	}
@@ -79,7 +83,9 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
 				hit.incrementAndGet();
 			}
 			return value;
-		} catch (Exception e) {
+		} catch (ConnectionException e) {
+			throw new RedisCacheException(e);
+		} catch (IOException e) {
 			throw new RedisCacheException(e);
 		}
 	}
@@ -96,7 +102,9 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
 			V value = (V) serializer.deserialize(serializedValue);
 			evictionListener.onEviction(key, value);
 			return value;
-		} catch (Exception e) {
+		} catch (ConnectionException e) {
+			throw new RedisCacheException(e);
+		} catch (IOException e) {
 			throw new RedisCacheException(e);
 		}
 	}
@@ -116,7 +124,9 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
 	public void clear() {
 		try {
 			client.flushdb();
-		} catch (Exception e) {
+		} catch (ConnectionException e) {
+			throw new RedisCacheException(e);
+		} catch (IOException e) {
 			throw new RedisCacheException(e);
 		}
 	}
@@ -128,7 +138,7 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
 	 */
 	@Override
 	public double hitRatio() {
-		return hit.get() / (hit.get() +  miss.get());
+		return hit.get() / (double)(hit.get() +  miss.get());
 	}
 
 	/* (non-Javadoc)
@@ -138,7 +148,9 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
 	public int size() {
 		try {
 			return client.dbsize();
-		} catch (Exception e) {
+		} catch (ConnectionException e) {
+			throw new RedisCacheException(e);
+		} catch (IOException e) {
 			throw new RedisCacheException(e);
 		}
 	}
