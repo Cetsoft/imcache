@@ -133,7 +133,7 @@ public class HeapCache<K, V> extends AbstractCache<K, V> {
 	 * @see com.cetsoft.imcache.cache.Cache#hitRatio()
 	 */
 	public double hitRatio() {
-		return hit / (hit + miss);
+		return hitRatio(hit, miss);
 	}
 
 	/*
