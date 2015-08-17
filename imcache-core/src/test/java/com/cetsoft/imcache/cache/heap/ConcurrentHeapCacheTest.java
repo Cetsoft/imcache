@@ -139,21 +139,21 @@ public class ConcurrentHeapCacheTest {
 		long hit = 10, miss=20;
 		cache.hit.set(hit);
 		cache.miss.set(miss);
-		double actualHitRatio = 1/3.0;
+		double actualHitRatio = 1/3;
 		double expectedHitRatio = cache.hitRatio();
 		assertEquals(expectedHitRatio, actualHitRatio, 0);
 	}
 	
-        /**
-         * Size.
-         */
-        @Test
-        public void size() {
-                cache.put(1, new Object());
-                cache.put(2, new Object());
-                cache.put(3, new Object());                
-                assertEquals(3, cache.size());            
-        }
+    /**
+     * Size.
+     */
+    @Test
+    public void size() {
+            cache.put(1, new Object());
+            cache.put(2, new Object());
+            cache.put(3, new Object());                
+            assertEquals(3, cache.size());            
+    }
         
 	/**
 	 * Gets the limited map value in map.
