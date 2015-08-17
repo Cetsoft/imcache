@@ -18,10 +18,11 @@
 */
 package com.cetsoft.imcache.spring;
 
+import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
-import com.cetsoft.imcache.cache.SearchableCache;
 import com.cetsoft.imcache.cache.builder.CacheBuilder;
+import com.cetsoft.imcache.cache.builder.SearchableCacheBuilder;
 import com.cetsoft.imcache.cache.heap.tx.TransactionCommitter;
 import com.cetsoft.imcache.cache.offheap.OffHeapCache;
 import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
@@ -31,7 +32,7 @@ import com.cetsoft.imcache.serialization.Serializer;
 /**
  * The Class SpringCacheBuilder.
  */
-public class SpringCacheBuilder extends CacheBuilder {
+public class SpringCacheBuilder extends SearchableCacheBuilder {
 
 	/** The type. */
 	protected String type;
@@ -78,33 +79,36 @@ public class SpringCacheBuilder extends CacheBuilder {
 	 * 
 	 * @see com.cetsoft.imcache.cache.builder.CacheBuilder#build()
 	 */
-	@Override
-	public <K, V> SearchableCache<K, V> build() {
-		CacheBuilder builder = null;
+	public <K, V> Cache<K, V> build() {
 		if (type == null || type.equals("concurrentheap")) {
-			builder = CacheBuilder.concurrentHeapCache()
-					.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler);
+			return CacheBuilder.concurrentHeapCache()
+					.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler)
+					.build();
 		} else if (type.equals("heap")) {
-			builder = CacheBuilder.heapCache()
-					.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler);
+			return CacheBuilder.heapCache()
+					.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler)
+					.build();
 		} else if (type.equals("transactionalheap")) {
-			builder = CacheBuilder.transactionalHeapCache()
+			return CacheBuilder.transactionalHeapCache()
 					.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler)
-					.transactionCommitter(transactionCommitter);
+					.transactionCommitter(transactionCommitter)
+					.build();
 		} else if (type.equals("offheap")) {
-			builder = CacheBuilder.offHeapCache()
+			return CacheBuilder.offHeapCache()
 					.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler)
 					.concurrencyLevel(concurrencyLevel).bufferCleanerPeriod(bufferCleanerPeriod)
 					.bufferCleanerThreshold(bufferCleanerThreshold).evictionPeriod(evictionPeriod)
-					.serializer(serializer).storage(bufferStore);
+					.serializer(serializer).storage(bufferStore)
+					.build();
 		} else if (type.equals("versionedoffheap")) {
-			builder = CacheBuilder.versionedOffHeapCache()
+			return CacheBuilder.versionedOffHeapCache()
 					.cacheLoader(cacheLoader).evictionListener(evictionListener).indexHandler(indexHandler)
 					.concurrencyLevel(concurrencyLevel).bufferCleanerPeriod(bufferCleanerPeriod)
 					.bufferCleanerThreshold(bufferCleanerThreshold).evictionPeriod(evictionPeriod)
-					.serializer(serializer).storage(bufferStore);
+					.serializer(serializer).storage(bufferStore)
+					.build();
 		}
-		return builder.build();
+		return null;
 	}
 
 	/**

@@ -31,7 +31,7 @@ import com.cetsoft.imcache.serialization.Serializer;
 /**
  * The Class VersionedOffHeapCacheBuilder.
  */
-public class VersionedOffHeapCacheBuilder extends CacheBuilder {
+public class VersionedOffHeapCacheBuilder extends SearchableCacheBuilder {
 
 	/** The concurrency level. */
 	int concurrencyLevel;
@@ -206,6 +206,20 @@ public class VersionedOffHeapCacheBuilder extends CacheBuilder {
 				(CacheLoader<K, V>) cacheLoader, (EvictionListener<K, V>) evictionListener,
 				(IndexHandler<K, V>) indexHandler, bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel,
 				evictionPeriod);
+	}
+	
+	/**
+	 * Builds the cache.
+	 *
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param cacheName the cache name
+	 * @return the searchable cache
+	 */
+	public <K, V> SearchableCache<K, V> build(String cacheName) {
+		SearchableCache<K, V> cache = build();
+		cache.setName(cacheName);
+		return cache;
 	}
 
 }

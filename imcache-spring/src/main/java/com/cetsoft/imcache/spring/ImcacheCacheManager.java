@@ -27,6 +27,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 
+import com.cetsoft.imcache.cache.builder.AbstractCacheBuilder;
 import com.cetsoft.imcache.cache.builder.CacheBuilder;
 
 /**
@@ -35,7 +36,7 @@ import com.cetsoft.imcache.cache.builder.CacheBuilder;
 public class ImcacheCacheManager implements CacheManager, InitializingBean {
 
 	/** The cache builder. */
-	private CacheBuilder cacheBuilder;
+	private AbstractCacheBuilder cacheBuilder;
 
 	/** The caches. */
 	private final ConcurrentMap<String, Cache> caches = new ConcurrentHashMap<String, Cache>();
@@ -52,7 +53,7 @@ public class ImcacheCacheManager implements CacheManager, InitializingBean {
 	 *
 	 * @param cacheBuilder the cache builder
 	 */
-	public ImcacheCacheManager(CacheBuilder cacheBuilder) {
+	public ImcacheCacheManager(AbstractCacheBuilder cacheBuilder) {
 		this.cacheBuilder = cacheBuilder;
 	}
 
@@ -99,7 +100,7 @@ public class ImcacheCacheManager implements CacheManager, InitializingBean {
 	 *
 	 * @return the cache builder
 	 */
-	public CacheBuilder getCacheBuilder() {
+	public AbstractCacheBuilder getCacheBuilder() {
 		return cacheBuilder;
 	}
 
@@ -108,7 +109,7 @@ public class ImcacheCacheManager implements CacheManager, InitializingBean {
 	 *
 	 * @param cacheBuilder the new cache builder
 	 */
-	public void setCacheBuilder(CacheBuilder cacheBuilder) {
+	public void setCacheBuilder(AbstractCacheBuilder cacheBuilder) {
 		this.cacheBuilder = cacheBuilder;
 	}
 

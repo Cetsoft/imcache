@@ -27,13 +27,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.cetsoft.imcache.cache.SearchableCache;
-import com.cetsoft.imcache.cache.builder.CacheBuilder;
+import com.cetsoft.imcache.cache.builder.AbstractCacheBuilder;
 
 public class ImcacheCacheManagerTest {
 
 	
 	@Mock
-	CacheBuilder builder;
+	AbstractCacheBuilder builder;
 	
 	@Mock
 	SearchableCache<Object, Object> cache;

@@ -32,8 +32,8 @@ public class TransactionalHeapCacheBuilderTest {
 	@Test
 	public void build(){
 		Cache<Object, Object> cache = CacheBuilder.transactionalHeapCache()
-		.cacheLoader(CacheBuilder.CACHE_LOADER)
-		.evictionListener(CacheBuilder.EVICTION_LISTENER)
+		.cacheLoader(AbstractCacheBuilder.CACHE_LOADER)
+		.evictionListener(AbstractCacheBuilder.EVICTION_LISTENER)
 		.indexHandler(DummyIndexHandler.getInstance())
 		.transactionCommitter(new TransactionCommitter<Object, Object>() {
 			@Override
