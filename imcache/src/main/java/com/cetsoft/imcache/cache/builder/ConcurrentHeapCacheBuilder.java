@@ -28,7 +28,7 @@ import com.cetsoft.imcache.cache.search.index.IndexType;
 /**
  * The Class ConcurrentHeapCacheBuilder.
  */
-public class ConcurrentHeapCacheBuilder extends CacheBuilder {
+public class ConcurrentHeapCacheBuilder extends SearchableCacheBuilder {
 
 	/** The capacity. */
 	private int capacity = 10000;
@@ -118,5 +118,19 @@ public class ConcurrentHeapCacheBuilder extends CacheBuilder {
 	public <K, V> SearchableCache<K, V> build() {
 		return new ConcurrentHeapCache<K, V>((CacheLoader<K, V>) cacheLoader,
 				(EvictionListener<K, V>) evictionListener, (IndexHandler<K, V>) indexHandler, capacity);
+	}
+	
+	/**
+	 * Builds the cache.
+	 *
+	 * @param <K> the key type
+	 * @param <V> the value type
+	 * @param cacheName the cache name
+	 * @return the searchable cache
+	 */
+	public <K, V> SearchableCache<K, V> build(String cacheName) {
+		SearchableCache<K, V> cache = build();
+		cache.setName(cacheName);
+		return cache;
 	}
 }

@@ -32,8 +32,8 @@ public class HeapCacheBuilderTest {
 	@Test
 	public void build(){
 		Cache<Object, Object> cache = CacheBuilder.heapCache()
-		.cacheLoader(CacheBuilder.CACHE_LOADER)
-		.evictionListener(CacheBuilder.EVICTION_LISTENER)
+		.cacheLoader(AbstractCacheBuilder.CACHE_LOADER)
+		.evictionListener(AbstractCacheBuilder.EVICTION_LISTENER)
 		.indexHandler(DummyIndexHandler.getInstance())
 		.addIndex("age", IndexType.RANGE_INDEX).capacity(1000).build();
 		assertTrue(cache instanceof SearchableCache);
