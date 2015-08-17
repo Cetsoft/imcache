@@ -24,8 +24,8 @@ import org.junit.Test;
 
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.SearchableCache;
-import com.cetsoft.imcache.cache.heap.HeapCache;
 import com.cetsoft.imcache.cache.search.index.IndexType;
+import com.cetsoft.imcache.heap.HeapCache;
 
 public class HeapCacheBuilderTest {
 	

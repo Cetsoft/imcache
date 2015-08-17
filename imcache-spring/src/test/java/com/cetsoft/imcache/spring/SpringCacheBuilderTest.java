@@ -22,13 +22,13 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.cetsoft.imcache.cache.heap.ConcurrentHeapCache;
-import com.cetsoft.imcache.cache.heap.HeapCache;
-import com.cetsoft.imcache.cache.heap.TransactionalHeapCache;
-import com.cetsoft.imcache.cache.heap.tx.TransactionCommitter;
-import com.cetsoft.imcache.cache.offheap.OffHeapCache;
-import com.cetsoft.imcache.cache.offheap.VersionedOffHeapCache;
-import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
+import com.cetsoft.imcache.heap.ConcurrentHeapCache;
+import com.cetsoft.imcache.heap.HeapCache;
+import com.cetsoft.imcache.heap.TransactionalHeapCache;
+import com.cetsoft.imcache.heap.tx.TransactionCommitter;
+import com.cetsoft.imcache.offheap.OffHeapCache;
+import com.cetsoft.imcache.offheap.VersionedOffHeapCache;
+import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBufferStore;
 
 public class SpringCacheBuilderTest {
 	

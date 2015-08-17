@@ -22,7 +22,7 @@ import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.builder.CacheBuilder;
-import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
+import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBufferStore;
 
 /**
  * The Class MultiLevelCacheExample.

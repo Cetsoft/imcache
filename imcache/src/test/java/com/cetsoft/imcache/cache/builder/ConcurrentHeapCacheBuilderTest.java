@@ -19,12 +19,13 @@
 package com.cetsoft.imcache.cache.builder;
 
 import org.junit.Test;
+
 import static org.junit.Assert.assertTrue;
 
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.SearchableCache;
-import com.cetsoft.imcache.cache.heap.ConcurrentHeapCache;
 import com.cetsoft.imcache.cache.search.index.IndexType;
+import com.cetsoft.imcache.heap.ConcurrentHeapCache;
 
 public class ConcurrentHeapCacheBuilderTest {
 	

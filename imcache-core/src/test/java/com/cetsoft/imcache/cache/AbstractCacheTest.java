@@ -29,12 +29,12 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.cetsoft.imcache.cache.heap.HeapCache;
 import com.cetsoft.imcache.cache.search.CacheQuery;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.Query;
 import com.cetsoft.imcache.cache.search.criteria.Criteria;
 import com.cetsoft.imcache.cache.search.filter.Filter;
+import com.cetsoft.imcache.heap.HeapCache;
 
 public class AbstractCacheTest {
 	

@@ -19,13 +19,14 @@
 package com.cetsoft.imcache.cache.builder;
 
 import org.junit.Test;
+
 import static org.junit.Assert.assertTrue;
 
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.SearchableCache;
-import com.cetsoft.imcache.cache.offheap.OffHeapCache;
-import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
 import com.cetsoft.imcache.cache.search.index.IndexType;
+import com.cetsoft.imcache.offheap.OffHeapCache;
+import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBufferStore;
 
 public class OffHeapCacheBuilderTest {
 	

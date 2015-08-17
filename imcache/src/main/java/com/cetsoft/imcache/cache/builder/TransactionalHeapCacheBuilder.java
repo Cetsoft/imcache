@@ -21,11 +21,11 @@ package com.cetsoft.imcache.cache.builder;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.SearchableCache;
-import com.cetsoft.imcache.cache.heap.TransactionalHeapCache;
-import com.cetsoft.imcache.cache.heap.tx.TransactionCommitter;
 import com.cetsoft.imcache.cache.search.DefaultIndexHandler;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.index.IndexType;
+import com.cetsoft.imcache.heap.TransactionalHeapCache;
+import com.cetsoft.imcache.heap.tx.TransactionCommitter;
 
 /**
  * The Class TransactionalHeapCacheBuilder.
