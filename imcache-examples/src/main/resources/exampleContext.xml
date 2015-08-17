@@ -28,7 +28,7 @@
 		</property>
 	</bean>
 	
-	<bean id="bufferStore" class="com.cetsoft.imcache.bytebuffer.OffHeapByteBufferStore">
+	<bean id="bufferStore" class="com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore">
 		<constructor-arg name="capacity" value="100000"/>
 		<constructor-arg name="bufferSize"  value="10"/>
 	</bean>	
