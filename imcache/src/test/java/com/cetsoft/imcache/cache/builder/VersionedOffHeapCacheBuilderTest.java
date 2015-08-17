@@ -24,9 +24,9 @@ import org.junit.Test;
 
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.SearchableCache;
-import com.cetsoft.imcache.cache.offheap.VersionedOffHeapCache;
-import com.cetsoft.imcache.cache.offheap.bytebuffer.OffHeapByteBufferStore;
 import com.cetsoft.imcache.cache.search.index.IndexType;
+import com.cetsoft.imcache.offheap.VersionedOffHeapCache;
+import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBufferStore;
 
 public class VersionedOffHeapCacheBuilderTest {
 	

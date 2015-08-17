@@ -20,10 +20,10 @@ package com.cetsoft.imcache.examples;
 
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.builder.CacheBuilder;
-import com.cetsoft.imcache.cache.heap.tx.CacheTransaction;
-import com.cetsoft.imcache.cache.heap.tx.Transaction;
-import com.cetsoft.imcache.cache.heap.tx.TransactionCommitter;
-import com.cetsoft.imcache.cache.heap.tx.TransactionException;
+import com.cetsoft.imcache.heap.tx.CacheTransaction;
+import com.cetsoft.imcache.heap.tx.Transaction;
+import com.cetsoft.imcache.heap.tx.TransactionCommitter;
+import com.cetsoft.imcache.heap.tx.TransactionException;
 
 /**
  * The Class HeapCacheTransactionTest.

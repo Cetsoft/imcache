@@ -19,13 +19,14 @@
 package com.cetsoft.imcache.cache.builder;
 
 import org.junit.Test;
+
 import static org.junit.Assert.assertTrue;
 
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.SearchableCache;
-import com.cetsoft.imcache.cache.heap.TransactionalHeapCache;
-import com.cetsoft.imcache.cache.heap.tx.TransactionCommitter;
 import com.cetsoft.imcache.cache.search.index.IndexType;
+import com.cetsoft.imcache.heap.TransactionalHeapCache;
+import com.cetsoft.imcache.heap.tx.TransactionCommitter;
 
 public class TransactionalHeapCacheBuilderTest {
 	

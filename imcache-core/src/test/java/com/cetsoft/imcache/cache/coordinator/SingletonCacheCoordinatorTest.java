@@ -28,8 +28,8 @@ import org.mockito.MockitoAnnotations;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.ImcacheType;
-import com.cetsoft.imcache.cache.heap.HeapCache;
 import com.cetsoft.imcache.cache.search.IndexHandler;
+import com.cetsoft.imcache.heap.HeapCache;
 
 /**
  * The class SingletonCacheCoordinatorTest.
