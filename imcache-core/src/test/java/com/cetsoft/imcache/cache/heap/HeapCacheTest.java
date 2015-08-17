@@ -144,7 +144,7 @@ public class HeapCacheTest {
 		long hit = 10, miss=20;
 		cache.hit = hit;
 		cache.miss = miss;
-		double actualHitRatio = 1/3;
+		double actualHitRatio = 1/3.0;
 		double expectedHitRatio = cache.hitRatio();
 		assertEquals(expectedHitRatio, actualHitRatio, 0);
 	}

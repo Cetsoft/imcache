@@ -139,7 +139,7 @@ public class ConcurrentHeapCacheTest {
 		long hit = 10, miss=20;
 		cache.hit.set(hit);
 		cache.miss.set(miss);
-		double actualHitRatio = 1/3;
+		double actualHitRatio = 1/3.0;
 		double expectedHitRatio = cache.hitRatio();
 		assertEquals(expectedHitRatio, actualHitRatio, 0);
 	}

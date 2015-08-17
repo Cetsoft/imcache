@@ -156,7 +156,7 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
 	 */
 	@Override
 	public double hitRatio() {
-		return hit.get() / (double)(hit.get() +  miss.get());
+		return hitRatio(hit.get(), miss.get());
 	}
 
 	/* (non-Javadoc)

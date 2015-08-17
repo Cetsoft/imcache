@@ -155,5 +155,20 @@ public abstract class AbstractCache<K, V> implements SearchableCache<K, V> {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	/**
+	 * Calculates hit ratio.
+	 *
+	 * @param hit the hit
+	 * @param miss the miss
+	 * @return the double
+	 */
+	protected double hitRatio(long hit, long miss){
+		long total = hit + miss;
+		if(total == 0){
+			return 0;
+		}
+		return (double)hit/total;
+	}
 
 }

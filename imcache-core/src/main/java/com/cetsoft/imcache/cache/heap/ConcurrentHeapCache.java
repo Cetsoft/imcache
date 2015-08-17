@@ -135,7 +135,7 @@ public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
 	 * @see com.cetsoft.imcache.cache.Cache#hitRatio()
 	 */
 	public double hitRatio() {
-		return hit.get() / (hit.get() + miss.get());
+		return hitRatio(hit.get(), miss.get());
 	}
 
 	/*
