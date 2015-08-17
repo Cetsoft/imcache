@@ -33,6 +33,8 @@ public class RedisClient implements Client{
 	
 	/** The command executor. */
 	CommandExecutor commandExecutor;
+	
+	Transaction transaction = new RedisTransaction();
 
 	/**
 	 * Instantiates a new redis client.
@@ -79,10 +81,15 @@ public class RedisClient implements Client{
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected void runVoidCommand(ByteCommand command, byte[] ... args) throws ConnectionException, IOException {
-		commandExecutor.execute(command, args);
-		String status = commandResult.getStatus();
-		if(!status.equals(STATUS_OK)){
-			throw new ConnectionException("Command couldn't run successfully "+ command.toString());
+		transaction.open();
+		try{
+			commandExecutor.execute(command, args);
+			String status = commandResult.getStatus();
+			if(!status.equals(STATUS_OK)){
+				throw new ConnectionException("Command couldn't run successfully "+ command.toString());
+			}
+		}finally{
+			transaction.close();
 		}
 	}
 	
@@ -107,8 +114,14 @@ public class RedisClient implements Client{
 	 */
 	@Override
 	public byte[] get(byte[] key) throws ConnectionException, IOException {
-		commandExecutor.execute(RedisCommands.GET, key);
-		return commandResult.getBytes();
+		transaction.open();
+		try{
+			commandExecutor.execute(RedisCommands.GET, key);
+			return commandResult.getBytes();
+		}
+		finally{
+			transaction.close();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -116,10 +129,15 @@ public class RedisClient implements Client{
 	 */
 	@Override
 	public byte[] expire(byte[] key) throws ConnectionException, IOException {
-		byte[] value = get(key);
-		commandExecutor.execute(RedisCommands.EXPIRE, key, new byte[]{'0'});
-		commandResult.getInt();
-		return value;
+		transaction.open();
+		try{
+			byte[] value = get(key);
+			commandExecutor.execute(RedisCommands.EXPIRE, key, new byte[]{'0'});
+			commandResult.getInt();
+			return value;
+		}finally{
+			transaction.close();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -135,8 +153,14 @@ public class RedisClient implements Client{
 	 */
 	@Override
 	public int dbsize() throws ConnectionException, IOException {
-		commandExecutor.execute(RedisCommands.DBSIZE);
-		return commandResult.getInt();
+		transaction.open();
+		try{
+			commandExecutor.execute(RedisCommands.DBSIZE);
+			return commandResult.getInt();
+		}
+		finally{
+			transaction.close();
+		}
 	}
 
 	
