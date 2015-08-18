@@ -30,7 +30,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
-import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.redis.client.Client;
 import com.cetsoft.imcache.redis.client.ConnectionException;
 import com.cetsoft.imcache.serialization.Serializer;
@@ -66,15 +65,12 @@ public class RedisCacheTest {
 	@Mock
 	EvictionListener<Integer, Integer> evictionListener;
 	
-	@Mock
-	IndexHandler<Integer, Integer> indexHandler;
-	
 	RedisCache<Integer, Integer> cache;
 	
 	@Before
 	public void setup(){
 		MockitoAnnotations.initMocks(this);
-		cache = new RedisCache<Integer, Integer>(cacheLoader, evictionListener, indexHandler, serializer, client);
+		cache = new RedisCache<Integer, Integer>(cacheLoader, evictionListener, serializer, client);
 	}
 	
 	@Test
