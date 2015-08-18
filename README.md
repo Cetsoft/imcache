@@ -14,7 +14,7 @@ In order to use imcache, you need to specify your dependency as follows.
 <dependency>
   <groupId>com.cetsoft</groupId>
   <artifactId>imcache</artifactId>
-  <version>0.1.4</version><!--Can be updated for later versions-->
+  <version>0.2.0</version><!--Can be updated for later versions-->
 </dependency>
 ```
 ###Simple Application
