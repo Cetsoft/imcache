@@ -114,9 +114,9 @@ RedisCache is a cache that uses redis server for storing or retrieving data by s
 ```java
 void example(){
     Cache<Integer, String> cache = CacheBuilder.redisCache().
-				hostName(HOSTNAME).port(PORT).build();
-		cache.put(1, "apple");
-	System.out.println(cache.get(1));
+	hostName(HOSTNAME).port(PORT).build();
+    cache.put(1, "apple");
+    System.out.println(cache.get(1));
 }
 ```
 
