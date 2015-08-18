@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cetsoft</groupId>
-	<version>0.2.0</version>
+	<version>0.2.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>imcache</name>
 	<artifactId>imcache-parent</artifactId>
@@ -35,7 +35,7 @@
 		<connection>scm:git:git@github.com:Cetsoft/imcache.git</connection>
 		<developerConnection>scm:git:git@github.com:Cetsoft/imcache.git</developerConnection>
 		<url>https://github.com/Cetsoft/imcache</url>
-		<tag>imcache-parent-0.2.0</tag>
+		<tag>imcache-0.1.2</tag>
 	</scm>
 	<developers>
 		<developer>
