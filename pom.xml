@@ -15,7 +15,6 @@
 		<module>imcache-offheap</module>
 		<module>imcache-core</module>
 		<module>imcache-redis</module>
-		<module>imcache-memcache</module>
 	</modules>
 	<properties>
 		<org.springframework.version>4.0.0.RELEASE</org.springframework.version>
