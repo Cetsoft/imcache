@@ -67,5 +67,14 @@ public abstract class CacheBuilder {
 	public static VersionedOffHeapCacheBuilder versionedOffHeapCache() {
 		return new VersionedOffHeapCacheBuilder();
 	}
+	
+	/**
+	 * Redis cache.
+	 *
+	 * @return the redis cache builder
+	 */
+	public static RedisCacheBuilder redisCache(){
+		return new RedisCacheBuilder();
+	}
 
 }

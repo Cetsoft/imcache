@@ -16,6 +16,10 @@
         	<groupId>com.cetsoft</groupId>
 			<artifactId>imcache-offheap</artifactId>
     	</dependency>
+    	<dependency>
+        	<groupId>com.cetsoft</groupId>
+			<artifactId>imcache-redis</artifactId>
+    	</dependency>
 		<dependency>
         	<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
