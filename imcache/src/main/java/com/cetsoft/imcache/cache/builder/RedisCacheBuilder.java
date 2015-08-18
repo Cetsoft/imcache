@@ -42,7 +42,7 @@ public class RedisCacheBuilder extends AbstractCacheBuilder{
 	private int concurrencyLevel = MultiRedisClient.CONCURRENCY_LEVEL;
 	
 	/** The serializer. */
-	private Serializer<Object> serializer;
+	private Serializer<Object> serializer = AbstractCacheBuilder.SERIALIZER;
 
 	/**
 	 * Cache loader.
