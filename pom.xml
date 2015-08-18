@@ -211,6 +211,11 @@
 				<artifactId>imcache-offheap</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.cetsoft</groupId>
+				<artifactId>imcache-redis</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 </project>
