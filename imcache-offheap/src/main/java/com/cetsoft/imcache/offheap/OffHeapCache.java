@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.cetsoft.imcache.cache.AbstractCache;
+import com.cetsoft.imcache.cache.AbstractSearchableCache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.search.IndexHandler;
@@ -57,7 +57,7 @@ import com.cetsoft.imcache.serialization.Serializer;
  * @param <K> the key type
  * @param <V> the value type
  */
-public class OffHeapCache<K, V> extends AbstractCache<K, V> {
+public class OffHeapCache<K, V> extends AbstractSearchableCache<K, V> {
 
 	/** The Constant DELTA. */
 	private static final float DELTA = 0.00001f;
