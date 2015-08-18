@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import com.cetsoft.imcache.cache.AbstractCache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
-import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.redis.client.Client;
 import com.cetsoft.imcache.redis.client.ConnectionException;
 import com.cetsoft.imcache.serialization.Serializer;
@@ -57,12 +56,11 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
 	 *
 	 * @param cacheLoader the cache loader
 	 * @param evictionListener the eviction listener
-	 * @param indexHandler the index handler
 	 * @param serializer the serializer
 	 * @param client the client
 	 */
 	public RedisCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,
-			IndexHandler<K, V> indexHandler, Serializer<Object> serializer, Client client) {
+			Serializer<Object> serializer, Client client) {
 		super(cacheLoader, evictionListener);
 		this.client = client;
 		this.serializer = serializer;
