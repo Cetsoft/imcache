@@ -63,7 +63,7 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
 	 */
 	public RedisCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,
 			IndexHandler<K, V> indexHandler, Serializer<Object> serializer, Client client) {
-		super(cacheLoader, evictionListener, indexHandler);
+		super(cacheLoader, evictionListener);
 		this.client = client;
 		this.serializer = serializer;
 	}

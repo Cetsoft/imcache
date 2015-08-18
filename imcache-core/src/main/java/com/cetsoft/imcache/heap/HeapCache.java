@@ -23,7 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.cetsoft.imcache.cache.AbstractCache;
+import com.cetsoft.imcache.cache.AbstractSearchableCache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.search.IndexHandler;
@@ -40,7 +40,7 @@ import com.cetsoft.imcache.cache.search.IndexHandler;
  * @param <K> the key type
  * @param <V> the value type
  */
-public class HeapCache<K, V> extends AbstractCache<K, V> {
+public class HeapCache<K, V> extends AbstractSearchableCache<K, V> {
 
 	/** The hit. */
 	protected long hit;

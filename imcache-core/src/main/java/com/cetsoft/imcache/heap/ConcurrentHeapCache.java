@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.cetsoft.imcache.cache.AbstractCache;
+import com.cetsoft.imcache.cache.AbstractSearchableCache;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.search.IndexHandler;
@@ -43,7 +43,7 @@ import com.cetsoft.imcache.concurrent.Weighers;
  * @param <K> the key type
  * @param <V> the value type
  */
-public class ConcurrentHeapCache<K, V> extends AbstractCache<K, V> {
+public class ConcurrentHeapCache<K, V> extends AbstractSearchableCache<K, V> {
 
 	/** The Constant NO_OF_EVICTORS. */
 	protected static final AtomicInteger NO_OF_EVICTORS = new AtomicInteger();
