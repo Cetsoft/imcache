@@ -109,6 +109,17 @@ void example(){
 }
 ```
 
+###Redis Cache
+RedisCache is a cache that uses redis server for storing or retrieving data by serializing items into bytes. Please check out [redis documentation](http://redis.io/documentation), and [download redis server](http://redis.io/download). Redis Cache doesn't have any capability of managing or dealing with redis cluster. Redis Cache can only talk to one redis server for the time being.
+```java
+void example(){
+    Cache<Integer, String> cache = CacheBuilder.redisCache().
+				hostName(HOSTNAME).port(PORT).build();
+		cache.put(1, "apple");
+	System.out.println(cache.get(1));
+}
+```
+
 ###Searching, Indexing and Query Execution
 imcache provides searching for all the caches by default. Searching is done by execute method of SearchableCache.
 Execute method takes a Query as an input and returns results as list. A query consists of criteria and filter. Here
