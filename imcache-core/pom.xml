@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>com.cetsoft</groupId>
 		<artifactId>imcache-parent</artifactId>
-		<version>0.1.5-SNAPSHOT</version>
+		<version>0.2.0</version>
 	</parent>
 	<artifactId>imcache-core</artifactId>
 	<dependencies>
