@@ -55,6 +55,6 @@ public abstract class BasicEvictionListener<K, V> implements AsyncEvictionListen
      * @param key the key
      * @param value the value
      */
-    abstract void save(K key, V value);
+    public abstract void save(K key, V value);
     
 }
