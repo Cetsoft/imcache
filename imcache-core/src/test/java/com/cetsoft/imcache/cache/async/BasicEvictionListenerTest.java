@@ -41,7 +41,7 @@ public class BasicEvictionListenerTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         asyncEvictionListener = spy(new BasicEvictionListener<Object, Object>() {
-            void save(Object key, Object value) {
+            public void save(Object key, Object value) {
             }
         });
     }
