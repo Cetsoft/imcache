@@ -59,7 +59,7 @@ public class OffHeapByteBufferStoreTest {
     
     /** The buffer store. */
     @Spy
-    OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(1000, 1);
+    OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(1000, 3);
     
     /**
      * Setup.

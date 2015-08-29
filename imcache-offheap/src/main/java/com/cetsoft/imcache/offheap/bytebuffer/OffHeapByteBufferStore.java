@@ -78,6 +78,7 @@ public class OffHeapByteBufferStore implements OffHeapStore {
             availableBuffers.add(i);
             buffers[i] = new OffHeapByteBuffer(i, capacity, concurrencyLevel);
         }
+        currentBuffer.set(availableBuffers.poll());
     }
     
     /*
@@ -221,8 +222,10 @@ public class OffHeapByteBufferStore implements OffHeapStore {
      * @param bufferIndex the buffer index
      */
     public void free(int bufferIndex) {
-        buffers[bufferIndex].free();
-        availableBuffers.add(bufferIndex);
+        if(!availableBuffers.contains(bufferIndex)){
+            buffers[bufferIndex].free();
+            availableBuffers.add(bufferIndex);
+        }
     }
     
     /**
