@@ -59,7 +59,7 @@ public class OffHeapByteBufferStoreTest {
     
     /** The buffer store. */
     @Spy
-    OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(1000, 3);
+    OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(1000, 1);
     
     /**
      * Setup.
@@ -108,6 +108,7 @@ public class OffHeapByteBufferStoreTest {
         byte[] expectedBytes = new byte[size];
         random.nextBytes(expectedBytes);
         doReturn(buffer).when(bufferStore).currentBuffer();
+        doNothing().when(bufferStore).nextBuffer();
         doThrow(new BufferOverflowException()).doThrow(new BufferOverflowException()).doReturn(pointer).when(buffer)
                 .store(expectedBytes);
         Pointer actualPointer = bufferStore.store(expectedBytes);
@@ -216,9 +217,9 @@ public class OffHeapByteBufferStoreTest {
      */
     @Test
     public void free() {
-        doNothing().when(bufferStore).free(anyInt());
         bufferStore.free();
         verify(bufferStore).free(anyInt());
+        assertEquals(1, bufferStore.availableBuffers.size());
     }
     
     /**
