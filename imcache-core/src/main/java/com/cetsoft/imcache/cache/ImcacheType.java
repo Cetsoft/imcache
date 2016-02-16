@@ -12,11 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : May 20, 2014
  */
 package com.cetsoft.imcache.cache;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The Class ImcacheType is a class to specify cache types.
@@ -25,27 +27,28 @@ package com.cetsoft.imcache.cache;
  * @param <V> the value type
  */
 public class ImcacheType<K, V> implements CacheType<K, V> {
-    
+
     /** The ordinal counter. */
-    protected static volatile int ordinalCounter = 0;
-    
+    private static final AtomicInteger ordinalCounter = new AtomicInteger();
+
     /** The ordinal. */
     private final int ordinal;
-    
+
     /**
      * Instantiates a new imcache type.
      */
     public ImcacheType() {
-        ordinal = ordinalCounter++;
+        ordinal = ordinalCounter.getAndIncrement();
     }
-    
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.cetsoft.imcache.cache.CacheType#getType()
      */
+    @Override
     public int getType() {
         return ordinal;
     }
-    
+
 }
