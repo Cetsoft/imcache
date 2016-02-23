@@ -19,6 +19,7 @@
 package com.cetsoft.imcache.spring;
 
 import com.cetsoft.imcache.cache.Cache;
+import com.cetsoft.imcache.cache.CacheCategoryEnum;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.builder.CacheBuilder;
@@ -35,9 +36,7 @@ import com.cetsoft.imcache.serialization.Serializer;
 public class SpringCacheBuilder extends SearchableCacheBuilder {
     
     /** The type. */
-    protected String type;
-    
-    private static final String DEFAULT_CACHE_TYPE = "concurrentheap";
+    protected CacheCategoryEnum type;
     
     /** The concurrency level. */
     private int concurrencyLevel = OffHeapCache.DEFAULT_CONCURRENCY_LEVEL;
@@ -59,11 +58,15 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
     
     private TransactionCommitter<Object, Object> transactionCommitter;
     
+    private String redisHost = "127.0.0.1";
+    
+    private int redisPort = 6379;
+    
     /**
      * Instantiates a new spring cache builder.
      */
     public SpringCacheBuilder() {
-        this(DEFAULT_CACHE_TYPE);
+    	this.type = CacheCategoryEnum.CONCURRENTHEAP;
     }
     
     /**
@@ -71,7 +74,7 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
      */
     public SpringCacheBuilder(String type) {
         super();
-        this.type = type;
+        this.type = CacheCategoryEnum.valueOf(type.toUpperCase());
     }
     
     /*
@@ -79,29 +82,40 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
      * 
      * @see com.cetsoft.imcache.cache.builder.CacheBuilder#build()
      */
-    public <K, V> Cache<K, V> build() {
-        if (type == null || type.equals("concurrentheap")) {
-            return CacheBuilder.concurrentHeapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
-                    .indexHandler(indexHandler).build();
-        } else if (type.equals("heap")) {
-            return CacheBuilder.heapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
-                    .indexHandler(indexHandler).build();
-        } else if (type.equals("transactionalheap")) {
-            return CacheBuilder.transactionalHeapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
-                    .indexHandler(indexHandler).transactionCommitter(transactionCommitter).build();
-        } else if (type.equals("offheap")) {
-            return CacheBuilder.offHeapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
-                    .indexHandler(indexHandler).concurrencyLevel(concurrencyLevel)
-                    .bufferCleanerPeriod(bufferCleanerPeriod).bufferCleanerThreshold(bufferCleanerThreshold)
-                    .evictionPeriod(evictionPeriod).serializer(serializer).storage(bufferStore).build();
-        } else if (type.equals("versionedoffheap")) {
-            return CacheBuilder.versionedOffHeapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
-                    .indexHandler(indexHandler).concurrencyLevel(concurrencyLevel)
-                    .bufferCleanerPeriod(bufferCleanerPeriod).bufferCleanerThreshold(bufferCleanerThreshold)
-                    .evictionPeriod(evictionPeriod).serializer(serializer).storage(bufferStore).build();
-        }
-        return null;
-    }
+	public <K, V> Cache<K, V> build() {
+
+		switch (this.type) {
+
+		case HEAP:
+			return CacheBuilder.heapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
+					.indexHandler(indexHandler).build();
+
+		case TRANSACTIONALHEAP:
+			return CacheBuilder.transactionalHeapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
+					.indexHandler(indexHandler).transactionCommitter(transactionCommitter).build();
+
+		case OFFHEAP:
+			return CacheBuilder.offHeapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
+					.indexHandler(indexHandler).concurrencyLevel(concurrencyLevel)
+					.bufferCleanerPeriod(bufferCleanerPeriod).bufferCleanerThreshold(bufferCleanerThreshold)
+					.evictionPeriod(evictionPeriod).serializer(serializer).storage(bufferStore).build();
+
+		case VERSIONEDOFFHEAP:
+			return CacheBuilder.versionedOffHeapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
+					.indexHandler(indexHandler).concurrencyLevel(concurrencyLevel)
+					.bufferCleanerPeriod(bufferCleanerPeriod).bufferCleanerThreshold(bufferCleanerThreshold)
+					.evictionPeriod(evictionPeriod).serializer(serializer).storage(bufferStore).build();
+
+		case REDIS:
+			return CacheBuilder.redisCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
+					.serializer(serializer).concurrencyLevel(concurrencyLevel).hostName(redisHost).port(redisPort)
+					.build();
+
+		default:
+			return CacheBuilder.concurrentHeapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
+					.indexHandler(indexHandler).build();
+		}
+	}
     
     /**
      * Sets the type.
@@ -109,7 +123,7 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
      * @param type the new type
      */
     public void setType(String type) {
-        this.type = type;
+    	this.type = CacheCategoryEnum.valueOf(type.toUpperCase());
     }
     
     /**
@@ -201,5 +215,23 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
     public void setTransactionCommitter(TransactionCommitter<Object, Object> transactionCommitter) {
         this.transactionCommitter = transactionCommitter;
     }
+
+    /**
+     * Sets the REDIS server host.
+     * 
+     * @param redisHost
+     */
+	public void setRedisHost(String redisHost) {
+		this.redisHost = redisHost;
+	}
+
+	/**
+	 * Sets the REDIS server PORT.
+	 * 
+	 * @param redisPort
+	 */
+	public void setRedisPort(int redisPort) {
+		this.redisPort = redisPort;
+	}
     
 }
