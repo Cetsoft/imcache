@@ -62,6 +62,8 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
     
     private int redisPort = 6379;
     
+    private int heapCapacity = 10000;
+    
     /**
      * Instantiates a new spring cache builder.
      */
@@ -88,7 +90,7 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
 
 		case HEAP:
 			return CacheBuilder.heapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
-					.indexHandler(indexHandler).build();
+					.indexHandler(indexHandler).capacity(heapCapacity).build();
 
 		case TRANSACTIONALHEAP:
 			return CacheBuilder.transactionalHeapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
@@ -233,5 +235,14 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
 	public void setRedisPort(int redisPort) {
 		this.redisPort = redisPort;
 	}
-    
+
+	/**
+	 * Sets the HEAP capacity. If not set then it defaults to 10000.
+	 * 
+	 * @param heapCapacity
+	 */
+	public void setHeapCapacity(int heapCapacity) {
+		this.heapCapacity = heapCapacity;
+	}
+  
 }
