@@ -9,7 +9,7 @@ Imcache is a Java Caching Library.Imcache intends to speed up applications by pr
 [![License](http://img.shields.io/:license-apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html) [![Join the chat at https://gitter.im/Cetsoft/imcache](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Cetsoft/imcache?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ###Pom Reference
-In order to use imcache, you need to specify your dependency as follows.
+In order to use imcache, you need to specify your dependency as follows:
 ```xml
 <dependency>
   <groupId>com.cetsoft</groupId>
