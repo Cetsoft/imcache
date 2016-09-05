@@ -2,7 +2,7 @@ imcache
 =======
 Imcache is a Java Caching Library.Imcache intends to speed up applications by providing a means to manage cached data. It offers solutions ranging from small applications to large scale applications. It supports n-level caching hierarchy where it supports various kind of caching methods like heap, offheap, and more. Imcache also supports well-known caching solution, redis. To extend, you can define a heapcache backed by offheap cache which is also backed by database. If a key is not found in heap, it will be asked to offheap and so on. 
 
-![alt tag](http://www.cetsoft.com/wp-content/uploads/2016/09/imcache.png)
+<img src="http://www.cetsoft.com/wp-content/uploads/2016/09/imcache.png" width="50">
 [![Build Status](https://travis-ci.org/Cetsoft/imcache.svg)](https://travis-ci.org/Cetsoft/imcache)
 [![Coverage Status](https://coveralls.io/repos/Cetsoft/imcache/badge.svg?branch=master&service=github)](https://coveralls.io/github/Cetsoft/imcache?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.cetsoft/imcache/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.cetsoft/imcache/)
