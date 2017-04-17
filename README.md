@@ -8,7 +8,7 @@ Imcache is a Java Caching Library.Imcache intends to speed up applications by pr
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.cetsoft/imcache/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.cetsoft/imcache/)
 [![License](http://img.shields.io/:license-apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html) [![Join the chat at https://gitter.im/Cetsoft/imcache](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Cetsoft/imcache?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-###Pom Reference
+### Pom Reference
 In order to use imcache, you need to specify your dependency as follows:
 ```xml
 <dependency>
@@ -17,7 +17,7 @@ In order to use imcache, you need to specify your dependency as follows:
   <version>0.2.0</version><!--Can be updated for later versions-->
 </dependency>
 ```
-###Simple Application
+### Simple Application
 ```java
 Cache<String,User> cache = CacheBuilder.heapCache().
 cacheLoader(new CacheLoader<String, User>() {
@@ -36,7 +36,7 @@ User newUser = new User("email", "Richard", "Murray")
 //In case of eviction, newUser will be saved to db.
 cache.put(newUser.getEmail(), newUser);
 ```
-###The Cache Interface
+### The Cache Interface
 Imcache supports simple operation defined by the cache interface. Cache interface provides general methods that is implemented by all imcache caches. See the methods below.
 ```java
 public interface Cache<K, V> {
@@ -49,7 +49,7 @@ public interface Cache<K, V> {
     int size();
 }
 ```
-###The Cache Builder
+### The Cache Builder
 Cache Builder is one of the core asset of the imcache. You can create simple heapCaches to complexOffHeapCaches via 
 Cache Builder. Let's see Cache Builder in action below.
 ```java
@@ -63,21 +63,21 @@ void example(){
     }).capacity(10000).build(); 
 }
 ```
-###The Cache Loader
+### The Cache Loader
 The CacheLoader interface for loading values with specified keys. The class that is interested in loading values 
 from a resource implements this interface. When data is not found the cache, load method of CacheLoader is called.
-###The Eviction Listener
+### The Eviction Listener
 The listener interface for receiving eviction events. The class that is interested in processing a eviction event
 implements this interface. When the eviction event occurs,that object's onEviction method is invoked.
-###The Heap Cache
+### The Heap Cache
 HeapCache uses LRU(Least Recently Used) as eviction strategy by the help of LinkedHashMap. As a result, 
 HeapCache discards the least recently used items first when eviction required. Eviction occurs if the size of
 the cache is equal to the cache capacity in a put operation.
-###The Concurrent Heap Cache
+### The Concurrent Heap Cache
 ConcurrentHeapCache uses LRU(Least Recently Used) as eviction strategy by the help of ConcurrentLinkedHashMap. 
 As a result, ConcurrentHeapCache discards the least recently used items firstwhen eviction required.
 Eviction occurs if the size of the cache is equal to the cache capacity in a put operation
-###The Off Heap Cache
+### The Off Heap Cache
 The Class OffHeapCache is a cache that uses offheap byte buffers to store or retrieve data by serializing
 items into bytes. To do so, OffHeapCache uses pointers to point array location of an item. OffHeapCache clears
 the buffers periodically to gain free space if buffers are dirty(unused memory). It also does eviction depending on
@@ -95,7 +95,7 @@ void example(){
 By default configuration, OffHeapCache will try to clean the places which are not used and marked as 
 dirty periodically. What is more, it will do eviction periodically, too.
 
-###The Versioned Off Heap Cache
+### The Versioned Off Heap Cache
 The Class VersionedOffHeapCache is a type of offheap cache where cache items have versions that are incremented for each update.
 To make versioned off heap cache work to JVM Parameters <b>"-XX:MaxDirectMemorySize=4g"</b> must be set. Buffer capacity of 8 mb 
 is a good choice to start VersionedOffHeapCache. Let's see sample VersionedOffHeapCache use.
@@ -109,7 +109,7 @@ void example(){
 }
 ```
 
-###Redis Cache
+### Redis Cache
 RedisCache is a cache that uses redis server for storing or retrieving data by serializing items into bytes. Please check out [redis documentation](http://redis.io/documentation), and [download redis server](http://redis.io/download). Redis Cache doesn't have any capability of managing or dealing with redis cluster. Redis Cache can only talk to one redis server for the time being.
 ```java
 void example(){
@@ -120,7 +120,7 @@ void example(){
 }
 ```
 
-###Searching, Indexing and Query Execution
+### Searching, Indexing and Query Execution
 imcache provides searching for all the caches by default. Searching is done by execute method of SearchableCache.
 Execute method takes a Query as an input and returns results as list. A query consists of criteria and filter. Here
 is an example use for queries.
