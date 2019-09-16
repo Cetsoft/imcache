@@ -18,6 +18,8 @@
  */
 package com.cetsoft.imcache.cache;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * The Interface Cache.
  *
@@ -33,6 +35,16 @@ public interface Cache<K, V> {
      * @param value the value
      */
     void put(K key, V value);
+
+    /**
+     * Puts the value with the specified key and ttl value
+     *
+     * @param key the key
+     * @param value the value
+     * @param timeUnit the time unit
+     * @param duration time to live
+     */
+    void put(K key, V value, TimeUnit timeUnit, long duration);
     
     /**
      * Gets the value with the specified key.
@@ -62,32 +74,26 @@ public interface Cache<K, V> {
      * Clear the cache.
      */
     void clear();
-    
-    /**
-     * Calculates the Hit ratio.
-     *
-     * @return the double
-     */
-    double hitRatio();
-    
+
     /**
      * Gets the specified name if exist, otherwise returns the class name.
      *
      * @return the name
      */
     String getName();
-    
+
     /**
-     * Sets the name.
+     * Returns estimated number of elements in this cache
      *
-     * @param name the new name
-     */
-    void setName(String name);
-    
-    /**
-     * Returns the number of elements in this cache.
-     * 
      * @return the number of elements
      */
-    int size();
+    long size();
+
+    /**
+     * Returns the cache stats
+     *
+     * @return cache stats
+     */
+    CacheStats stats();
+
 }

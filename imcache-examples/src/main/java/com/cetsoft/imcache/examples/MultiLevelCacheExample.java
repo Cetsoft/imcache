@@ -39,7 +39,7 @@ public class MultiLevelCacheExample {
                         return cacheDao.load(key);
                     }
                 }).evictionListener(new EvictionListener<String, String>() {
-                    public void onEviction(String key, String value) {
+                    public void onEviction(Object key, Object value) {
                         cacheDao.store(key, value);
                     }
                 }).build();
@@ -48,7 +48,7 @@ public class MultiLevelCacheExample {
                 return offHeapCache.get(key);
             }
         }).evictionListener(new EvictionListener<String, String>() {
-            public void onEviction(String key, String value) {
+            public void onEviction(Object key, Object value) {
                 offHeapCache.put(key, value);
             }
         }).capacity(10000).build();

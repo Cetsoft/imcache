@@ -24,7 +24,6 @@ import com.cetsoft.imcache.cache.SearchableCache;
 import com.cetsoft.imcache.cache.search.DefaultIndexHandler;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.index.IndexType;
-import com.cetsoft.imcache.heap.HeapCache;
 
 /**
  * The Class HeapCacheBuilder.

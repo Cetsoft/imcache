@@ -52,7 +52,7 @@ public abstract class QueuingEvictionListener<K, V> implements AsyncEvictionList
      * com.cetsoft.imcache.cache.EvictionListener#onEviction(java.lang.Object,
      * java.lang.Object)
      */
-    public void onEviction(K key, V value) {
+    public void onEviction(Object key, Object value) {
         while (true) {
             try {
                 CacheTask<K, V> cacheTask = createCacheTask(key, value);

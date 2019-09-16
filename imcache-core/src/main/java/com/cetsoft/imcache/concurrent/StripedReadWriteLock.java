@@ -16,7 +16,7 @@
  * Author : Yusuf Aytas
  * Date   : September 6, 2014
  */
-package com.cetsoft.imcache.concurrent.lock;
+package com.cetsoft.imcache.concurrent;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 

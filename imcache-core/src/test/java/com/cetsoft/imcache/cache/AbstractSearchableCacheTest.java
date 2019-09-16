@@ -61,7 +61,7 @@ public class AbstractSearchableCacheTest {
                         return null;
                     }
                 }, new EvictionListener<Integer, Item>() {
-                    public void onEviction(Integer key, Item value) {
+                    public void onEviction(Object key, Object value) {
                     }
                 }, indexHandler, 10);
         Item item1 = new Item(1);

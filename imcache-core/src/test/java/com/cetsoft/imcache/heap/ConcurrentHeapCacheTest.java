@@ -33,12 +33,12 @@ import org.mockito.MockitoAnnotations;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.search.IndexHandler;
-import com.cetsoft.imcache.heap.ConcurrentHeapCache;
 
 /**
  * The Class ConcurrentHeapCacheTest.
  */
-public class ConcurrentHeapCacheTest {
+public class HeapCacheTest
+{
     
     /** The cache loader. */
     @Mock
@@ -60,7 +60,7 @@ public class ConcurrentHeapCacheTest {
     Map<Object, Object> limitedMap;
     
     /** The cache. */
-    ConcurrentHeapCache<Object, Object> cache;
+    HeapCache<Object, Object> cache;
     
     /**
      * Setup.
@@ -68,7 +68,7 @@ public class ConcurrentHeapCacheTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        cache = new ConcurrentHeapCache<Object, Object>(cacheLoader, evictionListener, indexHandler, 1000);
+        cache = new HeapCache<Object, Object>(cacheLoader, evictionListener, indexHandler, 1000);
         cache.cache = spy(cache.cache);
         limitedMap = cache.cache;
     }
@@ -164,7 +164,7 @@ public class ConcurrentHeapCacheTest {
     @Test
     public void getLimitedMapValueInMap() {
         Object expectedValue = new Object();
-        cache = new ConcurrentHeapCache<Object, Object>(cacheLoader, evictionListener, indexHandler, 10);
+        cache = new HeapCache<Object, Object>(cacheLoader, evictionListener, indexHandler, 10);
         cache.cache.put(expectedValue, expectedValue);
         Object actualValue = cache.get(expectedValue);
         assertEquals(expectedValue, actualValue);
@@ -192,7 +192,7 @@ public class ConcurrentHeapCacheTest {
      */
     @Test
     public void putConcurrentLimitedHashMapSizeGreaterThanCapacity() {
-        cache = new ConcurrentHeapCache<Object, Object>(cacheLoader, evictionListener, indexHandler, 0);
+        cache = new HeapCache<Object, Object>(cacheLoader, evictionListener, indexHandler, 0);
         Object object = new Object();
         cache.cache.put(object, object);
         doReturn(object).when(entry).getKey();
@@ -208,7 +208,7 @@ public class ConcurrentHeapCacheTest {
      */
     @Test
     public void removeConcurrentLimitedHashMapExistExKey() {
-        cache = new ConcurrentHeapCache<Object, Object>(cacheLoader, evictionListener, indexHandler, 0);
+        cache = new HeapCache<Object, Object>(cacheLoader, evictionListener, indexHandler, 0);
         Object object = new Object();
         cache.cache.put(object, object);
         doReturn(object).when(entry).getKey();

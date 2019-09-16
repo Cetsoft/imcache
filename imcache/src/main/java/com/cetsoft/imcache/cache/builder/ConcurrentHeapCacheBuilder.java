@@ -23,7 +23,7 @@ import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.SearchableCache;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.index.IndexType;
-import com.cetsoft.imcache.heap.ConcurrentHeapCache;
+import com.cetsoft.imcache.heap.HeapCache;
 
 /**
  * The Class ConcurrentHeapCacheBuilder.
@@ -116,7 +116,7 @@ public class ConcurrentHeapCacheBuilder extends SearchableCacheBuilder {
      */
     @SuppressWarnings("unchecked")
     public <K, V> SearchableCache<K, V> build() {
-        return new ConcurrentHeapCache<K, V>((CacheLoader<K, V>) cacheLoader,
+        return new HeapCache<K, V>((CacheLoader<K, V>) cacheLoader,
                 (EvictionListener<K, V>) evictionListener, (IndexHandler<K, V>) indexHandler, capacity);
     }
     

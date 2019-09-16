@@ -19,7 +19,7 @@
 package com.cetsoft.imcache.spring;
 
 import com.cetsoft.imcache.cache.Cache;
-import com.cetsoft.imcache.cache.CacheCategoryEnum;
+import com.cetsoft.imcache.cache.CacheCategory;
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.builder.CacheBuilder;
@@ -36,7 +36,7 @@ import com.cetsoft.imcache.serialization.Serializer;
 public class SpringCacheBuilder extends SearchableCacheBuilder {
     
     /** The type. */
-    protected CacheCategoryEnum type;
+    protected CacheCategory type;
     
     /** The concurrency level. */
     private int concurrencyLevel = OffHeapCache.DEFAULT_CONCURRENCY_LEVEL;
@@ -68,7 +68,7 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
      * Instantiates a new spring cache builder.
      */
     public SpringCacheBuilder() {
-    	this.type = CacheCategoryEnum.CONCURRENTHEAP;
+    	this.type = CacheCategory.CONCURRENTHEAP;
     }
     
     /**
@@ -76,7 +76,7 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
      */
     public SpringCacheBuilder(String type) {
         super();
-        this.type = CacheCategoryEnum.valueOf(type.toUpperCase());
+        this.type = CacheCategory.valueOf(type.toUpperCase());
     }
     
     /*
@@ -102,7 +102,7 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
 					.bufferCleanerPeriod(bufferCleanerPeriod).bufferCleanerThreshold(bufferCleanerThreshold)
 					.evictionPeriod(evictionPeriod).serializer(serializer).storage(bufferStore).build();
 
-		case VERSIONEDOFFHEAP:
+		case VERSIONED_OFFHEAP:
 			return CacheBuilder.versionedOffHeapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
 					.indexHandler(indexHandler).concurrencyLevel(concurrencyLevel)
 					.bufferCleanerPeriod(bufferCleanerPeriod).bufferCleanerThreshold(bufferCleanerThreshold)
@@ -125,7 +125,7 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
      * @param type the new type
      */
     public void setType(String type) {
-    	this.type = CacheCategoryEnum.valueOf(type.toUpperCase());
+    	this.type = CacheCategory.valueOf(type.toUpperCase());
     }
     
     /**

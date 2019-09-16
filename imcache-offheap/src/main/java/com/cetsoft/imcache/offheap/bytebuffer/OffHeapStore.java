@@ -43,18 +43,20 @@ public interface OffHeapStore {
      * Stores the payload.
      *
      * @param payload the payload
+     * @param expiry the expiry
      * @return the pointer
      */
-    Pointer store(byte[] payload);
+    Pointer store(byte[] payload, long expiry);
     
     /**
      * Updates the payload by marking exPayload as dirty.
      *
      * @param pointer the pointer
      * @param payload the payload
+     * @param payload the expiry
      * @return the pointer
      */
-    Pointer update(Pointer pointer, byte[] payload);
+    Pointer update(Pointer pointer, byte[] payload, long expiry);
     
     /**
      * Calculates and returns Dirty memory.

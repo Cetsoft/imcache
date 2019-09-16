@@ -22,7 +22,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.cetsoft.imcache.heap.ConcurrentHeapCache;
 import com.cetsoft.imcache.heap.HeapCache;
 import com.cetsoft.imcache.heap.TransactionalHeapCache;
 import com.cetsoft.imcache.heap.tx.TransactionCommitter;
@@ -49,7 +48,7 @@ public class SpringCacheBuilderTest {
         
         builder.setType("concurrentheap");
         builder.setConcurrencyLevel(2);
-        assertTrue(builder.build() instanceof ConcurrentHeapCache);
+        assertTrue(builder.build() instanceof HeapCache);
         
         builder.setType("offheap");
         builder.setEvictionPeriod(2);

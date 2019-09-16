@@ -41,7 +41,7 @@ public abstract class BasicEvictionListener<K, V> implements AsyncEvictionListen
      * com.cetsoft.imcache.cache.EvictionListener#onEviction(java.lang.Object,
      * java.lang.Object)
      */
-    public void onEviction(final K key, final V value) {
+    public void onEviction(final Object key, final Object value) {
         ThreadUtils.createDaemonThread(new Runnable() {
             public void run() {
                 save(key, value);

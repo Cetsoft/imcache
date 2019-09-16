@@ -18,7 +18,9 @@
  */
 package com.cetsoft.imcache.redis;
 
+import com.cetsoft.imcache.cache.CacheStats;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.cetsoft.imcache.cache.AbstractCache;
@@ -82,7 +84,12 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
             throw new RedisCacheException(e);
         }
     }
-    
+
+    @Override
+    public void put(K key, V value, TimeUnit timeUnit, long duration) {
+
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -158,23 +165,12 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
     }
     
     /*
-     * (non-Javadoc) This method returns hit ratio per cache. It doesn't have
-     * ability to aggregate data from different JVM and caches.
-     * 
-     * @see com.cetsoft.imcache.cache.Cache#hitRatio()
-     */
-    @Override
-    public double hitRatio() {
-        return hitRatio(hit.get(), miss.get());
-    }
-    
-    /*
      * (non-Javadoc)
      * 
      * @see com.cetsoft.imcache.cache.Cache#size()
      */
     @Override
-    public int size() {
+    public long size() {
         try {
             return client.dbsize();
         } catch (ConnectionException e) {
@@ -183,5 +179,10 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
             throw new RedisCacheException(e);
         }
     }
-    
+
+    @Override
+    public CacheStats stats() {
+        return null;
+    }
+
 }

@@ -26,13 +26,13 @@ package com.cetsoft.imcache.cache;
  * @param <K> the key type
  * @param <V> the value type
  */
+@FunctionalInterface
 public interface EvictionListener<K, V> {
     
     /**
      * Called on eviction.
-     *
      * @param key the key
      * @param value the value
      */
-    void onEviction(K key, V value);
+    void onEviction(Object key, Object value);
 }

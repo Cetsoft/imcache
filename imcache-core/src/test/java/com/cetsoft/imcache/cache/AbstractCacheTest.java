@@ -45,7 +45,7 @@ public class AbstractCacheTest {
                 return null;
             }
         }, new EvictionListener<Integer, Item>() {
-            public void onEviction(Integer key, Item value) {
+            public void onEviction(Object key, Object value) {
             }
         }, indexHandler, 10);
         long hit = 2;
@@ -60,7 +60,7 @@ public class AbstractCacheTest {
                 return null;
             }
         }, new EvictionListener<Integer, Item>() {
-            public void onEviction(Integer key, Item value) {
+            public void onEviction(Object key, Object value) {
             }
         }, indexHandler, 10);
         assertEquals(0.0, abstractCache.hitRatio(0, 0), 0.000001);

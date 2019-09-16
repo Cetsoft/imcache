@@ -33,15 +33,6 @@ public abstract class CacheBuilder {
     }
     
     /**
-     * Transactional Heap cache.
-     *
-     * @return the transactional heap cache builder
-     */
-    public static TransactionalHeapCacheBuilder transactionalHeapCache() {
-        return new TransactionalHeapCacheBuilder();
-    }
-    
-    /**
      * Concurrent heap cache.
      *
      * @return the concurrent heap cache builder

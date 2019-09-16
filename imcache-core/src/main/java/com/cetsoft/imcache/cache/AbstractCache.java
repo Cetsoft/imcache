@@ -40,7 +40,6 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
      *
      * @param cacheLoader the cache loader
      * @param evictionListener the eviction listener
-     * @param indexHandler the query executer
      */
     public AbstractCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener) {
         this.cacheLoader = cacheLoader;

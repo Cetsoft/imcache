@@ -18,6 +18,7 @@
  */
 package com.cetsoft.imcache.cache.builder;
 
+import com.cetsoft.imcache.heap.HeapCache;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -25,7 +26,6 @@ import static org.junit.Assert.assertTrue;
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.SearchableCache;
 import com.cetsoft.imcache.cache.search.index.IndexType;
-import com.cetsoft.imcache.heap.ConcurrentHeapCache;
 
 public class ConcurrentHeapCacheBuilderTest {
     
@@ -35,6 +35,6 @@ public class ConcurrentHeapCacheBuilderTest {
                 .evictionListener(AbstractCacheBuilder.EVICTION_LISTENER).indexHandler(DummyIndexHandler.getInstance())
                 .addIndex("age", IndexType.RANGE_INDEX).capacity(1000).build();
         assertTrue(cache instanceof SearchableCache);
-        assertTrue(cache instanceof ConcurrentHeapCache);
+        assertTrue(cache instanceof HeapCache);
     }
 }

@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-import com.cetsoft.imcache.concurrent.lock.StripedReadWriteLock;
+import com.cetsoft.imcache.concurrent.StripedReadWriteLock;
 
 public class StripedReadWriteLockTest {
     
