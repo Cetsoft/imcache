@@ -241,28 +241,6 @@ public class OffHeapByteBufferStoreTest {
         verify(queue).add(anyInt());
     }
     
-    /**
-     * Pointers to be redistributed.
-     */
-    @Test
-    public void pointersToBeRedistributed() {
-        int size = 100;
-//        TODO: Implement this
-//        byte[] expectedBytes = new byte[size];
-//        random.nextBytes(expectedBytes);
-//        List<Pointer> pointers = new ArrayList<Pointer>();
-//        pointers.add(pointer);
-//        doReturn(expectedBytes).when(bufferStore).retrieve(pointer);
-//        doReturn(buffer).when(pointer).getOffHeapByteBuffer();
-//        doReturn(pointer).when(bufferStore).store(expectedBytes, buffer);
-//        doReturn(pointer).when(pointer).copy(pointer);
-//        bufferStore.redistribute(pointers);
-//        verify(bufferStore).retrieve(pointer);
-//        verify(pointer).getOffHeapByteBuffer();
-//        verify(pointer).copy(pointer);
-//        verify(bufferStore).store(expectedBytes, buffer);
-    }
-    
     @Test
     public void remove() {
         int size = 100;

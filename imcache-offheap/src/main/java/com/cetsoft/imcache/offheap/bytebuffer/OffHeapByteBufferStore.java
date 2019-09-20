@@ -75,7 +75,7 @@ public class OffHeapByteBufferStore implements OffHeapStore {
   public OffHeapByteBufferStore(int capacity, int bufferSize, int concurrencyLevel) {
     this.bufferSize = bufferSize;
     buffers = new OffHeapByteBuffer[bufferSize];
-    availableBuffers = new LinkedBlockingQueue<Integer>(bufferSize);
+    availableBuffers = new LinkedBlockingQueue<>(bufferSize);
     for (int i = 0; i < bufferSize; i++) {
       availableBuffers.add(i);
       buffers[i] = new OffHeapByteBuffer(i, capacity, concurrencyLevel);

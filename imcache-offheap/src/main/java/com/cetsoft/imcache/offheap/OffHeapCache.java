@@ -199,6 +199,7 @@ public class OffHeapCache<K, V> extends AbstractSearchableCache<K, V> {
         pointer = bufferStore.update(pointer, bytes, expiry);
       }
       pointerMap.put(key, pointer);
+      indexHandler.add(key, value);
     } finally {
       writeUnlock(key);
     }
