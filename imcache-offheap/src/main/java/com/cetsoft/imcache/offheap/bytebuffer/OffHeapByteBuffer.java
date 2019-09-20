@@ -39,12 +39,12 @@ public class OffHeapByteBuffer implements OffHeapStore {
   /**
    * The direct byte buffer.
    */
-  private DirectByteBuffer directByteBuffer;
+  private final DirectByteBuffer directByteBuffer;
 
   /**
    * The read write lock.
    */
-  private StripedReadWriteLock readWriteLock;
+  private final StripedReadWriteLock readWriteLock;
 
   /**
    * The Constant DEFAULT_CONCURRENCY_LEVEL.
@@ -59,17 +59,17 @@ public class OffHeapByteBuffer implements OffHeapStore {
   /**
    * The offset.
    */
-  private AtomicInteger offset = new AtomicInteger(0);
+  private final AtomicInteger offset = new AtomicInteger(0);
 
   /**
    * The used memory.
    */
-  private AtomicInteger usedMemory = new AtomicInteger(0);
+  private final AtomicInteger usedMemory = new AtomicInteger(0);
 
   /**
    * The dirty memory.
    */
-  private AtomicInteger dirtyMemory = new AtomicInteger(0);
+  private final AtomicInteger dirtyMemory = new AtomicInteger(0);
 
   /**
    * The Constant USED.
@@ -120,10 +120,10 @@ public class OffHeapByteBuffer implements OffHeapStore {
   public byte[] retrieve(final Pointer pointer) {
     readWriteLock.readLock(pointer.getPosition());
     try {
-      byte[] header = new byte[POINTER_SIZE];
+      final byte[] header = new byte[POINTER_SIZE];
       directByteBuffer.get(pointer.getPosition(), header, 0, POINTER_SIZE);
-      int length = header(header);
-      byte[] payload = new byte[length];
+      final int length = header(header);
+      final byte[] payload = new byte[length];
       directByteBuffer.get(pointer.getPosition() + POINTER_SIZE, payload, 0, length);
       return payload;
     } finally {
@@ -141,7 +141,7 @@ public class OffHeapByteBuffer implements OffHeapStore {
   public byte[] remove(Pointer pointer) {
     readWriteLock.writeLock(pointer.getPosition());
     try {
-      byte[] payload = retrieve(pointer);
+      final byte[] payload = retrieve(pointer);
       dirtyMemory.addAndGet(payload.length + POINTER_SIZE);
       markAsDirty(pointer.getPosition());
       return payload;
@@ -156,7 +156,7 @@ public class OffHeapByteBuffer implements OffHeapStore {
    * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#store(byte[])
    */
   public Pointer store(final byte[] payload, final long expiry) {
-    Allocation allocation = allocate(payload);
+    final Allocation allocation = allocate(payload);
     return store(allocation, payload, expiry);
   }
 
@@ -165,13 +165,12 @@ public class OffHeapByteBuffer implements OffHeapStore {
    *
    * @param allocation the allocation
    * @param payload the payload
-   * @param expiry the expiry
    * @return the pointer
    */
   public Pointer store(final Allocation allocation, byte[] payload, final long expiry) {
     usedMemory.addAndGet(allocation.getLength());
-    Pointer pointer = new Pointer(allocation.getOffset(), expiry, this);
-    byte[] header = header(payload.length);
+    final Pointer pointer = new Pointer(allocation.getOffset(), expiry, this);
+    final byte[] header = header(payload.length);
     directByteBuffer.put(allocation.getOffset(), header, 0, POINTER_SIZE);
     directByteBuffer.put(allocation.getOffset() + POINTER_SIZE, payload, 0,
         allocation.getLength() - POINTER_SIZE);
@@ -188,13 +187,13 @@ public class OffHeapByteBuffer implements OffHeapStore {
   public Pointer update(final Pointer pointer, final byte[] payload, final long expiry) {
     readWriteLock.writeLock(pointer.getPosition());
     try {
-      byte[] exPayload = retrieve(pointer);
+      final byte[] exPayload = retrieve(pointer);
       if (exPayload.length >= payload.length) {
         // Note that updated payload should be always less than
         // exPayload,
         // otherwise new location is allocated.
         dirtyMemory.addAndGet(exPayload.length - payload.length);
-        Allocation allocation = new Allocation(pointer.getPosition(),
+        final Allocation allocation = new Allocation(pointer.getPosition(),
             payload.length + POINTER_SIZE);
         return store(allocation, payload, expiry);
       } else {
@@ -214,7 +213,7 @@ public class OffHeapByteBuffer implements OffHeapStore {
    * @return the byte[]
    */
   protected byte[] header(int length) {
-    byte[] header = new byte[5];
+    final byte[] header = new byte[5];
     header[0] = USED;
     header[1] = (byte) ((length >>> 24) & 0xFF);
     header[2] = (byte) ((length >>> 16) & 0xFF);
@@ -248,7 +247,7 @@ public class OffHeapByteBuffer implements OffHeapStore {
    * @param offset the offset
    */
   protected void markAsDirty(int offset) {
-    byte[] dirtyMark = {DIRTY};
+    final byte[] dirtyMark = {DIRTY};
     directByteBuffer.put(offset, dirtyMark, 0, 1);
   }
 
@@ -259,13 +258,12 @@ public class OffHeapByteBuffer implements OffHeapStore {
    * @return the allocation
    */
   protected Allocation allocate(byte[] payload) {
-    int payloadLength = payload.length + POINTER_SIZE;
-    int allocationOffset = offset.addAndGet(payloadLength);
+    final int payloadLength = payload.length + POINTER_SIZE;
+    final int allocationOffset = offset.addAndGet(payloadLength);
     if (this.capacity < allocationOffset) {
       throw new BufferOverflowException();
     }
-    Allocation allocation = new Allocation(allocationOffset - payloadLength, payloadLength);
-    return allocation;
+    return new Allocation(allocationOffset - payloadLength, payloadLength);
   }
 
   /**
@@ -310,12 +308,12 @@ public class OffHeapByteBuffer implements OffHeapStore {
     /**
      * The offset.
      */
-    private int offset;
+    private final int offset;
 
     /**
      * The length.
      */
-    private int length;
+    private final int length;
 
     /**
      * Instantiates a new allocation.

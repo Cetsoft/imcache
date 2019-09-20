@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Jun 5, 2014
  */
@@ -32,37 +32,38 @@ import java.util.concurrent.BlockingQueue;
  * @param <V> the value type
  */
 public abstract class QueuingEvictionListener<K, V> implements AsyncEvictionListener<K, V> {
-    
+
     /** The Constant DEFAULT_BATCH_SIZE. */
     public static final int DEFAULT_BATCH_SIZE = 1000;
-    
+
     /** The Constant DEFAULT_QUEUE_SIZE. */
     public static final int DEFAULT_QUEUE_SIZE = 10000;
-    
+
     /** The cache tasks. */
     protected BlockingQueue<CacheTask<K, V>> cacheTasks;
-    
+
     /** The batch size. */
     protected int batchSize;
-    
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.cetsoft.imcache.cache.EvictionListener#onEviction(java.lang.Object,
      * java.lang.Object)
      */
-    public void onEviction(Object key, Object value) {
+    public void onEviction(K key, V value) {
         while (true) {
             try {
                 CacheTask<K, V> cacheTask = createCacheTask(key, value);
                 cacheTasks.put(cacheTask);
                 return;
             } catch (InterruptedException e) {
+              Thread.currentThread().interrupt();
             }
         }
     }
-    
+
     /**
      * Creates the cache task.
      *
@@ -73,23 +74,23 @@ public abstract class QueuingEvictionListener<K, V> implements AsyncEvictionList
     public CacheTask<K, V> createCacheTask(K key, V value) {
         return new SimpleCacheTask<K, V>(key, value);
     }
-    
+
     /**
      * Drain queue.
      */
     protected void drainQueue() {
-        List<CacheTask<K, V>> cacheTasksToBeDrained = new ArrayList<CacheTask<K, V>>(batchSize);
+        final List<CacheTask<K, V>> cacheTasksToBeDrained = new ArrayList<CacheTask<K, V>>(batchSize);
         cacheTasks.drainTo(cacheTasksToBeDrained, batchSize);
         save(cacheTasksToBeDrained);
     }
-    
+
     /**
      * Save all.
      *
      * @param cacheTasks the cache tasks
      */
     public abstract void save(List<CacheTask<K, V>> cacheTasks);
-    
+
     /**
      * The Class SimpleCacheTask.
      *
@@ -97,13 +98,13 @@ public abstract class QueuingEvictionListener<K, V> implements AsyncEvictionList
      * @param <V> the value type
      */
     protected static class SimpleCacheTask<K, V> implements CacheTask<K, V> {
-        
+
         /** The key. */
         private K key;
-        
+
         /** The value. */
         private V value;
-        
+
         /**
          * Instantiates a new simple cache task.
          *
@@ -114,24 +115,24 @@ public abstract class QueuingEvictionListener<K, V> implements AsyncEvictionList
             this.key = key;
             this.value = value;
         }
-        
+
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see com.cetsoft.imcache.cache.async.CacheTask#getKey()
          */
         public K getKey() {
             return key;
         }
-        
+
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see com.cetsoft.imcache.cache.async.CacheTask#getValue()
          */
         public V getValue() {
             return value;
         }
-        
+
     }
 }

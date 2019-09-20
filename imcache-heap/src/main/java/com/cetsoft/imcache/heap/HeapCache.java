@@ -29,7 +29,7 @@ public class HeapCache<K, V> extends AbstractSearchableCache<K, V> {
         .maximumSize(limit)
         .expireAfterWrite(duration, timeUnit)
         .removalListener((key, value, cause) -> {
-          evictionListener.onEviction(key, value);
+          evictionListener.onEviction((K)key, (V)value);
           stats.incrementEvictionCount();
         })
         .build();

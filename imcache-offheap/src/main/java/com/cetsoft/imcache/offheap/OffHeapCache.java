@@ -192,7 +192,7 @@ public class OffHeapCache<K, V> extends AbstractSearchableCache<K, V> {
     final long expiry = System.currentTimeMillis() + timeUnit.toMillis(duration);
     Pointer pointer = pointerMap.get(key);
     try {
-      byte[] bytes = serializer.serialize(value);
+      final byte[] bytes = serializer.serialize(value);
       if (pointer == null) {
         pointer = bufferStore.store(bytes, expiry);
       } else {
@@ -215,7 +215,7 @@ public class OffHeapCache<K, V> extends AbstractSearchableCache<K, V> {
       readLock(key);
       try {
         stats.incrementHitCount();
-        byte[] payload = bufferStore.retrieve(pointer);
+        final byte[] payload = bufferStore.retrieve(pointer);
         return serializer.deserialize(payload);
       } finally {
         readUnlock(key);
@@ -241,7 +241,7 @@ public class OffHeapCache<K, V> extends AbstractSearchableCache<K, V> {
     try {
       final Pointer pointer = pointerMap.get(key);
       if (pointer != null) {
-        byte[] payload = bufferStore.remove(pointer);
+        final byte[] payload = bufferStore.remove(pointer);
         pointerMap.remove(key);
         return serializer.deserialize(payload);
       }

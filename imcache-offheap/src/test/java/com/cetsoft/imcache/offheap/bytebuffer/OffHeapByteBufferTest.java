@@ -18,18 +18,13 @@
  */
 package com.cetsoft.imcache.offheap.bytebuffer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
 
 import java.nio.BufferOverflowException;
 import java.util.Random;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-
-import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBuffer;
-import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBufferException;
-import com.cetsoft.imcache.offheap.bytebuffer.Pointer;
 
 /**
  * The Class DirectByteBufferTest.
@@ -57,9 +52,10 @@ public class OffHeapByteBufferTest {
     @Test
     public void store() {
         int size = 100;
+        final long expiry = System.currentTimeMillis();
         byte[] expectedBytes = new byte[size];
         random.nextBytes(expectedBytes);
-        Pointer pointer = buffer.store(expectedBytes);
+        Pointer pointer = buffer.store(expectedBytes, expiry);
         byte[] actualBytes = buffer.retrieve(pointer);
         assertArrayEquals(expectedBytes, actualBytes);
     }
@@ -81,12 +77,13 @@ public class OffHeapByteBufferTest {
     @Test
     public void update() {
         int size = 100;
+        final long expiry = System.currentTimeMillis();
         byte[] bytes = new byte[size];
         random.nextBytes(bytes);
-        Pointer pointer = buffer.store(bytes);
+        Pointer pointer = buffer.store(bytes, expiry);
         byte[] expectedBytes = new byte[size];
         random.nextBytes(expectedBytes);
-        pointer = buffer.update(pointer, expectedBytes);
+        pointer = buffer.update(pointer, expectedBytes, expiry);
         byte[] actualBytes = buffer.retrieve(pointer);
         assertArrayEquals(expectedBytes, actualBytes);
     }
@@ -97,12 +94,13 @@ public class OffHeapByteBufferTest {
     @Test
     public void updateGreaterExPayload() {
         int size = 100;
+        final long expiry = System.currentTimeMillis();
         byte[] bytes = new byte[size];
         random.nextBytes(bytes);
-        Pointer pointer = buffer.store(bytes);
+        Pointer pointer = buffer.store(bytes, expiry);
         byte[] expectedBytes = new byte[size + 5];
         random.nextBytes(expectedBytes);
-        pointer = buffer.update(pointer, expectedBytes);
+        pointer = buffer.update(pointer, expectedBytes, expiry);
         byte[] actualBytes = buffer.retrieve(pointer);
         assertArrayEquals(expectedBytes, actualBytes);
     }
@@ -149,9 +147,10 @@ public class OffHeapByteBufferTest {
     @Test
     public void remove() {
         int size = 100;
+        final long expiry = System.currentTimeMillis();
         byte[] expectedBytes = new byte[size];
         random.nextBytes(expectedBytes);
-        Pointer pointer = buffer.store(expectedBytes);
+        Pointer pointer = buffer.store(expectedBytes, expiry);
         byte[] actualBytes = buffer.remove(pointer);
         assertArrayEquals(expectedBytes, actualBytes);
     }

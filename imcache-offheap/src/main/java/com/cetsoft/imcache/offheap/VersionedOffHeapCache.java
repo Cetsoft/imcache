@@ -248,9 +248,8 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
      * com.cetsoft.imcache.cache.EvictionListener#onEviction(java.lang.Object
      * , java.lang.Object)
      */
-    public void onEviction(Object key, Object value) {
-      final VersionedItem<V> versionedItem = (VersionedItem<V>) value;
-      evictionListener.onEviction(key, versionedItem.getValue());
+    public void onEviction(K key, VersionedItem<V> value) {
+      evictionListener.onEviction(key, value.getValue());
     }
   }
 

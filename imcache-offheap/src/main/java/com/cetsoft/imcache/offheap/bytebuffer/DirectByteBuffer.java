@@ -44,7 +44,7 @@ public class DirectByteBuffer implements ByteBuffer {
      *
      * @param capacity the capacity
      */
-    public DirectByteBuffer(int capacity) {
+    public DirectByteBuffer(final int capacity) {
         byteBuffer = java.nio.ByteBuffer.allocateDirect(capacity);
         java.lang.reflect.Method method;
         try {
@@ -101,7 +101,7 @@ public class DirectByteBuffer implements ByteBuffer {
         long offset = destinationBaseOffset + destinationPosition;
         while (length > 0) {
             // Copy as much as copy threshold
-            long size = (length > UNSAFE_COPY_THRESHOLD) ? UNSAFE_COPY_THRESHOLD : length;
+            final long size = (length > UNSAFE_COPY_THRESHOLD) ? UNSAFE_COPY_THRESHOLD : length;
             // Copy from bytebuffer to destination
             UNSAFE.copyMemory(null, sourceAddress, destination, offset, size);
             length -= size;
@@ -126,7 +126,7 @@ public class DirectByteBuffer implements ByteBuffer {
         long offset = sourceBaseOffset + sourcePosition;
         while (length > 0) {
             // Copy as much as copy threshold
-            long size = (length > UNSAFE_COPY_THRESHOLD) ? UNSAFE_COPY_THRESHOLD : length;
+            final long size = (length > UNSAFE_COPY_THRESHOLD) ? UNSAFE_COPY_THRESHOLD : length;
             // Copy from source to bytebuffer
             UNSAFE.copyMemory(source, offset, null, destinationAddress, size);
             length -= size;

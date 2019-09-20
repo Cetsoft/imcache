@@ -20,7 +20,7 @@ package com.cetsoft.imcache.offheap.bytebuffer;
 
 /**
  * The Class Pointer is a pointer to the stored elements, which keeps position of the payload and
- * related OffHeapByteBuffer. Additionally, it keeps track of access time of the payload.
+ * related OffHeapByteBuffer. Additionally, it keeps track of expiry time for the payload.
  */
 public class Pointer {
 

@@ -12,16 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Jan 4, 2014
  */
 package com.cetsoft.imcache.cache.populator;
 
-import java.util.List;
-
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheEntry;
+import java.util.List;
 
 /**
  * The Class SimpleCachePopulator populates the cache directly.
@@ -30,26 +29,26 @@ import com.cetsoft.imcache.cache.CacheEntry;
  * @param <V> the value type
  */
 public abstract class SimpleCachePopulator<K, V> extends AbstractCachePopulator<K, V> {
-    
-    /**
-     * Instantiates a new simple cache populator.
-     *
-     * @param cache the cache
-     */
-    public SimpleCachePopulator(Cache<K, V> cache) {
-        super(cache);
+
+  /**
+   * Instantiates a new simple cache populator.
+   *
+   * @param cache the cache
+   */
+  public SimpleCachePopulator(Cache<K, V> cache) {
+    super(cache);
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see com.cetsoft.imcache.cache.CachePopulator#pupulate()
+   */
+  public void pupulate() {
+    final List<CacheEntry<K, V>> entries = loadEntries();
+    for (final CacheEntry<K, V> cacheEntry : entries) {
+      cache.put(cacheEntry.getKey(), cacheEntry.getValue());
     }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.cetsoft.imcache.cache.CachePopulator#pupulate()
-     */
-    public void pupulate() {
-        List<CacheEntry<K, V>> entries = loadEntries();
-        for (CacheEntry<K, V> cacheEntry : entries) {
-            cache.put(cacheEntry.getKey(), cacheEntry.getValue());
-        }
-    }
-    
+  }
+
 }

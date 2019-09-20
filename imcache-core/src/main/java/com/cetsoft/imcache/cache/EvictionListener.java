@@ -34,5 +34,5 @@ public interface EvictionListener<K, V> {
      * @param key the key
      * @param value the value
      */
-    void onEviction(Object key, Object value);
+    void onEviction(K key, V value);
 }

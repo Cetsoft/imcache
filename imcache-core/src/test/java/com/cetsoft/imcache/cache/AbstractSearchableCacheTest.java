@@ -18,23 +18,25 @@
  */
 package com.cetsoft.imcache.cache;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyList;
+import static org.mockito.Mockito.doReturn;
 
 import com.cetsoft.imcache.cache.search.CacheQuery;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.Query;
 import com.cetsoft.imcache.cache.search.criteria.Criteria;
 import com.cetsoft.imcache.cache.search.filter.Filter;
-import com.cetsoft.imcache.heap.HeapCache;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class AbstractSearchableCacheTest {
     
@@ -55,15 +57,54 @@ public class AbstractSearchableCacheTest {
     @Test
     @SuppressWarnings("unchecked")
     public void execute() {
-        AbstractSearchableCache<Integer, Item> abstractCache = new HeapCache<Integer, Item>(
-                new CacheLoader<Integer, Item>() {
-                    public Item load(Integer key) {
-                        return null;
-                    }
-                }, new EvictionListener<Integer, Item>() {
-                    public void onEviction(Object key, Object value) {
-                    }
-                }, indexHandler, 10);
+        AbstractSearchableCache<Integer, Item> abstractCache = new AbstractSearchableCache<Integer, Item>(
+            key -> null, (key, value) -> {
+            }, indexHandler) {
+            final Map<Integer, Item> items = new HashMap<>();
+            @Override
+            public void put(Integer key, Item value) {
+                items.put(key, value);
+                indexHandler.add(key, value);
+            }
+
+            @Override
+            public void put(Integer key, Item value, TimeUnit timeUnit, long duration) {
+                items.put(key, value);
+                indexHandler.add(key, value);
+            }
+
+            @Override
+            public Item get(Integer key) {
+                return null;
+            }
+
+            @Override
+            public Item invalidate(Integer key) {
+                final Item value = items.remove(key);
+                indexHandler.remove(key, value);
+                return null;
+            }
+
+            @Override
+            public boolean contains(Integer key) {
+                return false;
+            }
+
+            @Override
+            public void clear() {
+
+            }
+
+            @Override
+            public long size() {
+                return 0;
+            }
+
+            @Override
+            public CacheStats stats() {
+                return null;
+            }
+        };
         Item item1 = new Item(1);
         Item item2 = new Item(2);
         abstractCache.put(1, item1);

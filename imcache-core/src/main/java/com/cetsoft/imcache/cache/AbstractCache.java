@@ -93,29 +93,4 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
         }
         return this.getClass().getName();
     }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.cetsoft.imcache.cache.Cache#setName(java.lang.String)
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    /**
-     * Calculates hit ratio.
-     *
-     * @param hit the hit
-     * @param miss the miss
-     * @return the double
-     */
-    protected double hitRatio(long hit, long miss) {
-        long total = hit + miss;
-        if (total == 0) {
-            return 0;
-        }
-        return (double) hit / total;
-    }
-    
 }

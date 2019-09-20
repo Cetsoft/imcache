@@ -18,13 +18,11 @@
  */
 package com.cetsoft.imcache.cache.async;
 
+import com.cetsoft.imcache.cache.util.ThreadUtils;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import com.cetsoft.imcache.cache.util.ThreadUtils;
 
 /**
  * The concurrent eviction listener interface for receiving eviction events.
@@ -56,32 +54,27 @@ public abstract class ConcurrentEvictionListener<K, V> extends QueuingEvictionLi
      * @param queueSize the queue size
      * @param concurrencyLevel the concurrency level
      */
-    public ConcurrentEvictionListener(int batchSize, int queueSize, int concurrencyLevel) {
+    public ConcurrentEvictionListener(final int batchSize, final int queueSize, final int concurrencyLevel) {
         this.batchSize = batchSize;
         init(queueSize, concurrencyLevel);
     }
     
     /**
-     * Inits the.
+     * Inits the eviction listener
      *
      * @param queueSize the queue size
      * @param concurrencyLevel the concurrency level
      */
     protected void init(int queueSize, int concurrencyLevel) {
-        cacheTasks = new ArrayBlockingQueue<CacheTask<K, V>>(queueSize);
-        ExecutorService drainerService = Executors.newFixedThreadPool(concurrencyLevel, new ThreadFactory() {
-            public Thread newThread(Runnable runnable) {
-                return ThreadUtils.createDaemonThread(runnable, "imcache:concurrentAsyncEvictionDrainer(thread="
-                        + NO_OF_EVICTION_DRAINERS.incrementAndGet() + ")");
-            }
-        });
+        cacheTasks = new ArrayBlockingQueue<>(queueSize);
+        final ExecutorService drainerService = Executors.newFixedThreadPool(concurrencyLevel,
+            runnable -> ThreadUtils.createDaemonThread(runnable, "imcache:concurrentAsyncEvictionDrainer(thread="
+                    + NO_OF_EVICTION_DRAINERS.incrementAndGet() + ")"));
         // Creates runnables to drain cache task queue constantly.
         for (int i = 0; i < concurrencyLevel; i++) {
-            drainerService.execute(new Runnable() {
-                public void run() {
-                    while (true) {
-                        drainQueue();
-                    }
+            drainerService.execute(() -> {
+                while (true) {
+                    drainQueue();
                 }
             });
         }

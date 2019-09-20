@@ -25,7 +25,6 @@ import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.builder.CacheBuilder;
 import com.cetsoft.imcache.cache.builder.SearchableCacheBuilder;
 import com.cetsoft.imcache.cache.search.IndexHandler;
-import com.cetsoft.imcache.heap.tx.TransactionCommitter;
 import com.cetsoft.imcache.offheap.OffHeapCache;
 import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBufferStore;
 import com.cetsoft.imcache.serialization.Serializer;
@@ -56,8 +55,6 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
     /** The buffer store. */
     private OffHeapByteBufferStore bufferStore;
     
-    private TransactionCommitter<Object, Object> transactionCommitter;
-    
     private String redisHost = "127.0.0.1";
     
     private int redisPort = 6379;
@@ -68,7 +65,7 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
      * Instantiates a new spring cache builder.
      */
     public SpringCacheBuilder() {
-    	this.type = CacheCategory.CONCURRENTHEAP;
+    	this.type = CacheCategory.HEAP;
     }
     
     /**
@@ -91,10 +88,6 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
 		case HEAP:
 			return CacheBuilder.heapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
 					.indexHandler(indexHandler).capacity(heapCapacity).build();
-
-		case TRANSACTIONALHEAP:
-			return CacheBuilder.transactionalHeapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
-					.indexHandler(indexHandler).transactionCommitter(transactionCommitter).build();
 
 		case OFFHEAP:
 			return CacheBuilder.offHeapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
@@ -207,15 +200,6 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
      */
     public void setBufferStore(OffHeapByteBufferStore bufferStore) {
         this.bufferStore = bufferStore;
-    }
-    
-    /**
-     * Sets the transaction committer.
-     *
-     * @param transactionCommitter the transaction committer
-     */
-    public void setTransactionCommitter(TransactionCommitter<Object, Object> transactionCommitter) {
-        this.transactionCommitter = transactionCommitter;
     }
 
     /**
