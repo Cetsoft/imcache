@@ -69,14 +69,14 @@ public class RedisCacheTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        cache = new RedisCache<Integer, Integer>(cacheLoader, evictionListener, serializer, client);
+        cache = new RedisCache<>(cacheLoader, evictionListener, serializer, client);
     }
     
     @Test
     public void size() throws ConnectionException, IOException {
         int size = 3;
         doReturn(size).when(client).dbsize();
-        int actualSize = cache.size();
+        long actualSize = cache.size();
         assertEquals(size, actualSize);
     }
     
@@ -187,15 +187,5 @@ public class RedisCacheTest {
         doThrow(new IOException("")).when(client).get(serializer.serialize(key));
         cache.get(key);
     }
-    
-    public void hitRatio() throws ConnectionException, IOException {
-        int key = 3;
-        int value = 5;
-        doReturn(null).doReturn(serializer.serialize(value)).when(client).get(serializer.serialize(key));
-        doReturn(value).when(cacheLoader).load(key);
-        cache.get(key);
-        cache.get(key);
-        assertEquals(0.5, cache.hitRatio(), 0.0001);
-    }
-    
+
 }

@@ -18,17 +18,16 @@
  */
 package com.cetsoft.imcache.redis;
 
-import com.cetsoft.imcache.cache.CacheStats;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
-
 import com.cetsoft.imcache.cache.AbstractCache;
 import com.cetsoft.imcache.cache.CacheLoader;
+import com.cetsoft.imcache.cache.CacheStats;
 import com.cetsoft.imcache.cache.EvictionListener;
+import com.cetsoft.imcache.concurrent.ConcurrentCacheStats;
 import com.cetsoft.imcache.redis.client.Client;
 import com.cetsoft.imcache.redis.client.ConnectionException;
 import com.cetsoft.imcache.serialization.Serializer;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Class RedisCache is a cache that uses redis server. to store or retrieve
@@ -42,17 +41,13 @@ import com.cetsoft.imcache.serialization.Serializer;
 public class RedisCache<K, V> extends AbstractCache<K, V> {
     
     /** The client. */
-    Client client;
-    
+    final Client client;
+
     /** The serializer. */
-    Serializer<Object> serializer;
-    
-    /** The hit. */
-    protected AtomicLong hit = new AtomicLong();
-    
-    /** The miss. */
-    protected AtomicLong miss = new AtomicLong();
-    
+    final Serializer<Object> serializer;
+
+    final ConcurrentCacheStats stats = new ConcurrentCacheStats();
+
     /**
      * Instantiates a new redis cache.
      *
@@ -75,7 +70,7 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
      * java.lang.Object)
      */
     @Override
-    public void put(K key, V value) {
+    public void put(final K key, final V value) {
         try {
             client.set(serializer.serialize(key), serializer.serialize(value));
         } catch (ConnectionException e) {
@@ -86,8 +81,14 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
     }
 
     @Override
-    public void put(K key, V value, TimeUnit timeUnit, long duration) {
-
+    public void put(final K key, final V value, final TimeUnit timeUnit, final long duration) {
+        try {
+            client.set(serializer.serialize(key), serializer.serialize(value), TimeUnit.MILLISECONDS.toMillis(duration));
+        } catch (ConnectionException e) {
+            throw new RedisCacheException(e);
+        } catch (IOException e) {
+            throw new RedisCacheException(e);
+        }
     }
 
     /*
@@ -97,17 +98,20 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public V get(K key) {
+    public V get(final K key) {
         try {
-            byte[] serializedKey = serializer.serialize(key);
+            final byte[] serializedKey = serializer.serialize(key);
             V value = (V) serializer.deserialize(client.get(serializedKey));
             if (value == null) {
-                miss.incrementAndGet();
+                stats.incrementMissCount();
                 value = cacheLoader.load(key);
-                byte[] serializedValue = serializer.serialize(value);
-                client.set(serializedKey, serializedValue);
+                if(value != null) {
+                    byte[] serializedValue = serializer.serialize(value);
+                    client.set(serializedKey, serializedValue);
+                    stats.incrementLoadCount();
+                }
             } else {
-                hit.incrementAndGet();
+                stats.incrementHitCount();
             }
             return value;
         } catch (ConnectionException e) {
@@ -124,12 +128,13 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public V invalidate(K key) {
+    public V invalidate(final K key) {
         try {
             byte[] serializedKey = serializer.serialize(key);
             byte[] serializedValue = client.expire(serializedKey);
             V value = (V) serializer.deserialize(serializedValue);
             evictionListener.onEviction(key, value);
+            stats.incrementEvictionCount();
             return value;
         } catch (ConnectionException e) {
             throw new RedisCacheException(e);
@@ -144,7 +149,7 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
      * @see com.cetsoft.imcache.cache.Cache#contains(java.lang.Object)
      */
     @Override
-    public boolean contains(K key) {
+    public boolean contains(final K key) {
         return get(key) != null;
     }
     
@@ -182,7 +187,7 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
 
     @Override
     public CacheStats stats() {
-        return null;
+        return stats;
     }
 
 }

@@ -26,14 +26,14 @@ import java.io.IOException;
 public class RedisCommandResult implements CommandResult {
     
     /** The connection. */
-    Connection connection;
+    private final Connection connection;
     
     /**
      * Instantiates a new redis command result.
      *
      * @param connection the connection
      */
-    public RedisCommandResult(Connection connection) {
+    public RedisCommandResult(final Connection connection) {
         this.connection = connection;
     }
     
@@ -44,7 +44,7 @@ public class RedisCommandResult implements CommandResult {
      */
     @Override
     public byte[] getBytes() throws ConnectionException, IOException {
-        RedisStreamReader streamReader = getStreamReader();
+        final RedisStreamReader streamReader = getStreamReader();
         checkMessageType(streamReader, RedisBytes.DOLLAR_BYTE);
         int length = streamReader.readInt();
         return streamReader.read(length);
@@ -57,7 +57,7 @@ public class RedisCommandResult implements CommandResult {
      */
     @Override
     public String getStatus() throws ConnectionException, IOException {
-        RedisStreamReader streamReader = getStreamReader();
+        final RedisStreamReader streamReader = getStreamReader();
         checkMessageType(streamReader, RedisBytes.PLUS_BYTE);
         return streamReader.readString();
     }
@@ -69,7 +69,7 @@ public class RedisCommandResult implements CommandResult {
      */
     @Override
     public int getInt() throws ConnectionException, IOException {
-        RedisStreamReader streamReader = getStreamReader();
+        final RedisStreamReader streamReader = getStreamReader();
         checkMessageType(streamReader, RedisBytes.COLON_BYTE);
         return streamReader.readInt();
     }
@@ -82,7 +82,7 @@ public class RedisCommandResult implements CommandResult {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws ConnectionException the connection exception
      */
-    protected void checkMessageType(RedisStreamReader streamReader, byte expectedByte) throws IOException,
+    protected void checkMessageType(final RedisStreamReader streamReader, final byte expectedByte) throws IOException,
             ConnectionException {
         final byte actualByte = streamReader.readByte();
         if (actualByte != expectedByte) {
@@ -97,7 +97,7 @@ public class RedisCommandResult implements CommandResult {
      * @return the input stream
      * @throws ConnectionException the connection exception
      */
-    protected RedisStreamReader getStreamReader() throws ConnectionException {
+    protected RedisStreamReader getStreamReader() throws ConnectionException, IOException {
         connection.open();
         return connection.getStreamReader();
     }

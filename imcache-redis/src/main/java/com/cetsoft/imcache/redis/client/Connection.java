@@ -40,25 +40,19 @@ public class Connection {
     public static final int DEFAULT_PORT = 6379;
     
     /** The host. */
-    private String host;
+    private final String host;
     
     /** The port. */
-    private int port;
+    private final int port;
     
     /** The timeout. */
-    private int timeout;
+    private final int timeout;
     
     /** The socket timeout. */
-    private int socketTimeout;
+    private final int socketTimeout;
     
     /** The socket. */
-    Socket socket;
-    
-    /** The stream writer. */
-    RedisStreamWriter streamWriter;
-    
-    /** The stream reader. */
-    RedisStreamReader streamReader;
+    private Socket socket;
     
     /**
      * Instantiates a new connection.
@@ -83,10 +77,20 @@ public class Connection {
      * @param port the port
      */
     public Connection(final String host, final int port) {
+        this(host, port, DEFAULT_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
+    }
+
+    /**
+     * Instantiates a new connection.
+     *
+     * @param host the host
+     * @param port the port
+     */
+    public Connection(final String host, final int port, final int timeout, final int socketTimeout) {
         this.host = host;
         this.port = port;
-        this.timeout = DEFAULT_TIMEOUT;
-        this.socketTimeout = DEFAULT_SOCKET_TIMEOUT;
+        this.timeout = timeout;
+        this.socketTimeout = socketTimeout;
     }
     
     /**
@@ -94,19 +98,14 @@ public class Connection {
      *
      * @return the timeout
      */
-    public long getTimeout() {
+    public int getTimeout() {
         return timeout;
     }
-    
-    /**
-     * Sets the timeout.
-     *
-     * @param timeout the new timeout
-     */
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
+
+    public int getSocketTimeout() {
+        return socketTimeout;
     }
-    
+
     /**
      * Gets the host.
      *
@@ -153,8 +152,6 @@ public class Connection {
                 
                 socket.connect(getInetSocketAddress(), timeout);
                 socket.setSoTimeout(socketTimeout);
-                streamWriter = new RedisStreamWriter(socket.getOutputStream());
-                streamReader = new RedisStreamReader(socket.getInputStream());
             } catch (IOException ex) {
                 throw new ConnectionException(ex);
             }
@@ -187,7 +184,6 @@ public class Connection {
     public void close() throws ConnectionException {
         if (isConnected()) {
             try {
-                streamWriter.flush();
                 socket.close();
             } catch (IOException ex) {
                 throw new ConnectionException(ex);
@@ -195,7 +191,7 @@ public class Connection {
                 try {
                     socket.close();
                 } catch (IOException e) {
-                    //ignore exception.
+                    throw new ConnectionException(e);
                 }
             }
         }
@@ -206,8 +202,8 @@ public class Connection {
      *
      * @return the output stream
      */
-    public RedisStreamWriter getStreamWriter() {
-        return streamWriter;
+    public RedisStreamWriter getStreamWriter() throws IOException {
+        return new RedisStreamWriter(this.socket.getOutputStream());
     }
     
     /**
@@ -215,8 +211,8 @@ public class Connection {
      *
      * @return the input stream
      */
-    public RedisStreamReader getStreamReader() {
-        return streamReader;
+    public RedisStreamReader getStreamReader() throws IOException {
+        return new RedisStreamReader(this.socket.getInputStream());
     }
     
 }

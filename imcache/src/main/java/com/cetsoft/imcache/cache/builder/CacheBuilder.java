@@ -33,15 +33,6 @@ public abstract class CacheBuilder {
     }
     
     /**
-     * Concurrent heap cache.
-     *
-     * @return the concurrent heap cache builder
-     */
-    public static ConcurrentHeapCacheBuilder concurrentHeapCache() {
-        return new ConcurrentHeapCacheBuilder();
-    }
-    
-    /**
      * Off heap cache.
      *
      * @return the off heap cache builder

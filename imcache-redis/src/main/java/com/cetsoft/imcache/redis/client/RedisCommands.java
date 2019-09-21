@@ -25,7 +25,7 @@ import java.io.UnsupportedEncodingException;
  */
 public enum RedisCommands implements ByteCommand {
     
-    PING, SET, GET, EXPIRE, FLUSHDB, DBSIZE;
+    PING, SET, GET, EXPIRE, PEXPIRE, FLUSHDB, DBSIZE;
     
     public static final String CHARSET = "UTF-8";
     
@@ -38,8 +38,7 @@ public enum RedisCommands implements ByteCommand {
         try {
             return this.name().getBytes(CHARSET);
         } catch (UnsupportedEncodingException e) {
-            //do nothing.
+            throw new RuntimeException(e);
         }
-        return null;
     }
 }

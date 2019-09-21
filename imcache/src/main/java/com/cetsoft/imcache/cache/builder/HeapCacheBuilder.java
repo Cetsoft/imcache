@@ -24,6 +24,8 @@ import com.cetsoft.imcache.cache.SearchableCache;
 import com.cetsoft.imcache.cache.search.DefaultIndexHandler;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.index.IndexType;
+import com.cetsoft.imcache.heap.HeapCache;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Class HeapCacheBuilder.
@@ -116,8 +118,9 @@ public class HeapCacheBuilder extends SearchableCacheBuilder {
      */
     @SuppressWarnings("unchecked")
     public <K, V> SearchableCache<K, V> build() {
+        //TODO: Fix duration
         return new HeapCache<K, V>((CacheLoader<K, V>) cacheLoader, (EvictionListener<K, V>) evictionListener,
-                (IndexHandler<K, V>) indexHandler, capacity);
+                (IndexHandler<K, V>) indexHandler, capacity, TimeUnit.MILLISECONDS, 10);
     }
     
     /**
@@ -128,9 +131,8 @@ public class HeapCacheBuilder extends SearchableCacheBuilder {
      * @param cacheName the cache name
      * @return the searchable cache
      */
-    public <K, V> SearchableCache<K, V> build(String cacheName) {
+    public <K, V> SearchableCache<K, V> build(final String cacheName) {
         SearchableCache<K, V> cache = build();
-        cache.setName(cacheName);
         return cache;
     }
     

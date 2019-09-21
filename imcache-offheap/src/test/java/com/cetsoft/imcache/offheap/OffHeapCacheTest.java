@@ -153,6 +153,10 @@ public class OffHeapCacheTest {
         cache.put("a", "b", TimeUnit.MILLISECONDS, 0);
         cache.put("c", "d", TimeUnit.MILLISECONDS, 0);
 
+        try {
+            Thread.sleep(3);
+        } catch (InterruptedException e) {
+        }
         cache.doEviction();
 
         verify(evictionListener).onEviction("a", "b");
@@ -191,7 +195,7 @@ public class OffHeapCacheTest {
     public void init() {
         cache.initCache(bufferStore, serializer, 1, 1, 1);
         try {
-            Thread.sleep(100);
+            Thread.sleep(10);
         } catch (InterruptedException e) {
         }
         verify(cache, atLeast(1)).cleanBuffers(1);

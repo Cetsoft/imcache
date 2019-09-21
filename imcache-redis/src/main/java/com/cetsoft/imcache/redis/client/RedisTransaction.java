@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Aug 17, 2015
  */
@@ -27,24 +27,24 @@ import java.util.concurrent.locks.ReentrantLock;
  * The Class RedisTransaction.
  */
 public class RedisTransaction implements Transaction {
-    
+
     /** The transaction lock. */
-    Lock transactionLock = new ReentrantLock();
-    
+    final Lock transactionLock = new ReentrantLock();
+
     /** The transaction condition. */
-    Condition transactionCondition = transactionLock.newCondition();
-    
+    final Condition transactionCondition = transactionLock.newCondition();
+
     /** The thread in transaction. */
-    AtomicReference<Thread> threadInTransaction = new AtomicReference<Thread>();
-    
+    final AtomicReference<Thread> threadInTransaction = new AtomicReference<Thread>();
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.cetsoft.imcache.redis.client.Transaction#open()
      */
     @Override
     public void open() {
-        Thread currentThread = Thread.currentThread();
+        final Thread currentThread = Thread.currentThread();
         try {
             if (threadInTransaction.get() == null) {
                 transactionLock.lock();
@@ -71,13 +71,13 @@ public class RedisTransaction implements Transaction {
                 open();
             }
         } catch (InterruptedException e) {
-            //ignore interruption.
+          Thread.interrupted();
         }
     }
-    
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.cetsoft.imcache.redis.client.Transaction#close()
      */
     @Override
@@ -90,5 +90,5 @@ public class RedisTransaction implements Transaction {
             transactionLock.unlock();
         }
     }
-    
+
 }

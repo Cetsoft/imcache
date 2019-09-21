@@ -111,9 +111,8 @@ public abstract class AbstractCacheBuilder {
      * @param cacheName the cache name
      * @return the searchable cache
      */
-    public <K, V> Cache<K, V> build(String cacheName) {
+    public <K, V> Cache<K, V> build(final String cacheName) {
         Cache<K, V> cache = build();
-        cache.setName(cacheName);
         return cache;
     }
 }

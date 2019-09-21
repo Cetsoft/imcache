@@ -107,7 +107,7 @@ public class SpringCacheBuilder extends SearchableCacheBuilder {
 					.build();
 
 		default:
-			return CacheBuilder.concurrentHeapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
+			return CacheBuilder.heapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
 					.indexHandler(indexHandler).build();
 		}
 	}

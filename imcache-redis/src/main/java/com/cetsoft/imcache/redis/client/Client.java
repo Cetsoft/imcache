@@ -47,6 +47,18 @@ public interface Client {
      * @throws ConnectionException
      */
     void set(byte[] key, byte[] value) throws ConnectionException, IOException;
+
+    /**
+     * Set key to hold the value. If key already holds a value, it is
+     * overwritten.
+     *
+     * @param key the key
+     * @param value the value
+     * @param expiryInMillis the expiry in millis
+     * @throws IOException
+     * @throws ConnectionException
+     */
+    void set(byte[] key, byte[] value, long expiryInMillis) throws ConnectionException, IOException;
     
     /**
      * Get the value of key. If the key does not exist the special value null is

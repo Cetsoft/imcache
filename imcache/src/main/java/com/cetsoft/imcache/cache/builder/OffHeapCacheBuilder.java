@@ -216,7 +216,6 @@ public class OffHeapCacheBuilder extends SearchableCacheBuilder {
      */
     public <K, V> SearchableCache<K, V> build(String cacheName) {
         SearchableCache<K, V> cache = build();
-        cache.setName(cacheName);
         return cache;
     }
 }

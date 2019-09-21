@@ -34,9 +34,9 @@ public class MultiRedisClient implements Client {
     public static final int CONCURRENCY_LEVEL = 3;
     
     /** The redis clients. */
-    List<Client> redisClients;
+    final List<Client> redisClients;
     
-    AtomicInteger currentIndex = new AtomicInteger(0);
+    final AtomicInteger currentIndex = new AtomicInteger(0);
     
     /**
      * Instantiates a new multi redis client.
@@ -60,10 +60,10 @@ public class MultiRedisClient implements Client {
             throw new IllegalArgumentException("Concurrency level must be greater or equals " + "to 1 but it was "
                     + concurrencyLevel);
         }
-        redisClients = new ArrayList<Client>(concurrencyLevel);
+        redisClients = new ArrayList<>(concurrencyLevel);
         for (int i = 0; i < concurrencyLevel; i++) {
-            Connection connection = new Connection(host, port);
-            Client client = new RedisClient(connection);
+            final Connection connection = new Connection(host, port);
+            final Client client = new RedisClient(connection);
             redisClients.add(client);
         }
     }
@@ -86,6 +86,16 @@ public class MultiRedisClient implements Client {
     @Override
     public void set(byte[] key, byte[] value) throws ConnectionException, IOException {
         getClient().set(key, value);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.cetsoft.imcache.redis.client.Client#set(byte[], byte[], long)
+     */
+    @Override
+    public void set(byte[] key, byte[] value, long expiryInMillis) throws ConnectionException, IOException {
+        getClient().set(key, value, expiryInMillis);
     }
     
     /*
@@ -135,7 +145,7 @@ public class MultiRedisClient implements Client {
      * @return the client
      */
     protected Client getClient() {
-        int index = currentIndex.incrementAndGet() % redisClients.size();
+        final int index = currentIndex.incrementAndGet() % redisClients.size();
         return redisClients.get(index);
     }
     

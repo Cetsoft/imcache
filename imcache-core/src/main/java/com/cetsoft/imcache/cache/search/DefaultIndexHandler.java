@@ -53,7 +53,7 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
      * Instantiates a new simple query executer.
      */
     public DefaultIndexHandler() {
-        indexes = new HashMap<String, CacheIndex>();
+        indexes = new HashMap<>();
     }
     
     /*
@@ -63,7 +63,7 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
      * com.cetsoft.imcache.cache.search.Indexable#addIndex(com.cetsoft.imcache
      * .cache.search.CacheIndex)
      */
-    public void addIndex(String attributeName, IndexType type) {
+    public void addIndex(final String attributeName, final IndexType type) {
         if (type == IndexType.UNIQUE_HASH) {
             indexes.put(attributeName, new UniqueHashIndex());
         } else if (type == IndexType.NON_UNIQUE_HASH) {
@@ -79,9 +79,9 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
      * @see com.cetsoft.imcache.cache.search.IndexHandler#add(java.lang.Object,
      * java.lang.Object)
      */
-    public void add(K key, V value) {
-        for (String attributeName : indexes.keySet()) {
-            Object indexedKey = getIndexedKey(attributeName, value);
+    public void add(final K key, final V value) {
+        for (final String attributeName : indexes.keySet()) {
+            final Object indexedKey = getIndexedKey(attributeName, value);
             if (indexedKey == null) {
                 throw new NullPointerException();
             }
@@ -96,9 +96,9 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
      * com.cetsoft.imcache.cache.search.IndexHandler#remove(java.lang.Object,
      * java.lang.Object)
      */
-    public void remove(K key, V value) {
-        for (String attributeName : indexes.keySet()) {
-            Object indexedKey = getIndexedKey(attributeName, value);
+    public void remove(final K key, final V value) {
+        for (final String attributeName : indexes.keySet()) {
+            final Object indexedKey = getIndexedKey(attributeName, value);
             if (indexedKey == null) {
                 throw new NullPointerException();
             }
@@ -123,7 +123,7 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
      * .cache.search.Query)
      */
     @SuppressWarnings("unchecked")
-    public List<K> execute(Query query) {
+    public List<K> execute(final Query query) {
         List<Object> results = execute(query.getCriteria());
         return (List<K>) results;
     }
@@ -134,7 +134,7 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
      * @param criteria the criteria
      * @return the list
      */
-    protected List<Object> execute(Criteria criteria) {
+    protected List<Object> execute(final Criteria criteria) {
         if (criteria instanceof ArithmeticCriteria) {
             return executeArithmetic((ArithmeticCriteria) criteria);
         } else if (criteria instanceof AndCriteria) {
@@ -149,11 +149,11 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
     /**
      * Execute arithmetic.
      *
-     * @param criteria the criteria
+     * @param arithmeticCriteria the criteria
      * @return the list
      */
-    protected List<Object> executeArithmetic(ArithmeticCriteria arithmeticCriteria) {
-        CacheIndex cacheIndex = indexes.get(arithmeticCriteria.getAttributeName());
+    protected List<Object> executeArithmetic(final ArithmeticCriteria arithmeticCriteria) {
+        final CacheIndex cacheIndex = indexes.get(arithmeticCriteria.getAttributeName());
         if (cacheIndex == null) {
             throw new IndexNotFoundException();
         }
@@ -163,38 +163,43 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
     /**
      * Execute and.
      *
-     * @param criteria the criteria
+     * @param andCriteria the criteria
      * @return the list
      */
-    protected List<Object> executeAnd(AndCriteria andCriteria) {
+    protected List<Object> executeAnd(final AndCriteria andCriteria) {
         List<Object> results = new ArrayList<Object>();
-        for (Criteria innerCriteria : andCriteria.getCriterias()) {
+        for (final Criteria innerCriteria : andCriteria.getCriterias()) {
             List<Object> result = execute(innerCriteria);
-            if (results.size() == 0) {
-                results.addAll(result);
-            } else {
-                List<Object> mergedResults = new ArrayList<Object>(results.size());
-                for (Object object : result) {
-                    if (results.contains(object)) {
-                        mergedResults.add(object);
-                    }
-                }
-                results = mergedResults;
-            }
+            results = getObjects(results, result);
         }
         return results;
     }
-    
+
+    private List<Object> getObjects(List<Object> results, List<Object> result) {
+        if (results.size() == 0) {
+            results.addAll(result);
+        } else {
+            final List<Object> mergedResults = new ArrayList<>(results.size());
+            for (final Object object : result) {
+                if (results.contains(object)) {
+                    mergedResults.add(object);
+                }
+            }
+            results = mergedResults;
+        }
+        return results;
+    }
+
     /**
      * Execute diff.
      *
-     * @param criteria the criteria
+     * @param diffCriteria the criteria
      * @return the list
      */
-    protected List<Object> executeDiff(DiffCriteria diffCriteria) {
-        List<Object> leftResult = execute(diffCriteria.getLeftCriteria());
-        List<Object> rightResult = execute(diffCriteria.getRightCriteria());
-        for (Object object : rightResult) {
+    protected List<Object> executeDiff(final DiffCriteria diffCriteria) {
+        final List<Object> leftResult = execute(diffCriteria.getLeftCriteria());
+        final List<Object> rightResult = execute(diffCriteria.getRightCriteria());
+        for (final Object object : rightResult) {
             leftResult.remove(object);
         }
         return leftResult;
@@ -203,16 +208,16 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
     /**
      * Execute or.
      *
-     * @param criteria the criteria
+     * @param orCriteria the criteria
      * @return the list
      */
-    protected List<Object> executeOr(OrCriteria orCriteria) {
-        Set<Object> results = new HashSet<Object>();
+    protected List<Object> executeOr(final OrCriteria orCriteria) {
+        final Set<Object> results = new HashSet<Object>();
         for (Criteria innerCriteria : orCriteria.getCriterias()) {
-            List<Object> result = execute(innerCriteria);
+            final List<Object> result = execute(innerCriteria);
             results.addAll(result);
         }
-        return new ArrayList<Object>(results);
+        return new ArrayList<>(results);
     }
     
     /**

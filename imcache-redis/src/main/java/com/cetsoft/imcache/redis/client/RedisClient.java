@@ -19,6 +19,7 @@
 package com.cetsoft.imcache.redis.client;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * The Class RedisClient.
@@ -29,19 +30,19 @@ public class RedisClient implements Client {
     private static final String STATUS_OK = "OK";
     
     /** The command result. */
-    CommandResult commandResult;
+    final CommandResult commandResult;
     
     /** The command executor. */
-    CommandExecutor commandExecutor;
+    final CommandExecutor commandExecutor;
     
-    Transaction transaction = new RedisTransaction();
+    final Transaction transaction = new RedisTransaction();
     
     /**
      * Instantiates a new redis client.
      *
      * @param connection the connection
      */
-    public RedisClient(Connection connection) {
+    public RedisClient(final Connection connection) {
         this.commandExecutor = new RedisCommandExecutor(connection);
         this.commandResult = new RedisCommandResult(connection);
     }
@@ -80,11 +81,11 @@ public class RedisClient implements Client {
      * @throws ConnectionException the connection exception
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    protected void runVoidCommand(ByteCommand command, byte[]... args) throws ConnectionException, IOException {
+    protected void runVoidCommand(final ByteCommand command, final byte[]... args) throws ConnectionException, IOException {
         transaction.open();
         try {
             commandExecutor.execute(command, args);
-            String status = commandResult.getStatus();
+            final String status = commandResult.getStatus();
             if (!status.equals(STATUS_OK)) {
                 throw new ConnectionException("Command couldn't run successfully " + command.toString());
             }
@@ -109,17 +110,48 @@ public class RedisClient implements Client {
      * @see com.cetsoft.imcache.redis.client.Client#set(byte[], byte[])
      */
     @Override
-    public void set(byte[] key, byte[] value) throws ConnectionException, IOException {
+    public void set(final byte[] key, final byte[] value) throws ConnectionException, IOException {
         runVoidCommand(RedisCommands.SET, key, value);
     }
-    
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.cetsoft.imcache.redis.client.Client#set(byte[], byte[], long)
+     */
+    @Override
+    public void set(final byte[] key, final byte[] value, final long expiryInMillis) throws ConnectionException, IOException {
+        transaction.open();
+        try {
+            commandExecutor.execute(RedisCommands.SET, key, value);
+            final String setStatus = commandResult.getStatus();
+            if (!setStatus.equals(STATUS_OK)) {
+                throw new ConnectionException("Command couldn't run successfully " + setStatus);
+            }
+            //redis don't accept expiry in milliseconds, so converting to milliseconds.
+            commandExecutor.execute(RedisCommands.PEXPIRE, key, longToBytes(expiryInMillis));
+            final String expireStatus = commandResult.getStatus();
+            if (!setStatus.equals(STATUS_OK)) {
+                throw new ConnectionException("Command couldn't run successfully " + expireStatus);
+            }
+        } finally {
+            transaction.close();
+        }
+    }
+
+    public byte[] longToBytes(final long longToBeConverted) {
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(longToBeConverted);
+        return buffer.array();
+    }
+
     /*
      * (non-Javadoc)
      * 
      * @see com.cetsoft.imcache.redis.client.Client#get(byte[])
      */
     @Override
-    public byte[] get(byte[] key) throws ConnectionException, IOException {
+    public byte[] get(final byte[] key) throws ConnectionException, IOException {
         transaction.open();
         try {
             commandExecutor.execute(RedisCommands.GET, key);
@@ -135,10 +167,10 @@ public class RedisClient implements Client {
      * @see com.cetsoft.imcache.redis.client.Client#expire(byte[])
      */
     @Override
-    public byte[] expire(byte[] key) throws ConnectionException, IOException {
+    public byte[] expire(final byte[] key) throws ConnectionException, IOException {
         transaction.open();
         try {
-            byte[] value = get(key);
+            final byte[] value = get(key);
             commandExecutor.execute(RedisCommands.EXPIRE, key, new byte[] { '0' });
             commandResult.getInt();
             return value;

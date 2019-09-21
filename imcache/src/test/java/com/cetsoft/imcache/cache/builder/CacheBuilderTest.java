@@ -18,19 +18,15 @@
  */
 package com.cetsoft.imcache.cache.builder;
 
-import org.junit.Test;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 public class CacheBuilderTest {
     
     @Test
     public void heapCache() {
         assertTrue(CacheBuilder.heapCache() instanceof HeapCacheBuilder);
-    }
-    
-    @Test
-    public void transactionalHeapCache() {
-        assertTrue(CacheBuilder.transactionalHeapCache() instanceof TransactionalHeapCacheBuilder);
     }
     
     @Test

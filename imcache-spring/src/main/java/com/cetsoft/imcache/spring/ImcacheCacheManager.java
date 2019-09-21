@@ -45,7 +45,7 @@ public class ImcacheCacheManager implements CacheManager, InitializingBean {
      * Instantiates a new imcache cache manager.
      */
     public ImcacheCacheManager() {
-        this(CacheBuilder.concurrentHeapCache());
+        this(CacheBuilder.heapCache());
     }
     
     /**
