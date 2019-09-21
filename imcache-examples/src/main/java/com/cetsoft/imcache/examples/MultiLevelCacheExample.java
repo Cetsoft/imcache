@@ -34,24 +34,11 @@ public class MultiLevelCacheExample {
         final CacheDao cacheDao = null;// This is just for example purposes.
         OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(10000, 10);
         final Cache<String, String> offHeapCache = CacheBuilder.offHeapCache().storage(bufferStore)
-                .cacheLoader(new CacheLoader<String, String>() {
-                    public String load(String key) {
-                        return cacheDao.load(key);
-                    }
-                }).evictionListener(new EvictionListener<String, String>() {
-                    public void onEviction(Object key, Object value) {
-                        cacheDao.store(key, value);
-                    }
-                }).build();
-        Cache<String, String> multiLevelCache = CacheBuilder.heapCache().cacheLoader(new CacheLoader<String, String>() {
-            public String load(String key) {
-                return offHeapCache.get(key);
-            }
-        }).evictionListener(new EvictionListener<String, String>() {
-            public void onEviction(Object key, Object value) {
-                offHeapCache.put(key, value);
-            }
-        }).capacity(10000).build();
+                .cacheLoader((CacheLoader<String, String>) key -> cacheDao.load(key)).evictionListener(
+                (EvictionListener<String, String>) (key, value) -> cacheDao.store(key, value)).build();
+        Cache<String, String> multiLevelCache = CacheBuilder.heapCache().cacheLoader(
+            (CacheLoader<String, String>) key -> offHeapCache.get(key)).evictionListener(
+            (EvictionListener<String, String>) (key, value) -> offHeapCache.put(key, value)).capacity(10000).build();
         multiLevelCache.put("red", "apple");
     }
     

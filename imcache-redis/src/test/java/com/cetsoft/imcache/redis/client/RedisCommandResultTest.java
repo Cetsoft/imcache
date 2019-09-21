@@ -41,7 +41,7 @@ public class RedisCommandResultTest {
     RedisCommandResult commandResult;
     
     @Before
-    public void setup() {
+    public void setup() throws IOException {
         MockitoAnnotations.initMocks(this);
         streamReader = spy(new RedisStreamReader(inputStream));
         commandResult = spy(new RedisCommandResult(connection));

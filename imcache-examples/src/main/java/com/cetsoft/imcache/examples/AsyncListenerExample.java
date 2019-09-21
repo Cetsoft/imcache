@@ -32,7 +32,7 @@ public class AsyncListenerExample {
     
     public static void example() {
         final StringDAO stringDAO = new StringDAO();
-        Cache<String, String> cache = CacheBuilder.concurrentHeapCache()
+        Cache<String, String> cache = CacheBuilder.heapCache()
                 .evictionListener(new ScheduledEvictionListener<String, String>() {
                     @Override
                     public void save(List<CacheTask<String, String>> cacheTasks) {

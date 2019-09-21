@@ -18,16 +18,14 @@
  */
 package com.cetsoft.imcache.spring;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 import com.cetsoft.imcache.heap.HeapCache;
-import com.cetsoft.imcache.heap.TransactionalHeapCache;
-import com.cetsoft.imcache.heap.tx.TransactionCommitter;
 import com.cetsoft.imcache.offheap.OffHeapCache;
 import com.cetsoft.imcache.offheap.VersionedOffHeapCache;
 import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBufferStore;
+import com.cetsoft.imcache.redis.RedisCache;
+import org.junit.Test;
 
 public class SpringCacheBuilderTest {
     
@@ -38,17 +36,9 @@ public class SpringCacheBuilderTest {
         builder.setType("heap");
         assertTrue(builder.build() instanceof HeapCache);
         
-        builder.setTransactionCommitter(new TransactionCommitter<Object, Object>() {
-            @Override
-            public void doPut(Object key, Object value) {
-            }
-        });
-        builder.setType("transactionalheap");
-        assertTrue(builder.build() instanceof TransactionalHeapCache);
-        
-        builder.setType("concurrentheap");
+        builder.setType("redis");
         builder.setConcurrencyLevel(2);
-        assertTrue(builder.build() instanceof HeapCache);
+        assertTrue(builder.build() instanceof RedisCache);
         
         builder.setType("offheap");
         builder.setEvictionPeriod(2);
@@ -58,7 +48,7 @@ public class SpringCacheBuilderTest {
         builder.setBufferStore(bufferStore);
         assertTrue(builder.build() instanceof OffHeapCache);
         
-        builder.setType("versionedoffheap");
+        builder.setType("versioned_offheap");
         assertTrue(builder.build() instanceof VersionedOffHeapCache);
     }
 }

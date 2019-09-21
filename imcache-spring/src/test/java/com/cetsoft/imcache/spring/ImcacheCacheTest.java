@@ -40,7 +40,7 @@ public class ImcacheCacheTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        cache = spy(CacheBuilder.concurrentHeapCache().build());
+        cache = spy(CacheBuilder.heapCache().build());
         imcache = new ImcacheCache(cache);
     }
     

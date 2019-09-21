@@ -36,6 +36,11 @@ public class RedisClient implements Client {
     final CommandExecutor commandExecutor;
     
     final Transaction transaction = new RedisTransaction();
+
+    RedisClient(final RedisCommandExecutor redisCommandExecutor, final RedisCommandResult redisCommandResult) {
+        this.commandExecutor = redisCommandExecutor;
+        this.commandResult = redisCommandResult;
+    }
     
     /**
      * Instantiates a new redis client.

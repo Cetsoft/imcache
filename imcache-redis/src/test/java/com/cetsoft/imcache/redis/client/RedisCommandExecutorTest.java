@@ -43,7 +43,7 @@ public class RedisCommandExecutorTest {
     RedisCommandExecutor commandExecutor;
     
     @Before
-    public void setup() {
+    public void setup() throws IOException {
         MockitoAnnotations.initMocks(this);
         streamWriter = spy(new RedisStreamWriter(outputStream));
         commandExecutor = spy(new RedisCommandExecutor(connection));

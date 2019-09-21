@@ -30,8 +30,8 @@ public class CacheBuilderTest {
     }
     
     @Test
-    public void concurrentHeapCache() {
-        assertTrue(CacheBuilder.concurrentHeapCache() instanceof ConcurrentHeapCacheBuilder);
+    public void redisCache() {
+        assertTrue(CacheBuilder.redisCache() instanceof RedisCacheBuilder);
     }
     
     @Test

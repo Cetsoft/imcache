@@ -52,7 +52,7 @@ public class Connection {
     private final int socketTimeout;
     
     /** The socket. */
-    private Socket socket;
+    Socket socket;
     
     /**
      * Instantiates a new connection.

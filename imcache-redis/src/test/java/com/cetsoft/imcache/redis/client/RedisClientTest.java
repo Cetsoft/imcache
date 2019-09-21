@@ -31,9 +31,6 @@ import org.mockito.MockitoAnnotations;
 public class RedisClientTest {
     
     @Mock
-    Connection connection;
-    
-    @Mock
     RedisCommandExecutor commandExecutor;
     
     @Mock
@@ -44,9 +41,7 @@ public class RedisClientTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        redisClient = spy(new RedisClient(connection));
-        redisClient.commandExecutor = commandExecutor;
-        redisClient.commandResult = commandResult;
+        redisClient = spy(new RedisClient(commandExecutor, commandResult));
     }
     
     @Test

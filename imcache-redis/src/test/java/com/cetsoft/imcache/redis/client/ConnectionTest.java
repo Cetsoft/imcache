@@ -18,22 +18,23 @@
  */
 package com.cetsoft.imcache.redis.client;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import com.cetsoft.imcache.redis.client.Connection;
-import com.cetsoft.imcache.redis.client.ConnectionException;
-import com.cetsoft.imcache.redis.client.RedisStreamWriter;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class ConnectionTest {
     
@@ -53,7 +54,6 @@ public class ConnectionTest {
         MockitoAnnotations.initMocks(this);
         connection = spy(new Connection());
         connection.socket = socket;
-        connection.streamWriter = redisOutputStream;
     }
     
     @Test
