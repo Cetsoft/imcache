@@ -27,9 +27,15 @@ import com.cetsoft.imcache.cache.SearchableCache;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 import com.cetsoft.imcache.heap.HeapCache;
 
+/**
+ * The type Heap cache builder test.
+ */
 public class HeapCacheBuilderTest {
-    
-    @Test
+
+  /**
+   * Build.
+   */
+  @Test
     public void build() {
         Cache<Object, Object> cache = CacheBuilder.heapCache().cacheLoader(AbstractCacheBuilder.CACHE_LOADER)
                 .evictionListener(AbstractCacheBuilder.EVICTION_LISTENER).indexHandler(DummyIndexHandler.getInstance())

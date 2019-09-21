@@ -24,9 +24,17 @@ import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.Query;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 
+/**
+ * The type Dummy index handler.
+ */
 public class DummyIndexHandler implements IndexHandler<Object, Object> {
-    
-    public static DummyIndexHandler getInstance() {
+
+  /**
+   * Gets instance.
+   *
+   * @return the instance
+   */
+  public static DummyIndexHandler getInstance() {
         return new DummyIndexHandler();
     }
     

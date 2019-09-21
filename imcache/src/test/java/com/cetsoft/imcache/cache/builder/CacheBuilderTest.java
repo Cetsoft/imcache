@@ -22,24 +22,39 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+/**
+ * The type Cache builder test.
+ */
 public class CacheBuilderTest {
-    
-    @Test
+
+  /**
+   * Heap cache.
+   */
+  @Test
     public void heapCache() {
         assertTrue(CacheBuilder.heapCache() instanceof HeapCacheBuilder);
     }
-    
-    @Test
+
+  /**
+   * Redis cache.
+   */
+  @Test
     public void redisCache() {
         assertTrue(CacheBuilder.redisCache() instanceof RedisCacheBuilder);
     }
-    
-    @Test
+
+  /**
+   * Off heap cache.
+   */
+  @Test
     public void offHeapCache() {
         assertTrue(CacheBuilder.offHeapCache() instanceof OffHeapCacheBuilder);
     }
-    
-    @Test
+
+  /**
+   * Versioned off heap cache.
+   */
+  @Test
     public void versionedOffHeapCache() {
         assertTrue(CacheBuilder.versionedOffHeapCache() instanceof VersionedOffHeapCacheBuilder);
     }

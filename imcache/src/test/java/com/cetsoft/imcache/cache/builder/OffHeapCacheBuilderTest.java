@@ -28,9 +28,15 @@ import com.cetsoft.imcache.cache.search.index.IndexType;
 import com.cetsoft.imcache.offheap.OffHeapCache;
 import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBufferStore;
 
+/**
+ * The type Off heap cache builder test.
+ */
 public class OffHeapCacheBuilderTest {
-    
-    @Test
+
+  /**
+   * Build.
+   */
+  @Test
     public void build() {
         OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
         Cache<Object, Object> cache = CacheBuilder.offHeapCache().storage(bufferStore)
@@ -41,8 +47,11 @@ public class OffHeapCacheBuilderTest {
         assertTrue(cache instanceof SearchableCache);
         assertTrue(cache instanceof OffHeapCache);
     }
-    
-    @Test(expected = NecessaryArgumentException.class)
+
+  /**
+   * Build throws necessary argument exception.
+   */
+  @Test(expected = NecessaryArgumentException.class)
     public void buildThrowsNecessaryArgumentException() {
         CacheBuilder.offHeapCache().build();
     }

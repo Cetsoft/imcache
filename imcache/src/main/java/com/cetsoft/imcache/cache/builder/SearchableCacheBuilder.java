@@ -25,16 +25,25 @@ import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.Query;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 
+/**
+ * The type Searchable cache builder.
+ */
 public abstract class SearchableCacheBuilder extends AbstractCacheBuilder {
-    
-    /** The is searchable. */
-    protected volatile boolean isSearchable = false;
-    
-    /** The query executer. */
-    protected IndexHandler<Object, Object> indexHandler;
-    
-    /** The Constant QUERY_EXECUTER. */
-    protected static final IndexHandler<Object, Object> QUERY_EXECUTER = new IndexHandler<Object, Object>() {
+
+  /**
+   * The is searchable.
+   */
+  protected volatile boolean isSearchable = false;
+
+  /**
+   * The query executer.
+   */
+  protected IndexHandler<Object, Object> indexHandler;
+
+  /**
+   * The Constant QUERY_EXECUTER.
+   */
+  protected static final IndexHandler<Object, Object> QUERY_EXECUTER = new IndexHandler<Object, Object>() {
         public void addIndex(String attributeName, IndexType type) {
         }
         
@@ -51,19 +60,19 @@ public abstract class SearchableCacheBuilder extends AbstractCacheBuilder {
         public void add(Object key, Object value) {
         }
     };
-    
-    /**
-     * Instantiates a new searchable cache builder.
-     */
-    protected SearchableCacheBuilder() {
+
+  /**
+   * Instantiates a new searchable cache builder.
+   */
+  protected SearchableCacheBuilder() {
         super();
         indexHandler = QUERY_EXECUTER;
     }
-    
-    /**
-     * Searchable.
-     */
-    protected void searchable() {
+
+  /**
+   * Searchable.
+   */
+  protected void searchable() {
         if (!isSearchable) {
             indexHandler = new ConcurrentIndexHandler<Object, Object>();
             isSearchable = true;

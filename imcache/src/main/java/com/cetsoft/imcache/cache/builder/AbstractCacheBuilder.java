@@ -31,23 +31,32 @@ import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.serialization.Serializer;
 
+/**
+ * The type Abstract cache builder.
+ */
 public abstract class AbstractCacheBuilder {
-    
-    /** The Constant CACHE_LOADER. */
-    protected static final CacheLoader<Object, Object> CACHE_LOADER = new CacheLoader<Object, Object>() {
+
+  /**
+   * The Constant CACHE_LOADER.
+   */
+  protected static final CacheLoader<Object, Object> CACHE_LOADER = new CacheLoader<Object, Object>() {
         public Object load(Object key) {
             return null;
         }
     };
-    
-    /** The Constant EVICTION_LISTENER. */
-    protected static final EvictionListener<Object, Object> EVICTION_LISTENER = new EvictionListener<Object, Object>() {
+
+  /**
+   * The Constant EVICTION_LISTENER.
+   */
+  protected static final EvictionListener<Object, Object> EVICTION_LISTENER = new EvictionListener<Object, Object>() {
         public void onEviction(Object key, Object value) {
         }
     };
-    
-    /** The Constant SERIALIZER. */
-    protected static final Serializer<Object> SERIALIZER = new Serializer<Object>() {
+
+  /**
+   * The Constant SERIALIZER.
+   */
+  protected static final Serializer<Object> SERIALIZER = new Serializer<Object>() {
         public byte[] serialize(Object object) {
             byte[] objectBytes = null;
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -79,39 +88,43 @@ public abstract class AbstractCacheBuilder {
             return object;
         }
     };
-    
-    /** The cache loader. */
-    protected CacheLoader<Object, Object> cacheLoader;
-    
-    /** The eviction listener. */
-    protected EvictionListener<Object, Object> evictionListener;
-    
-    /**
-     * Instantiates a new cache builder.
-     */
-    protected AbstractCacheBuilder() {
+
+  /**
+   * The cache loader.
+   */
+  protected CacheLoader<Object, Object> cacheLoader;
+
+  /**
+   * The eviction listener.
+   */
+  protected EvictionListener<Object, Object> evictionListener;
+
+  /**
+   * Instantiates a new cache builder.
+   */
+  protected AbstractCacheBuilder() {
         cacheLoader = CACHE_LOADER;
         evictionListener = EVICTION_LISTENER;
     }
-    
-    /**
-     * Builds the cache.
-     *
-     * @param <K> the key type
-     * @param <V> the value type
-     * @return the cache
-     */
-    public abstract <K, V> Cache<K, V> build();
-    
-    /**
-     * Builds the cache.
-     *
-     * @param <K> the key type
-     * @param <V> the value type
-     * @param cacheName the cache name
-     * @return the searchable cache
-     */
-    public <K, V> Cache<K, V> build(final String cacheName) {
+
+  /**
+   * Builds the cache.
+   *
+   * @param <K> the key type
+   * @param <V> the value type
+   * @return the cache
+   */
+  public abstract <K, V> Cache<K, V> build();
+
+  /**
+   * Builds the cache.
+   *
+   * @param <K> the key type
+   * @param <V> the value type
+   * @param cacheName the cache name
+   * @return the searchable cache
+   */
+  public <K, V> Cache<K, V> build(final String cacheName) {
         Cache<K, V> cache = build();
         return cache;
     }

@@ -22,40 +22,40 @@ package com.cetsoft.imcache.cache.builder;
  * The Class CacheBuilder.
  */
 public abstract class CacheBuilder {
-    
-    /**
-     * Heap cache.
-     *
-     * @return the heap cache builder
-     */
-    public static HeapCacheBuilder heapCache() {
+
+  /**
+   * Heap cache.
+   *
+   * @return the heap cache builder
+   */
+  public static HeapCacheBuilder heapCache() {
         return new HeapCacheBuilder();
     }
-    
-    /**
-     * Off heap cache.
-     *
-     * @return the off heap cache builder
-     */
-    public static OffHeapCacheBuilder offHeapCache() {
+
+  /**
+   * Off heap cache.
+   *
+   * @return the off heap cache builder
+   */
+  public static OffHeapCacheBuilder offHeapCache() {
         return new OffHeapCacheBuilder();
     }
-    
-    /**
-     * Versioned Off heap cache.
-     *
-     * @return the off heap cache builder
-     */
-    public static VersionedOffHeapCacheBuilder versionedOffHeapCache() {
+
+  /**
+   * Versioned Off heap cache.
+   *
+   * @return the off heap cache builder
+   */
+  public static VersionedOffHeapCacheBuilder versionedOffHeapCache() {
         return new VersionedOffHeapCacheBuilder();
     }
-    
-    /**
-     * Redis cache.
-     *
-     * @return the redis cache builder
-     */
-    public static RedisCacheBuilder redisCache() {
+
+  /**
+   * Redis cache.
+   *
+   * @return the redis cache builder
+   */
+  public static RedisCacheBuilder redisCache() {
         return new RedisCacheBuilder();
     }
     

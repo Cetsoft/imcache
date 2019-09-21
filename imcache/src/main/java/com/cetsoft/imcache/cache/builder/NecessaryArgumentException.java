@@ -25,13 +25,13 @@ public class NecessaryArgumentException extends RuntimeException {
     
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = -7420658148641484150L;
-    
-    /**
-     * Instantiates a new necessary argument exception.
-     *
-     * @param exception the exception
-     */
-    public NecessaryArgumentException(String exception) {
+
+  /**
+   * Instantiates a new necessary argument exception.
+   *
+   * @param exception the exception
+   */
+  public NecessaryArgumentException(String exception) {
         super(exception);
     }
 }

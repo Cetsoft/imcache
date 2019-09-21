@@ -29,11 +29,11 @@ import com.cetsoft.imcache.redis.RedisCache;
  * The Class RedisCacheBuilderTest.
  */
 public class RedisCacheBuilderTest {
-    
-    /**
-     * Builds the.
-     */
-    @Test
+
+  /**
+   * Builds the.
+   */
+  @Test
     public void build() {
         Cache<Object, Object> cache = CacheBuilder.redisCache().cacheLoader(AbstractCacheBuilder.CACHE_LOADER)
                 .evictionListener(AbstractCacheBuilder.EVICTION_LISTENER).serializer(AbstractCacheBuilder.SERIALIZER)

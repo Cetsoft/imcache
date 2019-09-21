@@ -43,76 +43,76 @@ public class RedisCacheBuilder extends AbstractCacheBuilder {
     
     /** The serializer. */
     private Serializer<Object> serializer = AbstractCacheBuilder.SERIALIZER;
-    
-    /**
-     * Cache loader.
-     *
-     * @param <K> the key type
-     * @param <V> the value type
-     * @param cacheLoader the cache loader
-     * @return the heap cache builder
-     */
-    @SuppressWarnings("unchecked")
+
+  /**
+   * Cache loader.
+   *
+   * @param <K> the key type
+   * @param <V> the value type
+   * @param cacheLoader the cache loader
+   * @return the heap cache builder
+   */
+  @SuppressWarnings("unchecked")
     public <K, V> RedisCacheBuilder cacheLoader(CacheLoader<K, V> cacheLoader) {
         this.cacheLoader = (CacheLoader<Object, Object>) cacheLoader;
         return this;
     }
-    
-    /**
-     * Eviction listener.
-     *
-     * @param <K> the key type
-     * @param <V> the value type
-     * @param evictionListener the eviction listener
-     * @return the heap cache builder
-     */
-    @SuppressWarnings("unchecked")
+
+  /**
+   * Eviction listener.
+   *
+   * @param <K> the key type
+   * @param <V> the value type
+   * @param evictionListener the eviction listener
+   * @return the heap cache builder
+   */
+  @SuppressWarnings("unchecked")
     public <K, V> RedisCacheBuilder evictionListener(EvictionListener<K, V> evictionListener) {
         this.evictionListener = (EvictionListener<Object, Object>) evictionListener;
         return this;
     }
-    
-    /**
-     * Serializer.
-     *
-     * @param <V> the value type
-     * @param serializer the serializer
-     * @return the off heap cache builder
-     */
-    public <V> RedisCacheBuilder serializer(Serializer<Object> serializer) {
+
+  /**
+   * Serializer.
+   *
+   * @param <V> the value type
+   * @param serializer the serializer
+   * @return the off heap cache builder
+   */
+  public <V> RedisCacheBuilder serializer(Serializer<Object> serializer) {
         this.serializer = (Serializer<Object>) serializer;
         return this;
     }
-    
-    /**
-     * Host name.
-     *
-     * @param hostName the host name
-     * @return the redis cache builder
-     */
-    public RedisCacheBuilder hostName(String hostName) {
+
+  /**
+   * Host name.
+   *
+   * @param hostName the host name
+   * @return the redis cache builder
+   */
+  public RedisCacheBuilder hostName(String hostName) {
         this.hostName = hostName;
         return this;
     }
-    
-    /**
-     * Port.
-     *
-     * @param port the port
-     * @return the redis cache builder
-     */
-    public RedisCacheBuilder port(int port) {
+
+  /**
+   * Port.
+   *
+   * @param port the port
+   * @return the redis cache builder
+   */
+  public RedisCacheBuilder port(int port) {
         this.port = port;
         return this;
     }
-    
-    /**
-     * Concurrency level.
-     *
-     * @param concurrencyLevel the concurrency level
-     * @return the redis cache builder
-     */
-    public RedisCacheBuilder concurrencyLevel(int concurrencyLevel) {
+
+  /**
+   * Concurrency level.
+   *
+   * @param concurrencyLevel the concurrency level
+   * @return the redis cache builder
+   */
+  public RedisCacheBuilder concurrencyLevel(int concurrencyLevel) {
         this.concurrencyLevel = concurrencyLevel;
         return this;
     }
