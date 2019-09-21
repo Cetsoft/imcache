@@ -22,13 +22,19 @@ package com.cetsoft.imcache.cache.search.index;
  * The Enum IndexType.
  */
 public enum IndexType {
-    
-    /** The unique hash. */
-    UNIQUE_HASH,
-    
-    /** The non unique hash. */
-    NON_UNIQUE_HASH,
-    
-    /** The range index. */
-    RANGE_INDEX
+
+  /**
+   * The unique hash.
+   */
+  UNIQUE_HASH,
+
+  /**
+   * The non unique hash.
+   */
+  NON_UNIQUE_HASH,
+
+  /**
+   * The range index.
+   */
+  RANGE_INDEX
 }

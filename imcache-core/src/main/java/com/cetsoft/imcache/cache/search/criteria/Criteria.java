@@ -22,28 +22,28 @@ package com.cetsoft.imcache.cache.search.criteria;
  * The Interface Criteria for meeting certain condition.
  */
 public interface Criteria {
-    
-    /**
-     * And.
-     *
-     * @param criteria the criteria
-     * @return the criteria
-     */
-    Criteria and(Criteria criteria);
-    
-    /**
-     * Or.
-     *
-     * @param criteria the criteria
-     * @return the criteria
-     */
-    Criteria or(Criteria criteria);
-    
-    /**
-     * Diff.
-     *
-     * @param criteria the criteria
-     * @return the criteria
-     */
-    Criteria diff(Criteria criteria);
+
+  /**
+   * And.
+   *
+   * @param criteria the criteria
+   * @return the criteria
+   */
+  Criteria and(Criteria criteria);
+
+  /**
+   * Or.
+   *
+   * @param criteria the criteria
+   * @return the criteria
+   */
+  Criteria or(Criteria criteria);
+
+  /**
+   * Diff.
+   *
+   * @param criteria the criteria
+   * @return the criteria
+   */
+  Criteria diff(Criteria criteria);
 }

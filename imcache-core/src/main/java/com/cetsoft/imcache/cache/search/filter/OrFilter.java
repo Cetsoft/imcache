@@ -30,22 +30,22 @@ public class OrFilter extends LogicalFilter {
     
     /** The filters. */
     private Filter[] filters;
-    
-    /**
-     * Instantiates a new or filter.
-     *
-     * @param filters the filters
-     */
-    public OrFilter(Filter... filters) {
+
+  /**
+   * Instantiates a new or filter.
+   *
+   * @param filters the filters
+   */
+  public OrFilter(Filter... filters) {
         this.filters = filters;
     }
-    
-    /**
-     * Gets the filters.
-     *
-     * @return the filters
-     */
-    public Filter[] getFilters() {
+
+  /**
+   * Gets the filters.
+   *
+   * @return the filters
+   */
+  public Filter[] getFilters() {
         return filters;
     }
     

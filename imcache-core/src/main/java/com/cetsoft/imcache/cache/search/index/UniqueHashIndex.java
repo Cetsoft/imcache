@@ -24,13 +24,15 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The Class UniqueHashIndex is type of index where indexed value can have
- * exactly one corresponding value.
+ * The Class UniqueHashIndex is type of index where indexed value can have exactly one corresponding
+ * value.
  */
 public class UniqueHashIndex extends CacheIndexBase {
-    
-    /** The map. */
-    protected Map<Object, Object> map = new ConcurrentHashMap<Object, Object>();
+
+  /**
+   * The map.
+   */
+  protected Map<Object, Object> map = new ConcurrentHashMap<Object, Object>();
     
     /*
      * (non-Javadoc)

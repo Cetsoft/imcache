@@ -26,14 +26,14 @@ import com.cetsoft.imcache.cache.search.index.CacheIndex;
  * The Class ETCriteria is used to retrieve items equals to the given value.
  */
 public class ETCriteria extends ArithmeticCriteria {
-    
-    /**
-     * Instantiates a new eT criteria.
-     *
-     * @param attributeName the attribute name
-     * @param expectedValue the expected value
-     */
-    public ETCriteria(String attributeName, Object expectedValue) {
+
+  /**
+   * Instantiates a new eT criteria.
+   *
+   * @param attributeName the attribute name
+   * @param expectedValue the expected value
+   */
+  public ETCriteria(String attributeName, Object expectedValue) {
         super(attributeName, expectedValue);
     }
     

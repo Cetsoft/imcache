@@ -25,18 +25,18 @@ package com.cetsoft.imcache.cache.async;
  * @param <V> the value type
  */
 public interface CacheTask<K, V> {
-    
-    /**
-     * Gets the value.
-     *
-     * @return the value
-     */
-    V getValue();
-    
-    /**
-     * Gets the key.
-     *
-     * @return the key
-     */
-    K getKey();
+
+  /**
+   * Gets the value.
+   *
+   * @return the value
+   */
+  V getValue();
+
+  /**
+   * Gets the key.
+   *
+   * @return the key
+   */
+  K getKey();
 }

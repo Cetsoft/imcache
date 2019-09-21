@@ -28,22 +28,22 @@ public class AndFilter extends LogicalFilter {
     
     /** The filters. */
     private Filter[] filters;
-    
-    /**
-     * Instantiates a new and filter.
-     *
-     * @param filters the filters
-     */
-    public AndFilter(Filter... filters) {
+
+  /**
+   * Instantiates a new and filter.
+   *
+   * @param filters the filters
+   */
+  public AndFilter(Filter... filters) {
         this.filters = filters;
     }
-    
-    /**
-     * Gets the filters.
-     *
-     * @return the filters
-     */
-    public Filter[] getFilters() {
+
+  /**
+   * Gets the filters.
+   *
+   * @return the filters
+   */
+  public Filter[] getFilters() {
         return filters;
     }
     

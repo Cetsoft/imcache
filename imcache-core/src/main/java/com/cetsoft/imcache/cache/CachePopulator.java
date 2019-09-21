@@ -27,16 +27,16 @@ import java.util.List;
  * @param <V> the value type
  */
 public interface CachePopulator<K, V> {
-    
-    /**
-     * Populates the given cache with the cache items.
-     */
-    void pupulate();
-    
-    /**
-     * Loads entries for the cahce.
-     *
-     * @return the list
-     */
-    List<CacheEntry<K, V>> loadEntries();
+
+  /**
+   * Populates the given cache with the cache items.
+   */
+  void pupulate();
+
+  /**
+   * Loads entries for the cahce.
+   *
+   * @return the list
+   */
+  List<CacheEntry<K, V>> loadEntries();
 }

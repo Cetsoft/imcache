@@ -24,26 +24,26 @@ package com.cetsoft.imcache.cache;
  * @param <V> the value type
  */
 public interface VersionedItem<V> extends CacheItem<V> {
-    
-    /**
-     * Gets the version.
-     *
-     * @return the version
-     */
-    int getVersion();
-    
-    /**
-     * Sets the version.
-     *
-     * @param version the version
-     * @return the int
-     */
-    int setVersion(int version);
-    
-    /**
-     * Updates the current value.
-     *
-     * @param value the value
-     */
-    void update(V value);
+
+  /**
+   * Gets the version.
+   *
+   * @return the version
+   */
+  int getVersion();
+
+  /**
+   * Sets the version.
+   *
+   * @param version the version
+   * @return the int
+   */
+  int setVersion(int version);
+
+  /**
+   * Updates the current value.
+   *
+   * @param value the value
+   */
+  void update(V value);
 }

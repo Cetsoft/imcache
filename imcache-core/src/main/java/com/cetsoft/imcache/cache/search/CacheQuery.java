@@ -36,13 +36,13 @@ public class CacheQuery implements Query {
      */
     private CacheQuery() {
     }
-    
-    /**
-     * New instance.
-     *
-     * @return the query
-     */
-    public static Query newQuery() {
+
+  /**
+   * New instance.
+   *
+   * @return the query
+   */
+  public static Query newQuery() {
         return new CacheQuery();
     }
     

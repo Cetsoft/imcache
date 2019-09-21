@@ -24,7 +24,7 @@ package com.cetsoft.imcache.serialization;
  * @param <V> the value type
  */
 public interface Serializer<V> {
-    
+
     /**
      * Serialize.
      *
@@ -32,7 +32,7 @@ public interface Serializer<V> {
      * @return the byte[]
      */
     byte[] serialize(V value);
-    
+
     /**
      * Deserialize.
      *

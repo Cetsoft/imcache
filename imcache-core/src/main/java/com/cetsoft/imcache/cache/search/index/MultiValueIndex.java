@@ -28,16 +28,18 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * The Class MultiValueIndex is type of index where indexed value can have one
- * or more corresponding values.
+ * The Class MultiValueIndex is type of index where indexed value can have one or more corresponding
+ * values.
  */
 public abstract class MultiValueIndex extends CacheIndexBase {
     
     /** The lock. */
     private Lock lock = new ReentrantLock();
-    
-    /** The map. */
-    protected Map<Object, Set<Object>> map;
+
+  /**
+   * The map.
+   */
+  protected Map<Object, Set<Object>> map;
     
     /*
      * (non-Javadoc)

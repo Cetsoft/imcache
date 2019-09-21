@@ -22,18 +22,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Class GTETFilter is used to retrieve items greater than equals to the
- * given value.
+ * The Class GTETFilter is used to retrieve items greater than equals to the given value.
  */
 public class GTETFilter extends ArithmeticFilter {
-    
-    /**
-     * Instantiates a new gTET filter.
-     *
-     * @param attributeName the attribute name
-     * @param value the value
-     */
-    public GTETFilter(String attributeName, Object value) {
+
+  /**
+   * Instantiates a new gTET filter.
+   *
+   * @param attributeName the attribute name
+   * @param value the value
+   */
+  public GTETFilter(String attributeName, Object value) {
         super(attributeName, value);
     }
     

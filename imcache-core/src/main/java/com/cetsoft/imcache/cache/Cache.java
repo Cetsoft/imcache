@@ -27,73 +27,73 @@ import java.util.concurrent.TimeUnit;
  * @param <V> the value type
  */
 public interface Cache<K, V> {
-    
-    /**
-     * Puts the value with the specified key.
-     *
-     * @param key the key
-     * @param value the value
-     */
-    void put(K key, V value);
 
-    /**
-     * Puts the value with the specified key and ttl value
-     *
-     * @param key the key
-     * @param value the value
-     * @param timeUnit the time unit
-     * @param duration time to live
-     */
-    void put(K key, V value, TimeUnit timeUnit, long duration);
-    
-    /**
-     * Gets the value with the specified key.
-     *
-     * @param key the key
-     * @return the value
-     */
-    V get(K key);
-    
-    /**
-     * Invalidate the value with the specified key.
-     *
-     * @param key the key
-     * @return the value
-     */
-    V invalidate(K key);
-    
-    /**
-     * Check if Cache contains the specified key.
-     *
-     * @param key the key
-     * @return true, if successful
-     */
-    boolean contains(K key);
-    
-    /**
-     * Clear the cache.
-     */
-    void clear();
+  /**
+   * Puts the value with the specified key.
+   *
+   * @param key the key
+   * @param value the value
+   */
+  void put(K key, V value);
 
-    /**
-     * Gets the specified name if exist, otherwise returns the class name.
-     *
-     * @return the name
-     */
-    String getName();
+  /**
+   * Puts the value with the specified key and ttl value
+   *
+   * @param key the key
+   * @param value the value
+   * @param timeUnit the time unit
+   * @param duration time to live
+   */
+  void put(K key, V value, TimeUnit timeUnit, long duration);
 
-    /**
-     * Returns estimated number of elements in this cache
-     *
-     * @return the number of elements
-     */
-    long size();
+  /**
+   * Gets the value with the specified key.
+   *
+   * @param key the key
+   * @return the value
+   */
+  V get(K key);
 
-    /**
-     * Returns the cache stats
-     *
-     * @return cache stats
-     */
-    CacheStats stats();
+  /**
+   * Invalidate the value with the specified key.
+   *
+   * @param key the key
+   * @return the value
+   */
+  V invalidate(K key);
+
+  /**
+   * Check if Cache contains the specified key.
+   *
+   * @param key the key
+   * @return true, if successful
+   */
+  boolean contains(K key);
+
+  /**
+   * Clear the cache.
+   */
+  void clear();
+
+  /**
+   * Gets the specified name if exist, otherwise returns the class name.
+   *
+   * @return the name
+   */
+  String getName();
+
+  /**
+   * Returns estimated number of elements in this cache
+   *
+   * @return the number of elements
+   */
+  long size();
+
+  /**
+   * Returns the cache stats
+   *
+   * @return cache stats
+   */
+  CacheStats stats();
 
 }

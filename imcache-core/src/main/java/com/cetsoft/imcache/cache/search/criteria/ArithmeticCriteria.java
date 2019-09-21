@@ -29,36 +29,38 @@ public abstract class ArithmeticCriteria extends LogicalCriteria {
     
     /** The attribute name. */
     private String attributeName;
-    
-    /** The expected value. */
-    protected Object value;
-    
-    /**
-     * Instantiates a new equals to criteria.
-     *
-     * @param attributeName the attribute name
-     * @param value the expected value
-     */
-    public ArithmeticCriteria(String attributeName, Object value) {
+
+  /**
+   * The expected value.
+   */
+  protected Object value;
+
+  /**
+   * Instantiates a new equals to criteria.
+   *
+   * @param attributeName the attribute name
+   * @param value the expected value
+   */
+  public ArithmeticCriteria(String attributeName, Object value) {
         this.attributeName = attributeName;
         this.value = value;
     }
-    
-    /**
-     * Gets the attribute name.
-     *
-     * @return the attribute name
-     */
-    public String getAttributeName() {
+
+  /**
+   * Gets the attribute name.
+   *
+   * @return the attribute name
+   */
+  public String getAttributeName() {
         return attributeName;
     }
-    
-    /**
-     * Meets the given criteria.
-     *
-     * @param cacheIndex the cache index
-     * @return the list
-     */
-    public abstract List<Object> meets(CacheIndex cacheIndex);
+
+  /**
+   * Meets the given criteria.
+   *
+   * @param cacheIndex the cache index
+   * @return the list
+   */
+  public abstract List<Object> meets(CacheIndex cacheIndex);
     
 }

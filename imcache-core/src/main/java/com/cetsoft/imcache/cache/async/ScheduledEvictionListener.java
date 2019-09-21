@@ -26,47 +26,48 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * The scheduled eviction listener interface for receiving eviction events. This
- * class drains cache task queue and executes saveAll function in a scheduled
- * manner.
+ * The scheduled eviction listener interface for receiving eviction events. This class drains cache
+ * task queue and executes saveAll function in a scheduled manner.
  *
  * @param <K> the key type
  * @param <V> the value type
  */
 public abstract class ScheduledEvictionListener<K, V> extends QueuingEvictionListener<K, V> {
 
-    /** The Constant DEFAULT_PERIOD. */
-    public static final long DEFAULT_PERIOD = 3000;
+  /**
+   * The Constant DEFAULT_PERIOD.
+   */
+  public static final long DEFAULT_PERIOD = 3000;
 
     /** The Constant NO_OF_EVICTION_DRAINERS. */
     private static final AtomicInteger NO_OF_EVICTION_DRAINERS = new AtomicInteger();
 
-    /**
-     * Instantiates a new scheduled eviction listener.
-     */
-    public ScheduledEvictionListener() {
+  /**
+   * Instantiates a new scheduled eviction listener.
+   */
+  public ScheduledEvictionListener() {
         this(DEFAULT_BATCH_SIZE, DEFAULT_PERIOD, DEFAULT_QUEUE_SIZE);
     }
 
-    /**
-     * Instantiates a new scheduled eviction listener.
-     *
-     * @param batchSize the batch size
-     * @param period the period
-     * @param queueSize the queue size
-     */
-    public ScheduledEvictionListener(final int batchSize, final long period, final int queueSize) {
+  /**
+   * Instantiates a new scheduled eviction listener.
+   *
+   * @param batchSize the batch size
+   * @param period the period
+   * @param queueSize the queue size
+   */
+  public ScheduledEvictionListener(final int batchSize, final long period, final int queueSize) {
         this.batchSize = batchSize;
         init(period, queueSize);
     }
 
-    /**
-     * Inits the eviction listener
-     *
-     * @param period the period
-     * @param queueSize the queue size
-     */
-    protected void init(final long period, final int queueSize) {
+  /**
+   * Inits the eviction listener
+   *
+   * @param period the period
+   * @param queueSize the queue size
+   */
+  protected void init(final long period, final int queueSize) {
         cacheTasks = new ArrayBlockingQueue<>(queueSize);
         final ScheduledExecutorService drainerService = Executors.newSingleThreadScheduledExecutor(
             runnable -> ThreadUtils.createDaemonThread(runnable, "imcache:batchAsyncEvictionDrainer(thread="

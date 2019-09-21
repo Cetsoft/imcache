@@ -45,14 +45,16 @@ import com.cetsoft.imcache.cache.search.index.UniqueHashIndex;
  * @param <V> the value type
  */
 public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
-    
-    /** The indexes. */
-    protected Map<String, CacheIndex> indexes;
-    
-    /**
-     * Instantiates a new simple query executer.
-     */
-    public DefaultIndexHandler() {
+
+  /**
+   * The indexes.
+   */
+  protected Map<String, CacheIndex> indexes;
+
+  /**
+   * Instantiates a new simple query executer.
+   */
+  public DefaultIndexHandler() {
         indexes = new HashMap<>();
     }
     
@@ -127,14 +129,14 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
         List<Object> results = execute(query.getCriteria());
         return (List<K>) results;
     }
-    
-    /**
-     * Execute.
-     *
-     * @param criteria the criteria
-     * @return the list
-     */
-    protected List<Object> execute(final Criteria criteria) {
+
+  /**
+   * Execute.
+   *
+   * @param criteria the criteria
+   * @return the list
+   */
+  protected List<Object> execute(final Criteria criteria) {
         if (criteria instanceof ArithmeticCriteria) {
             return executeArithmetic((ArithmeticCriteria) criteria);
         } else if (criteria instanceof AndCriteria) {
@@ -145,28 +147,28 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
             return executeDiff((DiffCriteria) criteria);
         }
     }
-    
-    /**
-     * Execute arithmetic.
-     *
-     * @param arithmeticCriteria the criteria
-     * @return the list
-     */
-    protected List<Object> executeArithmetic(final ArithmeticCriteria arithmeticCriteria) {
+
+  /**
+   * Execute arithmetic.
+   *
+   * @param arithmeticCriteria the criteria
+   * @return the list
+   */
+  protected List<Object> executeArithmetic(final ArithmeticCriteria arithmeticCriteria) {
         final CacheIndex cacheIndex = indexes.get(arithmeticCriteria.getAttributeName());
         if (cacheIndex == null) {
             throw new IndexNotFoundException();
         }
         return arithmeticCriteria.meets(cacheIndex);
     }
-    
-    /**
-     * Execute and.
-     *
-     * @param andCriteria the criteria
-     * @return the list
-     */
-    protected List<Object> executeAnd(final AndCriteria andCriteria) {
+
+  /**
+   * Execute and.
+   *
+   * @param andCriteria the criteria
+   * @return the list
+   */
+  protected List<Object> executeAnd(final AndCriteria andCriteria) {
         List<Object> results = new ArrayList<Object>();
         for (final Criteria innerCriteria : andCriteria.getCriterias()) {
             List<Object> result = execute(innerCriteria);
@@ -190,13 +192,13 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
         return results;
     }
 
-    /**
-     * Execute diff.
-     *
-     * @param diffCriteria the criteria
-     * @return the list
-     */
-    protected List<Object> executeDiff(final DiffCriteria diffCriteria) {
+  /**
+   * Execute diff.
+   *
+   * @param diffCriteria the criteria
+   * @return the list
+   */
+  protected List<Object> executeDiff(final DiffCriteria diffCriteria) {
         final List<Object> leftResult = execute(diffCriteria.getLeftCriteria());
         final List<Object> rightResult = execute(diffCriteria.getRightCriteria());
         for (final Object object : rightResult) {
@@ -204,14 +206,14 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
         }
         return leftResult;
     }
-    
-    /**
-     * Execute or.
-     *
-     * @param orCriteria the criteria
-     * @return the list
-     */
-    protected List<Object> executeOr(final OrCriteria orCriteria) {
+
+  /**
+   * Execute or.
+   *
+   * @param orCriteria the criteria
+   * @return the list
+   */
+  protected List<Object> executeOr(final OrCriteria orCriteria) {
         final Set<Object> results = new HashSet<Object>();
         for (Criteria innerCriteria : orCriteria.getCriterias()) {
             final List<Object> result = execute(innerCriteria);
@@ -219,15 +221,15 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
         }
         return new ArrayList<>(results);
     }
-    
-    /**
-     * Gets the indexed key.
-     *
-     * @param attributeName the attribute name
-     * @param value the value
-     * @return the indexed key
-     */
-    protected Object getIndexedKey(String attributeName, V value) {
+
+  /**
+   * Gets the indexed key.
+   *
+   * @param attributeName the attribute name
+   * @param value the value
+   * @return the indexed key
+   */
+  protected Object getIndexedKey(String attributeName, V value) {
         try {
             Field field = value.getClass().getDeclaredField(attributeName);
             field.setAccessible(true);

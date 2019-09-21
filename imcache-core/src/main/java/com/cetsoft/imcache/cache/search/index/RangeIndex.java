@@ -28,15 +28,15 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
- * The Class RangeIndex is type of index where tree indexed value can have one
- * or more corresponding values.
+ * The Class RangeIndex is type of index where tree indexed value can have one or more corresponding
+ * values.
  */
 public class RangeIndex extends MultiValueIndex {
-    
-    /**
-     * Instantiates a new range index.
-     */
-    public RangeIndex() {
+
+  /**
+   * Instantiates a new range index.
+   */
+  public RangeIndex() {
         this.map = new ConcurrentSkipListMap<Object, Set<Object>>();
     }
     
@@ -64,16 +64,15 @@ public class RangeIndex extends MultiValueIndex {
         equalsTo(value, result);
         return result;
     }
-    
-    /**
-     * Returns list of object which have associated key less than or equal to
-     * the current entry.
-     *
-     * @param map the map
-     * @param current the current
-     * @return the list of results
-     */
-    protected List<Object> lower(NavigableMap<Object, Set<Object>> map, Entry<Object, Set<Object>> current) {
+
+  /**
+   * Returns list of object which have associated key less than or equal to the current entry.
+   *
+   * @param map the map
+   * @param current the current
+   * @return the list of results
+   */
+  protected List<Object> lower(NavigableMap<Object, Set<Object>> map, Entry<Object, Set<Object>> current) {
         Set<Object> resultSet = new HashSet<Object>();
         while (current != null) {
             synchronized (current) {
@@ -109,14 +108,14 @@ public class RangeIndex extends MultiValueIndex {
         equalsTo(value, result);
         return result;
     }
-    
-    /**
-     * Equals to the given value.
-     *
-     * @param value the value
-     * @param result the result
-     */
-    protected void equalsTo(Object value, List<Object> result) {
+
+  /**
+   * Equals to the given value.
+   *
+   * @param value the value
+   * @param result the result
+   */
+  protected void equalsTo(Object value, List<Object> result) {
         Collection<Object> results = map.get(value);
         if (results != null) {
             synchronized (results) {
@@ -124,16 +123,15 @@ public class RangeIndex extends MultiValueIndex {
             }
         }
     }
-    
-    /**
-     * Returns list of object which have associated key greater than or equal to
-     * the current entry..
-     *
-     * @param map the map
-     * @param current the current
-     * @return the list of results
-     */
-    protected List<Object> higher(NavigableMap<Object, Set<Object>> map, Entry<Object, Set<Object>> current) {
+
+  /**
+   * Returns list of object which have associated key greater than or equal to the current entry..
+   *
+   * @param map the map
+   * @param current the current
+   * @return the list of results
+   */
+  protected List<Object> higher(NavigableMap<Object, Set<Object>> map, Entry<Object, Set<Object>> current) {
         Set<Object> resultSet = new HashSet<Object>();
         while (current != null) {
             synchronized (current) {
@@ -165,13 +163,13 @@ public class RangeIndex extends MultiValueIndex {
         }
         return new ArrayList<Object>(resultSet);
     }
-    
-    /**
-     * Gets the map.
-     *
-     * @return the map
-     */
-    public NavigableMap<Object, Set<Object>> getMap() {
+
+  /**
+   * Gets the map.
+   *
+   * @return the map
+   */
+  public NavigableMap<Object, Set<Object>> getMap() {
         return (NavigableMap<Object, Set<Object>>) this.map;
     }
 }

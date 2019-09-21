@@ -23,18 +23,17 @@ import java.util.List;
 import com.cetsoft.imcache.cache.search.index.CacheIndex;
 
 /**
- * The Class GTETCriteria is used to retrieve items greater than equals to the
- * given value.
+ * The Class GTETCriteria is used to retrieve items greater than equals to the given value.
  */
 public class GTETCriteria extends ArithmeticCriteria {
-    
-    /**
-     * Instantiates a new gTET criteria.
-     *
-     * @param attributeName the attribute name
-     * @param value the value
-     */
-    public GTETCriteria(String attributeName, Object value) {
+
+  /**
+   * Instantiates a new gTET criteria.
+   *
+   * @param attributeName the attribute name
+   * @param value the value
+   */
+  public GTETCriteria(String attributeName, Object value) {
         super(attributeName, value);
     }
     

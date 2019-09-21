@@ -42,13 +42,13 @@ public abstract class ConcurrentCachePopulator<K, V> extends AbstractCachePopula
     /** The Constant DEFAULT_CONCURRENCY_LEVEL. */
     private final static int DEFAULT_CONCURRENCY_LEVEL = 11;
 
-    /**
-     * Instantiates a new concurrent cache populator.
-     *
-     * @param cache the cache
-     * @param concurrencyLevel the concurrency level
-     */
-    public ConcurrentCachePopulator(final Cache<K, V> cache, final int concurrencyLevel) {
+  /**
+   * Instantiates a new concurrent cache populator.
+   *
+   * @param cache the cache
+   * @param concurrencyLevel the concurrency level
+   */
+  public ConcurrentCachePopulator(final Cache<K, V> cache, final int concurrencyLevel) {
         super(cache);
         this.concurrencyLevel = concurrencyLevel;
         final AtomicInteger populatorThreadNumber = new AtomicInteger();
@@ -57,12 +57,12 @@ public abstract class ConcurrentCachePopulator<K, V> extends AbstractCachePopula
                 "imcache:cachePopulator(name=" + cache.getName() + ",thread=" + populatorThreadNumber.incrementAndGet() + ")"));
     }
 
-    /**
-     * Instantiates a new concurrent cache populator.
-     *
-     * @param cache the cache
-     */
-    public ConcurrentCachePopulator(Cache<K, V> cache) {
+  /**
+   * Instantiates a new concurrent cache populator.
+   *
+   * @param cache the cache
+   */
+  public ConcurrentCachePopulator(Cache<K, V> cache) {
         this(cache, DEFAULT_CONCURRENCY_LEVEL);
     }
 

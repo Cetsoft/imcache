@@ -24,11 +24,11 @@ package com.cetsoft.imcache.cache;
  * @param <V> the value type
  */
 public interface CacheItem<V> {
-    
-    /**
-     * Gets the value.
-     *
-     * @return the value
-     */
-    V getValue();
+
+  /**
+   * Gets the value.
+   *
+   * @return the value
+   */
+  V getValue();
 }

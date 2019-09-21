@@ -33,13 +33,13 @@ public class CollectionItem<V> implements CacheItem<Collection<V>> {
     
     /** The objects. */
     private List<? extends V> objects;
-    
-    /**
-     * Instantiates a new collection item.
-     *
-     * @param objects the objects
-     */
-    public CollectionItem(Collection<? extends V> objects) {
+
+  /**
+   * Instantiates a new collection item.
+   *
+   * @param objects the objects
+   */
+  public CollectionItem(Collection<? extends V> objects) {
         this.objects = new ArrayList<V>(objects);
     }
     
@@ -52,14 +52,14 @@ public class CollectionItem<V> implements CacheItem<Collection<V>> {
     public Collection<V> getValue() {
         return (Collection<V>) objects;
     }
-    
-    /**
-     * Filter.
-     *
-     * @param filter the filter
-     * @return the collection
-     */
-    @SuppressWarnings("unchecked")
+
+  /**
+   * Filter.
+   *
+   * @param filter the filter
+   * @return the collection
+   */
+  @SuppressWarnings("unchecked")
     public Collection<V> filter(Filter filter) {
         List<Object> filteredObjects = filter.filter((List<Object>) objects);
         return (Collection<V>) filteredObjects;

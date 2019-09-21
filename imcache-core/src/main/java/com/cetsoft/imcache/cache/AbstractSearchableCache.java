@@ -31,18 +31,20 @@ import com.cetsoft.imcache.cache.search.Query;
  * @param <V> the value type
  */
 public abstract class AbstractSearchableCache<K, V> extends AbstractCache<K, V> implements SearchableCache<K, V> {
-    
-    /** The index handler. */
-    protected IndexHandler<K, V> indexHandler;
-    
-    /**
-     * Instantiates a new abstract searchable cache.
-     *
-     * @param cacheLoader the cache loader
-     * @param evictionListener the eviction listener
-     * @param indexHandler the index handler
-     */
-    public AbstractSearchableCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,
+
+  /**
+   * The index handler.
+   */
+  protected IndexHandler<K, V> indexHandler;
+
+  /**
+   * Instantiates a new abstract searchable cache.
+   *
+   * @param cacheLoader the cache loader
+   * @param evictionListener the eviction listener
+   * @param indexHandler the index handler
+   */
+  public AbstractSearchableCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,
             IndexHandler<K, V> indexHandler) {
         super(cacheLoader, evictionListener);
         this.indexHandler = indexHandler;

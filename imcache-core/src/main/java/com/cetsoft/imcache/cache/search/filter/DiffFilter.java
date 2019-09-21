@@ -27,33 +27,33 @@ public class DiffFilter extends LogicalFilter {
     
     /** The right filter. */
     private Filter leftFilter, rightFilter;
-    
-    /**
-     * Instantiates a new diff filter.
-     *
-     * @param leftFilter the left filter
-     * @param rightFilter the right filter
-     */
-    public DiffFilter(Filter leftFilter, Filter rightFilter) {
+
+  /**
+   * Instantiates a new diff filter.
+   *
+   * @param leftFilter the left filter
+   * @param rightFilter the right filter
+   */
+  public DiffFilter(Filter leftFilter, Filter rightFilter) {
         this.leftFilter = leftFilter;
         this.rightFilter = rightFilter;
     }
-    
-    /**
-     * Gets the left filter.
-     *
-     * @return the left filter
-     */
-    public Filter getLeftFilter() {
+
+  /**
+   * Gets the left filter.
+   *
+   * @return the left filter
+   */
+  public Filter getLeftFilter() {
         return leftFilter;
     }
-    
-    /**
-     * Gets the right filter.
-     *
-     * @return the right filter
-     */
-    public Filter getRightFilter() {
+
+  /**
+   * Gets the right filter.
+   *
+   * @return the right filter
+   */
+  public Filter getRightFilter() {
         return rightFilter;
     }
     

@@ -28,57 +28,61 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
     
     /** The name. */
     private String name;
-    
-    /** The cache loader. */
-    protected CacheLoader<K, V> cacheLoader;
-    
-    /** The eviction listener. */
-    protected EvictionListener<K, V> evictionListener;
-    
-    /**
-     * Instantiates a new abstract cache.
-     *
-     * @param cacheLoader the cache loader
-     * @param evictionListener the eviction listener
-     */
-    public AbstractCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener) {
+
+  /**
+   * The cache loader.
+   */
+  protected CacheLoader<K, V> cacheLoader;
+
+  /**
+   * The eviction listener.
+   */
+  protected EvictionListener<K, V> evictionListener;
+
+  /**
+   * Instantiates a new abstract cache.
+   *
+   * @param cacheLoader the cache loader
+   * @param evictionListener the eviction listener
+   */
+  public AbstractCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener) {
         this.cacheLoader = cacheLoader;
         this.evictionListener = evictionListener;
     }
-    
-    /**
-     * Gets the cache loader.
-     *
-     * @return the cache loader
-     */
-    public CacheLoader<K, V> getCacheLoader() {
+
+  /**
+   * Gets the cache loader.
+   *
+   * @return the cache loader
+   */
+  public CacheLoader<K, V> getCacheLoader() {
         return cacheLoader;
     }
-    
-    /**
-     * Sets the cache loader.
-     *
-     * @param cacheLoader the cache loader
-     */
-    public void setCacheLoader(CacheLoader<K, V> cacheLoader) {
+
+  /**
+   * Sets the cache loader.
+   *
+   * @param cacheLoader the cache loader
+   */
+  public void setCacheLoader(CacheLoader<K, V> cacheLoader) {
         this.cacheLoader = cacheLoader;
     }
-    
-    /**
-     * Gets the eviction listener.
-     *
-     * @return the eviction listener
-     */
-    public EvictionListener<K, V> getEvictionListener() {
+
+  /**
+   * Gets the eviction listener.
+   *
+   * @return the eviction listener
+   */
+  public EvictionListener<K, V> getEvictionListener() {
         return evictionListener;
     }
-    
-    /**
-     * Sets the eviction listener.
-     *
-     * @param evictionListener the eviction listener
-     */
-    public void setEvictionListener(EvictionListener<K, V> evictionListener) {
+
+  /**
+   * Sets the eviction listener.
+   *
+   * @param evictionListener the eviction listener
+   */
+  public void setEvictionListener(EvictionListener<K, V> evictionListener) {
         this.evictionListener = evictionListener;
     }
     

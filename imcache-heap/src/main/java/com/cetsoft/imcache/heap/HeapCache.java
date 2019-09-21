@@ -9,6 +9,12 @@ import com.cetsoft.imcache.concurrent.ConcurrentCacheStats;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The type Heap cache.
+ *
+ * @param <K> the type parameter
+ * @param <V> the type parameter
+ */
 public class HeapCache<K, V> extends AbstractSearchableCache<K, V> {
 
   private final com.github.benmanes.caffeine.cache.Cache<K, V> caffeine;
@@ -20,6 +26,9 @@ public class HeapCache<K, V> extends AbstractSearchableCache<K, V> {
    * @param cacheLoader the cache loader
    * @param evictionListener the eviction listener
    * @param indexHandler the index handler
+   * @param limit the limit
+   * @param timeUnit the time unit
+   * @param duration the duration
    */
   public HeapCache(final CacheLoader<K, V> cacheLoader,
       final EvictionListener<K, V> evictionListener, final IndexHandler<K, V> indexHandler,

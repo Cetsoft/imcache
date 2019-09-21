@@ -30,22 +30,28 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The Class RedisCache is a cache that uses redis server. to store or retrieve
- * data by serializing items into bytes. To do so, RedisCache uses a redis
- * client to talk to redis server. Any operation within this cache is a command
- * to redis.
+ * The Class RedisCache is a cache that uses redis server. to store or retrieve data by serializing
+ * items into bytes. To do so, RedisCache uses a redis client to talk to redis server. Any operation
+ * within this cache is a command to redis.
  *
  * @param <K> the key type
  * @param <V> the value type
  */
 public class RedisCache<K, V> extends AbstractCache<K, V> {
-    
-    /** The client. */
+
+    /**
+     * The client.
+     */
     final Client client;
 
-    /** The serializer. */
+    /**
+     * The serializer.
+     */
     final Serializer<Object> serializer;
 
+    /**
+     * The Stats.
+     */
     final ConcurrentCacheStats stats = new ConcurrentCacheStats();
 
     /**

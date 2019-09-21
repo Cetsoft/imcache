@@ -22,18 +22,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Class LTETFilter is used to retrieve items less than or equals to the
- * given value.
+ * The Class LTETFilter is used to retrieve items less than or equals to the given value.
  */
 public class LTETFilter extends ArithmeticFilter {
-    
-    /**
-     * Instantiates a new lTET filter.
-     *
-     * @param attributeName the attribute name
-     * @param value the value
-     */
-    public LTETFilter(String attributeName, Object value) {
+
+  /**
+   * Instantiates a new lTET filter.
+   *
+   * @param attributeName the attribute name
+   * @param value the value
+   */
+  public LTETFilter(String attributeName, Object value) {
         super(attributeName, value);
     }
     

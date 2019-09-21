@@ -22,11 +22,17 @@ package com.cetsoft.imcache.cache;
  * The Enum CachingType.
  */
 public enum CachingType {
-    
-    /** The heap. */
-    HEAP,
-    /** The offheap. */
-    OFFHEAP,
-    /** The distributed. */
-    DISTRIBUTED;
+
+  /**
+   * The heap.
+   */
+  HEAP,
+  /**
+   * The offheap.
+   */
+  OFFHEAP,
+  /**
+   * The distributed.
+   */
+  DISTRIBUTED;
 }

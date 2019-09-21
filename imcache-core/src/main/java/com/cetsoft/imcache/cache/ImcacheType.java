@@ -34,10 +34,10 @@ public class ImcacheType<K, V> implements CacheType<K, V> {
     /** The ordinal. */
     private final int ordinal;
 
-    /**
-     * Instantiates a new imcache type.
-     */
-    public ImcacheType() {
+  /**
+   * Instantiates a new imcache type.
+   */
+  public ImcacheType() {
         ordinal = ordinalCounter.getAndIncrement();
     }
 

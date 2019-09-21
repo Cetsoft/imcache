@@ -30,23 +30,23 @@ public class SimpleItem<V> implements VersionedItem<V> {
     
     /** The value. */
     private V value;
-    
-    /**
-     * Instantiates a new simple cache item.
-     *
-     * @param value the value
-     */
-    public SimpleItem(V value) {
+
+  /**
+   * Instantiates a new simple cache item.
+   *
+   * @param value the value
+   */
+  public SimpleItem(V value) {
         this.value = value;
     }
-    
-    /**
-     * Instantiates a new simple cache item.
-     *
-     * @param version the version
-     * @param value the value
-     */
-    public SimpleItem(int version, V value) {
+
+  /**
+   * Instantiates a new simple cache item.
+   *
+   * @param version the version
+   * @param value the value
+   */
+  public SimpleItem(int version, V value) {
         this.version = version;
         this.value = value;
     }

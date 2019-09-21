@@ -38,6 +38,9 @@ public abstract class BasicEvictionListener<K, V> implements AsyncEvictionListen
   private static final AtomicInteger NO_OF_EVICTION_LISTENERS = new AtomicInteger();
   private final ExecutorService asyncEvictionExecutor;
 
+  /**
+   * Instantiates a new Basic eviction listener.
+   */
   public BasicEvictionListener() {
     this.asyncEvictionExecutor = Executors.newSingleThreadExecutor(
         runnable -> ThreadUtils

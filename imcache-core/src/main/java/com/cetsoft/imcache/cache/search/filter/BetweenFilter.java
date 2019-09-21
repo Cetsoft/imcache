@@ -22,22 +22,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Class BetweenFilter is used to retrieve items greater than lowerBound and
- * less than upperBound.
+ * The Class BetweenFilter is used to retrieve items greater than lowerBound and less than
+ * upperBound.
  */
 public class BetweenFilter extends ArithmeticFilter {
     
     /** The upper bound. */
     private Object upperBound;
-    
-    /**
-     * Instantiates a new between filter.
-     *
-     * @param attributeName the attribute name
-     * @param lowerBound the lower bound
-     * @param upperBound the upper bound
-     */
-    public BetweenFilter(String attributeName, Object lowerBound, Object upperBound) {
+
+  /**
+   * Instantiates a new between filter.
+   *
+   * @param attributeName the attribute name
+   * @param lowerBound the lower bound
+   * @param upperBound the upper bound
+   */
+  public BetweenFilter(String attributeName, Object lowerBound, Object upperBound) {
         super(attributeName, lowerBound);
         this.upperBound = upperBound;
     }

@@ -22,15 +22,15 @@ package com.cetsoft.imcache.cache.util;
  * The Class ThreadUtils.
  */
 public class ThreadUtils {
-    
-    /**
-     * Creates a daemon thread.
-     *
-     * @param runnable the runnable
-     * @param threadName the thread name
-     * @return the thread
-     */
-    public static Thread createDaemonThread(Runnable runnable, String threadName) {
+
+  /**
+   * Creates a daemon thread.
+   *
+   * @param runnable the runnable
+   * @param threadName the thread name
+   * @return the thread
+   */
+  public static Thread createDaemonThread(Runnable runnable, String threadName) {
         Thread daemonThread = new Thread(runnable, threadName);
         daemonThread.setDaemon(true);
         return daemonThread;

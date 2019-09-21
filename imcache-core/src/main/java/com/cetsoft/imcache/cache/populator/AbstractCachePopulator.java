@@ -28,16 +28,18 @@ import com.cetsoft.imcache.cache.CachePopulator;
  * @param <V> the value type
  */
 public abstract class AbstractCachePopulator<K, V> implements CachePopulator<K, V> {
-    
-    /** The cache. */
-    protected Cache<K, V> cache;
-    
-    /**
-     * Instantiates a new abstract cache populator.
-     *
-     * @param cache the cache
-     */
-    public AbstractCachePopulator(Cache<K, V> cache) {
+
+  /**
+   * The cache.
+   */
+  protected Cache<K, V> cache;
+
+  /**
+   * Instantiates a new abstract cache populator.
+   *
+   * @param cache the cache
+   */
+  public AbstractCachePopulator(Cache<K, V> cache) {
         this.cache = cache;
     }
 }

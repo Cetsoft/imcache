@@ -22,14 +22,14 @@ package com.cetsoft.imcache.cache.util;
  * The Class SerializationUtils.
  */
 public class SerializationUtils {
-    
-    /**
-     * Serialize integer.
-     *
-     * @param integer the integer
-     * @return the byte[]
-     */
-    public static byte[] serializeInt(int integer) {
+
+  /**
+   * Serialize integer.
+   *
+   * @param integer the integer
+   * @return the byte[]
+   */
+  public static byte[] serializeInt(int integer) {
         byte[] ret = new byte[4];
         ret[3] = (byte) (integer & 0xFF);
         ret[2] = (byte) ((integer >> 8) & 0xFF);
@@ -37,14 +37,14 @@ public class SerializationUtils {
         ret[0] = (byte) ((integer >> 24) & 0xFF);
         return ret;
     }
-    
-    /**
-     * Deserialize integer.
-     *
-     * @param integer the integer
-     * @return the int
-     */
-    public static int deserializeInt(byte[] integer) {
+
+  /**
+   * Deserialize integer.
+   *
+   * @param integer the integer
+   * @return the int
+   */
+  public static int deserializeInt(byte[] integer) {
         int value = 0;
         for (int i = 0; i < 4; i++) {
             int shift = (4 - 1 - i) * 8;

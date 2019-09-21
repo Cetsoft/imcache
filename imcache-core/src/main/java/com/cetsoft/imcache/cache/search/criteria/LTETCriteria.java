@@ -23,18 +23,17 @@ import java.util.List;
 import com.cetsoft.imcache.cache.search.index.CacheIndex;
 
 /**
- * The Class LTETCriteria is used to retrieve items less than or equals to the
- * given value.
+ * The Class LTETCriteria is used to retrieve items less than or equals to the given value.
  */
 public class LTETCriteria extends ArithmeticCriteria {
-    
-    /**
-     * Instantiates a new lTET criteria.
-     *
-     * @param attributeName the attribute name
-     * @param value the value
-     */
-    public LTETCriteria(String attributeName, Object value) {
+
+  /**
+   * Instantiates a new lTET criteria.
+   *
+   * @param attributeName the attribute name
+   * @param value the value
+   */
+  public LTETCriteria(String attributeName, Object value) {
         super(attributeName, value);
     }
     

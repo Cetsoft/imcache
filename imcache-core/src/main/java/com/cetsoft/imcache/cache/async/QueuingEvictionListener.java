@@ -23,27 +23,34 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * The queuing eviction listener interface for receiving eviction events. When
- * eviction occurs, this class passes key, value pair to cache task, which is
- * later executed by the listener at some time in the future based on the
- * implementation.
+ * The queuing eviction listener interface for receiving eviction events. When eviction occurs, this
+ * class passes key, value pair to cache task, which is later executed by the listener at some time
+ * in the future based on the implementation.
  *
  * @param <K> the key type
  * @param <V> the value type
  */
 public abstract class QueuingEvictionListener<K, V> implements AsyncEvictionListener<K, V> {
 
-    /** The Constant DEFAULT_BATCH_SIZE. */
-    public static final int DEFAULT_BATCH_SIZE = 1000;
+  /**
+   * The Constant DEFAULT_BATCH_SIZE.
+   */
+  public static final int DEFAULT_BATCH_SIZE = 1000;
 
-    /** The Constant DEFAULT_QUEUE_SIZE. */
-    public static final int DEFAULT_QUEUE_SIZE = 10000;
+  /**
+   * The Constant DEFAULT_QUEUE_SIZE.
+   */
+  public static final int DEFAULT_QUEUE_SIZE = 10000;
 
-    /** The cache tasks. */
-    protected BlockingQueue<CacheTask<K, V>> cacheTasks;
+  /**
+   * The cache tasks.
+   */
+  protected BlockingQueue<CacheTask<K, V>> cacheTasks;
 
-    /** The batch size. */
-    protected int batchSize;
+  /**
+   * The batch size.
+   */
+  protected int batchSize;
 
     /*
      * (non-Javadoc)
@@ -64,40 +71,40 @@ public abstract class QueuingEvictionListener<K, V> implements AsyncEvictionList
         }
     }
 
-    /**
-     * Creates the cache task.
-     *
-     * @param key the key
-     * @param value the value
-     * @return the cache task
-     */
-    public CacheTask<K, V> createCacheTask(K key, V value) {
+  /**
+   * Creates the cache task.
+   *
+   * @param key the key
+   * @param value the value
+   * @return the cache task
+   */
+  public CacheTask<K, V> createCacheTask(K key, V value) {
         return new SimpleCacheTask<K, V>(key, value);
     }
 
-    /**
-     * Drain queue.
-     */
-    protected void drainQueue() {
+  /**
+   * Drain queue.
+   */
+  protected void drainQueue() {
         final List<CacheTask<K, V>> cacheTasksToBeDrained = new ArrayList<CacheTask<K, V>>(batchSize);
         cacheTasks.drainTo(cacheTasksToBeDrained, batchSize);
         save(cacheTasksToBeDrained);
     }
 
-    /**
-     * Save all.
-     *
-     * @param cacheTasks the cache tasks
-     */
-    public abstract void save(List<CacheTask<K, V>> cacheTasks);
+  /**
+   * Save all.
+   *
+   * @param cacheTasks the cache tasks
+   */
+  public abstract void save(List<CacheTask<K, V>> cacheTasks);
 
-    /**
-     * The Class SimpleCacheTask.
-     *
-     * @param <K> the key type
-     * @param <V> the value type
-     */
-    protected static class SimpleCacheTask<K, V> implements CacheTask<K, V> {
+  /**
+   * The Class SimpleCacheTask.
+   *
+   * @param <K> the key type
+   * @param <V> the value type
+   */
+  protected static class SimpleCacheTask<K, V> implements CacheTask<K, V> {
 
         /** The key. */
         private K key;
@@ -105,13 +112,13 @@ public abstract class QueuingEvictionListener<K, V> implements AsyncEvictionList
         /** The value. */
         private V value;
 
-        /**
-         * Instantiates a new simple cache task.
-         *
-         * @param key the key
-         * @param value the value
-         */
-        public SimpleCacheTask(K key, V value) {
+    /**
+     * Instantiates a new simple cache task.
+     *
+     * @param key the key
+     * @param value the value
+     */
+    public SimpleCacheTask(K key, V value) {
             this.key = key;
             this.value = value;
         }

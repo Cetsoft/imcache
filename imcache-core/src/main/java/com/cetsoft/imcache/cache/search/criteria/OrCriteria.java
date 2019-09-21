@@ -25,22 +25,22 @@ public class OrCriteria extends LogicalCriteria {
     
     /** The criterias. */
     private Criteria[] criterias;
-    
-    /**
-     * Instantiates a new or criteria.
-     *
-     * @param criterias the criterias
-     */
-    public OrCriteria(Criteria... criterias) {
+
+  /**
+   * Instantiates a new or criteria.
+   *
+   * @param criterias the criterias
+   */
+  public OrCriteria(Criteria... criterias) {
         this.criterias = criterias;
     }
-    
-    /**
-     * Gets the criterias.
-     *
-     * @return the criterias
-     */
-    public Criteria[] getCriterias() {
+
+  /**
+   * Gets the criterias.
+   *
+   * @return the criterias
+   */
+  public Criteria[] getCriterias() {
         return criterias;
     }
 }

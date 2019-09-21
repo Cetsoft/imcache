@@ -25,14 +25,14 @@ import java.util.List;
  * The Class LEFilter is used to retrieve items less than given value.
  */
 public class LTFilter extends ArithmeticFilter {
-    
-    /**
-     * Instantiates a new lE filter.
-     *
-     * @param attributeName the attribute name
-     * @param value the value
-     */
-    public LTFilter(String attributeName, Object value) {
+
+  /**
+   * Instantiates a new lE filter.
+   *
+   * @param attributeName the attribute name
+   * @param value the value
+   */
+  public LTFilter(String attributeName, Object value) {
         super(attributeName, value);
     }
     

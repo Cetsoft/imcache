@@ -3,6 +3,9 @@ package com.cetsoft.imcache.concurrent;
 import com.cetsoft.imcache.cache.CacheStats;
 import java.util.concurrent.atomic.LongAdder;
 
+/**
+ * Thread safe implementation for cache stats
+ */
 public class ConcurrentCacheStats implements CacheStats {
 
   private static final LongAdder hitCount = new LongAdder();
@@ -45,18 +48,30 @@ public class ConcurrentCacheStats implements CacheStats {
     return missCount.doubleValue() / requestCount();
   }
 
+  /**
+   * Increment hit count.
+   */
   public void incrementHitCount() {
     hitCount.increment();
   }
 
+  /**
+   * Increment miss count.
+   */
   public void incrementMissCount() {
     missCount.increment();
   }
 
+  /**
+   * Increment load count.
+   */
   public void incrementLoadCount() {
     loadCount.increment();
   }
 
+  /**
+   * Increment eviction count.
+   */
   public void incrementEvictionCount() {
     evictionCount.increment();
   }

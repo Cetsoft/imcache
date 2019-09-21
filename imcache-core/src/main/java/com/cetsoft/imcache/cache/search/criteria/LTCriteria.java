@@ -26,14 +26,14 @@ import com.cetsoft.imcache.cache.search.index.CacheIndex;
  * The Class LTCriteria is used to retrieve items less than given value.
  */
 public class LTCriteria extends ArithmeticCriteria {
-    
-    /**
-     * Instantiates a new Less Than criteria.
-     *
-     * @param attributeName the attribute name
-     * @param value the value
-     */
-    public LTCriteria(String attributeName, Object value) {
+
+  /**
+   * Instantiates a new Less Than criteria.
+   *
+   * @param attributeName the attribute name
+   * @param value the value
+   */
+  public LTCriteria(String attributeName, Object value) {
         super(attributeName, value);
     }
     

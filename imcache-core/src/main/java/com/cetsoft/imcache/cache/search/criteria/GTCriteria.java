@@ -26,14 +26,14 @@ import com.cetsoft.imcache.cache.search.index.CacheIndex;
  * The Class GTCriteria is used to retrieve items greater than the given value.
  */
 public class GTCriteria extends ArithmeticCriteria {
-    
-    /**
-     * Instantiates a new gT criteria.
-     *
-     * @param attributeName the attribute name
-     * @param value the value
-     */
-    public GTCriteria(String attributeName, Object value) {
+
+  /**
+   * Instantiates a new gT criteria.
+   *
+   * @param attributeName the attribute name
+   * @param value the value
+   */
+  public GTCriteria(String attributeName, Object value) {
         super(attributeName, value);
     }
     

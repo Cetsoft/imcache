@@ -21,8 +21,7 @@ package com.cetsoft.imcache.cache.search.index;
 import java.util.List;
 
 /**
- * The Class CacheIndexBase throws UnsupportedOperationException for all methods
- * to be implemented.
+ * The Class CacheIndexBase throws UnsupportedOperationException for all methods to be implemented.
  */
 public abstract class CacheIndexBase implements CacheIndex {
     

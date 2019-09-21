@@ -25,14 +25,14 @@ import java.util.List;
  * The Class GTFilter is used to retrieve items greater than the given value.
  */
 public class GTFilter extends ArithmeticFilter {
-    
-    /**
-     * Instantiates a new gT filter.
-     *
-     * @param attributeName the attribute name
-     * @param value the value
-     */
-    public GTFilter(String attributeName, Object value) {
+
+  /**
+   * Instantiates a new gT filter.
+   *
+   * @param attributeName the attribute name
+   * @param value the value
+   */
+  public GTFilter(String attributeName, Object value) {
         super(attributeName, value);
     }
     

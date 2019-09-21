@@ -22,15 +22,15 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The Class NonUniqueHashIndex is type of index where hash indexed value can
- * have one or more corresponding values.
+ * The Class NonUniqueHashIndex is type of index where hash indexed value can have one or more
+ * corresponding values.
  */
 public class NonUniqueHashIndex extends MultiValueIndex {
-    
-    /**
-     * Instantiates a new non unique hash index.
-     */
-    public NonUniqueHashIndex() {
+
+  /**
+   * Instantiates a new non unique hash index.
+   */
+  public NonUniqueHashIndex() {
         this.map = new ConcurrentHashMap<Object, Set<Object>>();
     }
 }

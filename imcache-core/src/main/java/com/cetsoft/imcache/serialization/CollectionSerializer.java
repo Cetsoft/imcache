@@ -36,7 +36,7 @@ public class CollectionSerializer<V> implements Serializer<CollectionItem<V>> {
     
     /** The serializer. */
     private Serializer<V> serializer;
-    
+
     /**
      * Instantiates a new collection serializer.
      *
@@ -53,9 +53,9 @@ public class CollectionSerializer<V> implements Serializer<CollectionItem<V>> {
      * com.cetsoft.imcache.serialization.Serializer#serialize(java.lang.Object)
      */
     public byte[] serialize(CollectionItem<V> value) {
-        List<Byte> bytes = new ArrayList<Byte>(value.getValue().size() * OBJECT_SIZE);
+        final List<Byte> bytes = new ArrayList<Byte>(value.getValue().size() * OBJECT_SIZE);
         for (V v : value.getValue()) {
-            byte[] currentPayload = serializer.serialize(v);
+            final byte[] currentPayload = serializer.serialize(v);
             for (byte lengthByte : SerializationUtils.serializeInt(currentPayload.length)) {
                 bytes.add(lengthByte);
             }
@@ -63,7 +63,7 @@ public class CollectionSerializer<V> implements Serializer<CollectionItem<V>> {
                 bytes.add(currentPayload[i]);
             }
         }
-        byte[] payload = new byte[bytes.size()];
+        final byte[] payload = new byte[bytes.size()];
         for (int i = 0; i < payload.length; i++) {
             payload[i] = bytes.get(i);
         }
@@ -77,16 +77,16 @@ public class CollectionSerializer<V> implements Serializer<CollectionItem<V>> {
      */
     public CollectionItem<V> deserialize(byte[] payload) {
         int pos = 0;
-        List<V> values = new ArrayList<V>();
+        final List<V> values = new ArrayList<V>();
         while (pos < payload.length) {
-            byte[] lengthBytes = new byte[4];
+            final byte[] lengthBytes = new byte[4];
             System.arraycopy(payload, pos, lengthBytes, 0, 4);
-            int length = SerializationUtils.deserializeInt(lengthBytes);
+            final int length = SerializationUtils.deserializeInt(lengthBytes);
             pos += 4;
-            byte[] bytes = new byte[length];
+            final byte[] bytes = new byte[length];
             System.arraycopy(payload, pos, bytes, 0, length);
             pos += length;
-            V v = serializer.deserialize(bytes);
+            final V v = serializer.deserialize(bytes);
             values.add(v);
         }
         return new CollectionItem<V>(values);

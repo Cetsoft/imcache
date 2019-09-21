@@ -25,11 +25,11 @@ package com.cetsoft.imcache.cache;
  * @param <V> the value value
  */
 public interface CacheType<K, V> {
-    
-    /**
-     * Gets the type of the cache.
-     *
-     * @return the type
-     */
-    int getType();
+
+  /**
+   * Gets the type of the cache.
+   *
+   * @return the type
+   */
+  int getType();
 }

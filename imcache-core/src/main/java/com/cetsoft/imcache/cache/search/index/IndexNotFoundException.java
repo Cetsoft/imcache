@@ -19,8 +19,8 @@
 package com.cetsoft.imcache.cache.search.index;
 
 /**
- * The Class IndexNotFoundException is thrown where index for the cache is not
- * found for the attribute given.
+ * The Class IndexNotFoundException is thrown where index for the cache is not found for the
+ * attribute given.
  */
 public class IndexNotFoundException extends RuntimeException {
     

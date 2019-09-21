@@ -25,22 +25,22 @@ public class AndCriteria extends LogicalCriteria {
     
     /** The criterias. */
     private Criteria[] criterias;
-    
-    /**
-     * Instantiates a new and criteria.
-     *
-     * @param criterias the criterias
-     */
-    public AndCriteria(Criteria... criterias) {
+
+  /**
+   * Instantiates a new and criteria.
+   *
+   * @param criterias the criterias
+   */
+  public AndCriteria(Criteria... criterias) {
         this.criterias = criterias;
     }
-    
-    /**
-     * Gets the criterias.
-     *
-     * @return the criterias
-     */
-    public Criteria[] getCriterias() {
+
+  /**
+   * Gets the criterias.
+   *
+   * @return the criterias
+   */
+  public Criteria[] getCriterias() {
         return criterias;
     }
 }
