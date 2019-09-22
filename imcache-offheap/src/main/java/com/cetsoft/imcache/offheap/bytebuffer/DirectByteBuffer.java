@@ -124,20 +124,12 @@ public class DirectByteBuffer implements ByteBuffer {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.bytebuffer.ByteBuffer#get(int, byte[], int, int)
-   */
+
   public void get(int position, byte[] destination, int offset, int length) {
     copyToArray(getPosition(position), destination, ARRAY_BASE_OFFSET, offset, length);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.bytebuffer.ByteBuffer#put(int, byte[], int, int)
-   */
+
   public void put(int position, byte[] source, int offset, int length) {
     copyFromArray(source, ARRAY_BASE_OFFSET, offset, getPosition(position), length);
   }
@@ -152,11 +144,7 @@ public class DirectByteBuffer implements ByteBuffer {
     return address + position;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.bytebuffer.ByteBuffer#free()
-   */
+
   public void free() {
     try {
       java.lang.reflect.Field cleanerField = byteBuffer.getClass().getDeclaredField("cleaner");

@@ -64,11 +64,7 @@ public abstract class ConcurrentCachePopulator<K, V> extends AbstractCachePopula
     this(cache, DEFAULT_CONCURRENCY_LEVEL);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.CachePopulator#pupulate()
-   */
+
   public void pupulate() {
     final List<CacheEntry<K, V>> entries = loadEntries();
     if (entries.size() < concurrencyLevel) {

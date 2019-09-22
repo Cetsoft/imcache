@@ -53,31 +53,18 @@ public class ImcacheCacheManager implements CacheManager, InitializingBean {
     this.cacheBuilder = cacheBuilder;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.cache.CacheManager#getCache(java.lang.String)
-   */
+
   public Cache getCache(final String name) {
     return caches
         .computeIfAbsent(name, (cacheName) -> new ImcacheCache(cacheBuilder.build(cacheName)));
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.cache.CacheManager#getCacheNames()
-   */
+
   public Collection<String> getCacheNames() {
     return Collections.unmodifiableCollection(caches.keySet());
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-   */
+
   public void afterPropertiesSet() throws Exception {
 
   }

@@ -161,11 +161,7 @@ public class OffHeapCache<K, V> extends AbstractSearchableCache<K, V> {
         TimeUnit.MILLISECONDS);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#put(java.lang.Object, java.lang.Object)
-   */
+
   public void put(K key, V value) {
     put(key, value, TimeUnit.MILLISECONDS, evictionPeriod * 3);
   }
@@ -189,11 +185,7 @@ public class OffHeapCache<K, V> extends AbstractSearchableCache<K, V> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#get(java.lang.Object)
-   */
+
   public V get(K key) {
     final Pointer pointer = pointerMap.get(key);
     if (pointer != null) {
@@ -216,11 +208,7 @@ public class OffHeapCache<K, V> extends AbstractSearchableCache<K, V> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#invalidate(java.lang.Object)
-   */
+
   public V invalidate(K key) {
     writeLock(key);
     try {
@@ -236,20 +224,12 @@ public class OffHeapCache<K, V> extends AbstractSearchableCache<K, V> {
     return null;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#contains(java.lang.Object)
-   */
+
   public boolean contains(K key) {
     return pointerMap.containsKey(key);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#clear()
-   */
+
   public void clear() {
     pointerMap.clear();
     bufferStore.free();

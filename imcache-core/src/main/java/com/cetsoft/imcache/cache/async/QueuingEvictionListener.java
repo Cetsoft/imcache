@@ -47,13 +47,7 @@ public abstract class QueuingEvictionListener<K, V> implements AsyncEvictionList
    */
   protected int batchSize;
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.EvictionListener#onEviction(java.lang.Object,
-   * java.lang.Object)
-   */
+
   public void onEviction(K key, V value) {
     while (true) {
       try {
@@ -122,20 +116,12 @@ public abstract class QueuingEvictionListener<K, V> implements AsyncEvictionList
       this.value = value;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.cetsoft.imcache.cache.async.CacheTask#getKey()
-     */
+
     public K getKey() {
       return key;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.cetsoft.imcache.cache.async.CacheTask#getValue()
-     */
+
     public V getValue() {
       return value;
     }

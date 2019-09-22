@@ -62,20 +62,12 @@ public class CacheUtils {
       this.value = value;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.cetsoft.imcache.cache.CacheEntry#getKey()
-     */
+
     public K getKey() {
       return key;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.cetsoft.imcache.cache.CacheEntry#getValue()
-     */
+
     public V getValue() {
       return value;
     }

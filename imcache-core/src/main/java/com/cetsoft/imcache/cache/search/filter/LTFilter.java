@@ -31,12 +31,7 @@ public class LTFilter extends ArithmeticFilter {
     super(attributeName, value);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.filter.Filter#filter(java.util.List)
-   */
+
   @SuppressWarnings({"rawtypes", "unchecked"})
   public List<Object> filter(List<Object> objects) {
     List<Object> result = new ArrayList<Object>(objects.size());

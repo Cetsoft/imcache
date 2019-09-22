@@ -68,72 +68,44 @@ public class MultiRedisClient implements Client {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.Client#ping()
-   */
+
   @Override
   public void ping() throws ConnectionException, IOException {
     getClient().ping();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.Client#set(byte[], byte[])
-   */
+
   @Override
   public void set(byte[] key, byte[] value) throws ConnectionException, IOException {
     getClient().set(key, value);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.Client#set(byte[], byte[], long)
-   */
+
   @Override
   public void set(byte[] key, byte[] value, long expiryInMillis)
       throws ConnectionException, IOException {
     getClient().set(key, value, expiryInMillis);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.Client#get(byte[])
-   */
+
   @Override
   public byte[] get(byte[] key) throws ConnectionException, IOException {
     return getClient().get(key);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.Client#expire(byte[])
-   */
+
   @Override
   public byte[] expire(byte[] key) throws ConnectionException, IOException {
     return getClient().expire(key);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.Client#flushdb()
-   */
+
   @Override
   public void flushdb() throws ConnectionException, IOException {
     getClient().flushdb();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.Client#dbsize()
-   */
+
   @Override
   public int dbsize() throws ConnectionException, IOException {
     return getClient().dbsize();

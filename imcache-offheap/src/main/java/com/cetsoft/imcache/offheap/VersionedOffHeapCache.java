@@ -106,12 +106,7 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
         bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#put(java.lang.Object,
-   * java.lang.Object)
-   */
+
   public void put(K key, VersionedItem<V> value) {
     int version = value.getVersion();
     VersionedItem<V> exValue = get(key);
@@ -155,67 +150,37 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
     readWriteLock.writeUnlock(Math.abs(key.hashCode()));
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#get(java.lang.Object)
-   */
+
   public VersionedItem<V> get(K key) {
     return offHeapCache.get(key);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#invalidate(java.lang.Object)
-   */
+
   public VersionedItem<V> invalidate(K key) {
     return offHeapCache.invalidate(key);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#contains(java.lang.Object)
-   */
+
   public boolean contains(K key) {
     return offHeapCache.contains(key);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#clear()
-   */
+
   public void clear() {
     offHeapCache.clear();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#size()
-   */
+
   public long size() {
     return offHeapCache.size();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.SearchableCache#execute(com.cetsoft.imcache
-   * .cache.search.Query)
-   */
+
   public List<VersionedItem<V>> execute(Query query) {
     return offHeapCache.execute(query);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#getName()
-   */
+
   public String getName() {
     if (this.name != null) {
       return name;
@@ -254,13 +219,7 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
       this.evictionListener = evictionListener;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.cetsoft.imcache.cache.EvictionListener#onEviction(java.lang.Object
-     * , java.lang.Object)
-     */
+
     public void onEviction(K key, VersionedItem<V> value) {
       evictionListener.onEviction(key, value.getValue());
     }
@@ -288,11 +247,7 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
       this.cacheLoader = cacheLoader;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.cetsoft.imcache.cache.CacheLoader#load(java.lang.Object)
-     */
+
     public VersionedItem<V> load(K key) {
       V value = cacheLoader.load(key);
       if (value == null) {
@@ -324,13 +279,7 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
       this.serializer = serializer;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.cetsoft.imcache.serialization.Serializer#serialize(java.lang.
-     * Object)
-     */
+
     public byte[] serialize(VersionedItem<V> value) {
       byte[] payload = serializer.serialize(value.getValue());
       byte[] newPayload = new byte[payload.length + 4];
@@ -340,11 +289,7 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
       return newPayload;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.cetsoft.imcache.serialization.Serializer#deserialize(byte[])
-     */
+
     public VersionedItem<V> deserialize(byte[] payload) {
       byte[] newPayload = new byte[payload.length - 4];
       byte[] version = new byte[4];
@@ -379,55 +324,27 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
       this.indexHandler = indexHandler;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.cetsoft.imcache.cache.search.Indexable#addIndex(com.cetsoft.imcache
-     * .cache.search.CacheIndex)
-     */
+
     public void addIndex(String attributeName, IndexType type) {
       indexHandler.addIndex(attributeName, type);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.cetsoft.imcache.cache.search.IndexHandler#add(java.lang.Object,
-     * java.lang.Object)
-     */
+
     public void add(K key, VersionedItem<V> value) {
       this.indexHandler.add(key, value.getValue());
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.cetsoft.imcache.cache.search.IndexHandler#remove(java.lang.Object
-     * , java.lang.Object)
-     */
+
     public void remove(K key, VersionedItem<V> value) {
       this.indexHandler.remove(key, value.getValue());
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.cetsoft.imcache.cache.search.IndexHandler#clear()
-     */
+
     public void clear() {
       this.indexHandler.clear();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.cetsoft.imcache.cache.search.IndexHandler#execute(com.cetsoft
-     * .imcache.cache.search.Query)
-     */
+
     public List<K> execute(Query query) {
       return indexHandler.execute(query);
     }

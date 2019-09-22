@@ -85,13 +85,7 @@ public class SpringConfigurationExample {
    */
   protected static class CacheDaoImpl implements CacheDao {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.cetsoft.imcache.examples.SpringConfigurationExample.CacheDao#
-     * getAll()
-     */
+
     public List<String> getAll() {
       List<String> fruits = new ArrayList<String>();
       fruits.add("orange");

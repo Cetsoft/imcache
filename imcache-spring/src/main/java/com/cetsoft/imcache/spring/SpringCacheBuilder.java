@@ -82,11 +82,7 @@ public class SpringCacheBuilder extends BaseCacheBuilder {
     this.type = CacheCategory.valueOf(type.toUpperCase());
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.builder.CacheBuilder#build()
-   */
+
   public <K, V> Cache<K, V> build() {
 
     switch (this.type) {
@@ -121,11 +117,7 @@ public class SpringCacheBuilder extends BaseCacheBuilder {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.builder.CacheBuilder#build(String)
-   */
+
   public <K, V> Cache<K, V> build(final String name) {
     this.name = name;
     return build();

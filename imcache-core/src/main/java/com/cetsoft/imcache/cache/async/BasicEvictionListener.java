@@ -43,12 +43,7 @@ public abstract class BasicEvictionListener<K, V> implements AsyncEvictionListen
                 + NO_OF_EVICTION_LISTENERS.incrementAndGet() + ")"));
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.EvictionListener#onEviction(java.lang.Object, java.lang.Object)
-   */
+
   public void onEviction(final K key, final V value) {
     asyncEvictionExecutor.execute(() -> save(key, value));
   }

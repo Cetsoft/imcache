@@ -35,25 +35,13 @@ public class RangeIndex extends MultiValueIndex {
     this.map = new ConcurrentSkipListMap<Object, Set<Object>>();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.index.CacheIndexBase#lessThan(java.lang
-   * .Object)
-   */
+
   public List<Object> lessThan(Object value) {
     NavigableMap<Object, Set<Object>> map = getMap();
     return lower(map, map.lowerEntry(value));
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.index.CacheIndexBase#lessThanOrEqualsTo
-   * (java.lang.Object)
-   */
+
   public List<Object> lessThanOrEqualsTo(Object value) {
     List<Object> result = lessThan(value);
     equalsTo(value, result);
@@ -79,26 +67,14 @@ public class RangeIndex extends MultiValueIndex {
     return new ArrayList<Object>(resultSet);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.index.CacheIndexBase#greaterThan(java
-   * .lang.Object)
-   */
+
   public List<Object> greaterThan(Object value) {
     NavigableMap<Object, Set<Object>> map = getMap();
     Entry<Object, Set<Object>> current = map.higherEntry(value);
     return higher(map, current);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.index.CacheIndexBase#greaterThanOrEqualsTo
-   * (java.lang.Object)
-   */
+
   public List<Object> greaterThanOrEqualsTo(Object value) {
     List<Object> result = greaterThan(value);
     equalsTo(value, result);
@@ -139,13 +115,7 @@ public class RangeIndex extends MultiValueIndex {
     return new ArrayList<Object>(resultSet);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.index.CacheIndexBase#between(java.lang
-   * .Object, java.lang.Object)
-   */
+
   @SuppressWarnings("unchecked")
   public List<Object> between(Object lowerBound, Object upperBound) {
     Set<Object> resultSet = new HashSet<Object>();

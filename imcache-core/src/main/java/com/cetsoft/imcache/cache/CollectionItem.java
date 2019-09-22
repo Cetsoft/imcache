@@ -39,11 +39,7 @@ public class CollectionItem<V> implements CacheItem<Collection<V>> {
     this.objects = new ArrayList<V>(objects);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.CacheItem#getValue()
-   */
+
   @SuppressWarnings("unchecked")
   public Collection<V> getValue() {
     return (Collection<V>) objects;

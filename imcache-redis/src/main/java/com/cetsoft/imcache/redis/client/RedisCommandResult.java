@@ -34,11 +34,7 @@ public class RedisCommandResult implements CommandResult {
     this.connection = connection;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.CommandResult#getBytes()
-   */
+
   @Override
   public byte[] getBytes() throws ConnectionException, IOException {
     final RedisStreamReader streamReader = getStreamReader();
@@ -47,11 +43,7 @@ public class RedisCommandResult implements CommandResult {
     return streamReader.read(length);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.CommandResult#getStatus()
-   */
+
   @Override
   public String getStatus() throws ConnectionException, IOException {
     final RedisStreamReader streamReader = getStreamReader();
@@ -59,11 +51,7 @@ public class RedisCommandResult implements CommandResult {
     return streamReader.readString();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.CommandResult#getInt()
-   */
+
   @Override
   public int getInt() throws ConnectionException, IOException {
     final RedisStreamReader streamReader = getStreamReader();

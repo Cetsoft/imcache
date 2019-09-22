@@ -66,12 +66,7 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
     this.serializer = serializer;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#put(java.lang.Object,
-   * java.lang.Object)
-   */
+
   @Override
   public void put(final K key, final V value) {
     try {
@@ -95,11 +90,7 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#get(java.lang.Object)
-   */
+
   @Override
   @SuppressWarnings("unchecked")
   public V get(final K key) {
@@ -125,11 +116,7 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#invalidate(java.lang.Object)
-   */
+
   @Override
   @SuppressWarnings("unchecked")
   public V invalidate(final K key) {
@@ -147,21 +134,13 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#contains(java.lang.Object)
-   */
+
   @Override
   public boolean contains(final K key) {
     return get(key) != null;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#clear()
-   */
+
   @Override
   public void clear() {
     try {
@@ -173,11 +152,7 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#size()
-   */
+
   @Override
   public long size() {
     try {

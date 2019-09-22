@@ -77,11 +77,7 @@ public abstract class ScheduledEvictionListener<K, V> extends QueuingEvictionLis
     }, period, period, TimeUnit.MILLISECONDS);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.async.QueuingEvictionListener#drainQueue()
-   */
+
   @Override
   protected void drainQueue() {
     while (!cacheTasks.isEmpty()) {

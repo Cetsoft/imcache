@@ -54,12 +54,7 @@ public class DiffFilter extends LogicalFilter {
     return rightFilter;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.filter.Filter#filter(java.util.List)
-   */
+
   public List<Object> filter(List<Object> objects) {
     List<Object> leftResult = leftFilter.filter(objects);
     List<Object> rightResult = rightFilter.filter(objects);

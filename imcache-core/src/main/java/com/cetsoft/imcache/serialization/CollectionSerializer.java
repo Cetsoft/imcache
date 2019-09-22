@@ -44,12 +44,7 @@ public class CollectionSerializer<V> implements Serializer<CollectionItem<V>> {
     this.serializer = serializer;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.serialization.Serializer#serialize(java.lang.Object)
-   */
+
   public byte[] serialize(CollectionItem<V> value) {
     final List<Byte> bytes = new ArrayList<Byte>(value.getValue().size() * OBJECT_SIZE);
     for (V v : value.getValue()) {
@@ -68,11 +63,7 @@ public class CollectionSerializer<V> implements Serializer<CollectionItem<V>> {
     return payload;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.serialization.Serializer#deserialize(byte[])
-   */
+
   public CollectionItem<V> deserialize(byte[] payload) {
     int pos = 0;
     final List<V> values = new ArrayList<V>();

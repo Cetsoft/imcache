@@ -47,13 +47,7 @@ public abstract class AbstractSearchableCache<K, V> extends AbstractCache<K, V> 
     this.indexHandler = indexHandler;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.SearchableCache#get(com.cetsoft.imcache.cache
-   * .search.Query)
-   */
+
   @SuppressWarnings("unchecked")
   public List<V> execute(Query query) {
     List<K> keys = indexHandler.execute(query);

@@ -36,29 +36,17 @@ public class ImcacheCache implements org.springframework.cache.Cache {
     this.cache = cache;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.cache.Cache#getName()
-   */
+
   public String getName() {
     return cache.getName();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.cache.Cache#getNativeCache()
-   */
+
   public Object getNativeCache() {
     return cache;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.cache.Cache#get(java.lang.Object)
-   */
+
   public ValueWrapper get(Object key) {
     if (key == null) {
       return null;
@@ -67,39 +55,22 @@ public class ImcacheCache implements org.springframework.cache.Cache {
     return value != null ? new SimpleValueWrapper(value) : null;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.cache.Cache#put(java.lang.Object,
-   * java.lang.Object)
-   */
+
   public void put(Object key, Object value) {
     cache.put(key, value);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.cache.Cache#evict(java.lang.Object)
-   */
+
   public void evict(Object key) {
     cache.invalidate(key);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.cache.Cache#clear()
-   */
+
   public void clear() {
     cache.clear();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.cache.Cache#get(java.lang.Object, java.lang.Class)
-   */
+
   @SuppressWarnings("unchecked")
   public <T> T get(Object key, Class<T> clazz) {
     if (key == null) {

@@ -31,13 +31,7 @@ public class GTETFilter extends ArithmeticFilter {
     super(attributeName, value);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.filter.Filter#filter(com.cetsoft.imcache
-   * .cache.search.index.CacheIndex)
-   */
+
   @SuppressWarnings({"unchecked", "rawtypes"})
   public List<Object> filter(List<Object> objects) {
     List<Object> result = new ArrayList<Object>();

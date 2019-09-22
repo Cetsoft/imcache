@@ -24,11 +24,7 @@ public enum RedisCommands implements ByteCommand {
 
   public static final String CHARSET = "UTF-8";
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.ByteCommand#getBytes()
-   */
+
   public byte[] getBytes() {
     try {
       return this.name().getBytes(CHARSET);

@@ -46,12 +46,7 @@ public class OrFilter extends LogicalFilter {
     return filters;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.filter.Filter#filter(java.util.List)
-   */
+
   public List<Object> filter(List<Object> objects) {
     Set<Object> results = new HashSet<Object>();
     for (Filter filter : filters) {

@@ -150,11 +150,7 @@ public class QuerySearchExample {
       this.name = name;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#toString()
-     */
+
     @Override
     public String toString() {
       return "SimpleObject [i=" + i + ", j=" + j + ", k=" + k + ", name=" + name + "]";

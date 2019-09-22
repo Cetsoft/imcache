@@ -40,11 +40,7 @@ public class ImcacheType<K, V> implements CacheType<K, V> {
     ordinal = ordinalCounter.getAndIncrement();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.CacheType#getType()
-   */
+
   @Override
   public int getType() {
     return ordinal;

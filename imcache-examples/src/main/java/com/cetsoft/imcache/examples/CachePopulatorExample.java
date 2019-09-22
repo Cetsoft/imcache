@@ -46,11 +46,7 @@ public class CachePopulatorExample extends ConcurrentCachePopulator<String, Stri
     example();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.CachePopulator#loadEntries()
-   */
+
   public List<CacheEntry<String, String>> loadEntries() {
     final int SIZE = 3;
     List<CacheEntry<String, String>> cacheEntries = new ArrayList<CacheEntry<String, String>>(SIZE);

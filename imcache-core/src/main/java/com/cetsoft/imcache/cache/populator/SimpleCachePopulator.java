@@ -34,11 +34,7 @@ public abstract class SimpleCachePopulator<K, V> extends AbstractCachePopulator<
     super(cache);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.CachePopulator#pupulate()
-   */
+
   public void pupulate() {
     final List<CacheEntry<K, V>> entries = loadEntries();
     for (final CacheEntry<K, V> cacheEntry : entries) {

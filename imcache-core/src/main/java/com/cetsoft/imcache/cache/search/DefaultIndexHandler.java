@@ -56,13 +56,7 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
     indexes = new ConcurrentHashMap<>();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.Indexable#addIndex(com.cetsoft.imcache
-   * .cache.search.CacheIndex)
-   */
+
   public void addIndex(final String attributeName, final IndexType type) {
     if (type == IndexType.UNIQUE_HASH) {
       indexes.put(attributeName, new UniqueHashIndex());
@@ -73,12 +67,7 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.search.IndexHandler#add(java.lang.Object,
-   * java.lang.Object)
-   */
+
   public void add(final K key, final V value) {
     for (final String attributeName : indexes.keySet()) {
       final Object indexedKey = getIndexedKey(attributeName, value);
@@ -89,13 +78,7 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.IndexHandler#remove(java.lang.Object,
-   * java.lang.Object)
-   */
+
   public void remove(final K key, final V value) {
     for (final String attributeName : indexes.keySet()) {
       final Object indexedKey = getIndexedKey(attributeName, value);
@@ -106,22 +89,12 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.search.IndexHandler#clear()
-   */
+
   public void clear() {
     indexes.clear();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.IndexHandler#execute(com.cetsoft.imcache
-   * .cache.search.Query)
-   */
+
   @SuppressWarnings("unchecked")
   public List<K> execute(final Query query) {
     List<Object> results = execute(query.getCriteria());
@@ -212,7 +185,7 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
    * @return the list
    */
   protected List<Object> executeOr(final OrCriteria orCriteria) {
-    final Set<Object> results = new HashSet<Object>();
+    final Set<Object> results = new HashSet<>();
     for (Criteria innerCriteria : orCriteria.getCriterias()) {
       final List<Object> result = execute(innerCriteria);
       results.addAll(result);

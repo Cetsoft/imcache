@@ -102,31 +102,19 @@ public class RedisClient implements Client {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.Client#ping()
-   */
+
   @Override
   public void ping() throws ConnectionException, IOException {
     runVoidCommand(RedisCommands.PING);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.Client#set(byte[], byte[])
-   */
+
   @Override
   public void set(final byte[] key, final byte[] value) throws ConnectionException, IOException {
     runVoidCommand(RedisCommands.SET, key, value);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.Client#set(byte[], byte[], long)
-   */
+
   @Override
   public void set(final byte[] key, final byte[] value, final long expiryInMillis)
       throws ConnectionException, IOException {
@@ -154,11 +142,7 @@ public class RedisClient implements Client {
     return buffer.array();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.Client#get(byte[])
-   */
+
   @Override
   public byte[] get(final byte[] key) throws ConnectionException, IOException {
     transaction.open();
@@ -170,11 +154,7 @@ public class RedisClient implements Client {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.Client#expire(byte[])
-   */
+
   @Override
   public byte[] expire(final byte[] key) throws ConnectionException, IOException {
     transaction.open();
@@ -188,21 +168,13 @@ public class RedisClient implements Client {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.Client#flushdb()
-   */
+
   @Override
   public void flushdb() throws ConnectionException, IOException {
     runVoidCommand(RedisCommands.FLUSHDB);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.Client#dbsize()
-   */
+
   @Override
   public int dbsize() throws ConnectionException, IOException {
     transaction.open();

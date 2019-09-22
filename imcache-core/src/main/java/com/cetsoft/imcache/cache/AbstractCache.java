@@ -86,11 +86,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
     this.evictionListener = evictionListener;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#getName()
-   */
+
   public String getName() {
     return name;
   }

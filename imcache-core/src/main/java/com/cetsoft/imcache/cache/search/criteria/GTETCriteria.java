@@ -31,13 +31,7 @@ public class GTETCriteria extends ArithmeticCriteria {
     super(attributeName, value);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.criteria.Criteria#meets(com.cetsoft.
-   * imcache.cache.search.index.CacheIndex)
-   */
+
   public List<Object> meets(CacheIndex cacheIndex) {
     return cacheIndex.greaterThanOrEqualsTo(value);
   }

@@ -39,13 +39,7 @@ public class BetweenCriteria extends ArithmeticCriteria {
     this.upperBound = upperBound;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.criteria.Criteria#meets(com.cetsoft.
-   * imcache.cache.search.index.CacheIndex)
-   */
+
   public List<Object> meets(CacheIndex cacheIndex) {
     return cacheIndex.between(value, upperBound);
   }

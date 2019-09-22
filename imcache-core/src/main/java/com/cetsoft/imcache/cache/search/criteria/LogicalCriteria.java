@@ -18,35 +18,17 @@ package com.cetsoft.imcache.cache.search.criteria;
  */
 public abstract class LogicalCriteria implements Criteria {
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.criteria.Criteria#and(com.cetsoft.imcache
-   * .cache.search.criteria.Criteria)
-   */
+
   public Criteria and(Criteria criteria) {
     return new AndCriteria(this, criteria);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.criteria.Criteria#or(com.cetsoft.imcache
-   * .cache.search.criteria.Criteria)
-   */
+
   public Criteria or(Criteria criteria) {
     return new OrCriteria(this, criteria);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.criteria.Criteria#diff(com.cetsoft.imcache
-   * .cache.search.criteria.Criteria)
-   */
+
   public Criteria diff(Criteria criteria) {
     return new DiffCriteria(this, criteria);
   }

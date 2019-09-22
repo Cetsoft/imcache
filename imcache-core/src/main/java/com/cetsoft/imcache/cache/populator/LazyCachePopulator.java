@@ -37,11 +37,7 @@ public abstract class LazyCachePopulator<K, V> extends AbstractCachePopulator<K,
     super(cache);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.CachePopulator#pupulate()
-   */
+
   public void pupulate() {
     final ExecutorService lazyExecuor = Executors.newSingleThreadExecutor(runnable -> ThreadUtils
         .createDaemonThread(runnable,

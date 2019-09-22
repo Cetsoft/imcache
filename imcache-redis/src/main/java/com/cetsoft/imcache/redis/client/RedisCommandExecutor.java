@@ -34,13 +34,7 @@ public class RedisCommandExecutor implements CommandExecutor {
     this.connection = connection;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.redis.client.CommandExecutor#execute(com.cetsoft.
-   * imcache.redis.client.ByteCommand, byte[][])
-   */
+
   public void execute(final ByteCommand command, final byte[]... args)
       throws ConnectionException, IOException {
     connection.open();

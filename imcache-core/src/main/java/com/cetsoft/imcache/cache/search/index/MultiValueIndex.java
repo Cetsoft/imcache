@@ -37,13 +37,7 @@ public abstract class MultiValueIndex extends CacheIndexBase {
    */
   private Lock lock = new ReentrantLock();
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.index.CacheIndex#put(java.lang.Object,
-   * java.lang.Object)
-   */
+
   public void put(Object indexedKey, Object key) {
     Set<Object> keyList = map.get(indexedKey);
     if (keyList == null) {
@@ -63,13 +57,7 @@ public abstract class MultiValueIndex extends CacheIndexBase {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.index.CacheIndex#remove(java.lang.Object
-   * , java.lang.Object)
-   */
+
   public void remove(Object indexedKey, Object key) {
     Set<Object> keyList = map.get(indexedKey);
     if (keyList == null) {
@@ -88,13 +76,7 @@ public abstract class MultiValueIndex extends CacheIndexBase {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.cache.search.index.CacheIndex#equalsTo(java.lang.
-   * Object)
-   */
+
   public List<Object> equalsTo(Object expectedValue) {
     Set<Object> result = map.get(expectedValue);
     if (result != null) {

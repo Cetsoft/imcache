@@ -75,33 +75,17 @@ public class OffHeapByteBufferStore implements OffHeapStore {
     currentBuffer.set(availableBuffers.poll());
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.bytebuffer.OffHeapStore#retrieve(com.cetsoft.imcache
-   * .bytebuffer.Pointer)
-   */
+
   public byte[] retrieve(Pointer pointer) {
     return pointer.getOffHeapByteBuffer().retrieve(pointer);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.bytebuffer.OffHeapStore#remove(com.cetsoft.imcache
-   * .bytebuffer.Pointer)
-   */
+
   public byte[] remove(Pointer pointer) {
     return pointer.getOffHeapByteBuffer().remove(pointer);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#store(byte[])
-   */
+
   public Pointer store(byte[] payload, long expiry) {
     while (true) {
       try {
@@ -147,13 +131,7 @@ public class OffHeapByteBufferStore implements OffHeapStore {
     return store(payload, expiry);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cetsoft.imcache.bytebuffer.OffHeapStore#update(com.cetsoft.imcache
-   * .bytebuffer.Pointer, byte[])
-   */
+
   public Pointer update(final Pointer pointer, final byte[] payload, final long expiry) {
     try {
       return pointer.getOffHeapByteBuffer().update(pointer, payload, expiry);
@@ -162,11 +140,7 @@ public class OffHeapByteBufferStore implements OffHeapStore {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#dirtyMemory()
-   */
+
   public long dirtyMemory() {
     long dirtyMemory = 0;
     for (int i = 0; i < bufferSize; i++) {
@@ -175,11 +149,7 @@ public class OffHeapByteBufferStore implements OffHeapStore {
     return dirtyMemory;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#usedMemory()
-   */
+
   public long usedMemory() {
     long usedMemory = 0;
     for (int i = 0; i < bufferSize; i++) {
@@ -188,11 +158,7 @@ public class OffHeapByteBufferStore implements OffHeapStore {
     return usedMemory;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.bytebuffer.OffHeapStore#freeMemory()
-   */
+
   public long freeMemory() {
     long freeMemory = 0;
     for (int i = 0; i < bufferSize; i++) {

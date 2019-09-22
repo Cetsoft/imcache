@@ -38,11 +38,7 @@ public class RedisTransaction implements Transaction {
    */
   final AtomicReference<Thread> threadInTransaction = new AtomicReference<Thread>();
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.Transaction#open()
-   */
+
   @Override
   public void open() {
     final Thread currentThread = Thread.currentThread();
@@ -76,11 +72,7 @@ public class RedisTransaction implements Transaction {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.redis.client.Transaction#close()
-   */
+
   @Override
   public void close() {
     transactionLock.lock();
