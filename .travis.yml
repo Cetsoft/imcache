@@ -9,5 +9,5 @@ branches:
     - master
 
 after_success:
-  - mvn clean test
-  - mvn clean cobertura:cobertura coveralls:report
+  - ./mvnw clean test
+  - ./mvnw clean cobertura:cobertura coveralls:report
