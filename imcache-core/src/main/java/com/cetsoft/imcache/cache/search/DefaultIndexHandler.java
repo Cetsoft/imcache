@@ -26,11 +26,11 @@ import com.cetsoft.imcache.cache.search.index.RangeIndex;
 import com.cetsoft.imcache.cache.search.index.UniqueHashIndex;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The Class DefaultIndexHandler implements basic query execution.
@@ -41,6 +41,10 @@ import java.util.Set;
 public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
 
   /**
+   * Fields for the object.
+   */
+  private final Map<String, Field> fields = new ConcurrentHashMap<>();
+  /**
    * The indexes.
    */
   protected Map<String, CacheIndex> indexes;
@@ -49,7 +53,7 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
    * Instantiates a new simple query executor.
    */
   public DefaultIndexHandler() {
-    indexes = new HashMap<>();
+    indexes = new ConcurrentHashMap<>();
   }
 
   /*
@@ -223,12 +227,18 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
    * @param value the value
    * @return the indexed key
    */
-  protected Object getIndexedKey(String attributeName, V value) {
+  protected Object getIndexedKey(final String attributeName, final V value) {
     try {
-      Field field = value.getClass().getDeclaredField(attributeName);
-      field.setAccessible(true);
-      return field.get(value);
-    } catch (Exception e) {
+      return fields.computeIfAbsent(attributeName, (a) -> {
+        try {
+          final Field field = value.getClass().getDeclaredField(attributeName);
+          field.setAccessible(true);
+          return field;
+        } catch (NoSuchFieldException e) {
+          throw new AttributeException(e);
+        }
+      }).get(value);
+    } catch (IllegalAccessException e) {
       throw new AttributeException(e);
     }
   }
