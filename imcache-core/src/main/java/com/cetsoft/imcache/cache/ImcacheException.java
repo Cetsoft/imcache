@@ -13,26 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cetsoft.imcache.examples;
+package com.cetsoft.imcache.cache;
 
-import com.cetsoft.imcache.cache.Cache;
-import com.cetsoft.imcache.cache.builder.CacheBuilder;
+public class ImcacheException extends RuntimeException {
 
-public class RedisCacheExample {
+  /**
+   * The Constant serialVersionUID.
+   */
+  private static final long serialVersionUID = -1L;
 
-  static final String HOSTNAME = "localhost";
-  static final int PORT = 6379;
-
-  public static void example() {
-    //If hostname and port aren't given, default port and
-    //hostname will be used.
-    Cache<Integer, String> cache = CacheBuilder.redisCache().hostName(HOSTNAME).port(PORT).build();
-    cache.put(1, "apple");
-    System.out.println(cache.get(1));
+  public ImcacheException(Throwable e) {
+    super(e);
   }
-
-  public static void main(String[] args) {
-    example();
-  }
-
 }

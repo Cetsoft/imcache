@@ -41,9 +41,9 @@
 		<developer>
 			<name>Yusuf Aytas</name>
 			<organization>Cetsoft</organization>
-			<email>yusufaytas@cetsoft.com</email>
-			<organizationUrl>http://www.cetsoft.com</organizationUrl>
-			<url>http://www.yusufaytas.com</url>
+			<email>yusufaytas@gmail.com</email>
+			<organizationUrl>https://www.cetsoft.com</organizationUrl>
+			<url>https://www.yusufaytas.com</url>
 			<roles>
 				<role>Software Engineer</role>
 			</roles>
@@ -69,6 +69,36 @@
 						<id>attach-sources</id>
 						<goals>
 							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<header>license-header.txt</header>
+					<properties>
+						<owner>Cetsoft</owner>
+						<email>yusufaytas@gmail.com</email>
+						<project.inceptionYear>2013</project.inceptionYear>
+					</properties>
+					<excludes>
+						<exclude>**/README</exclude>
+						<exclude>src/test/resources/**</exclude>
+						<exclude>src/main/resources/**</exclude>
+						<exclude>**/*.xml</exclude>
+						<exclude>.mvn/**</exclude>
+						<exclude>mvnw.cmd</exclude>
+						<exclude>mvnw</exclude>
+						<exclude>LICENSE</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
 						</goals>
 					</execution>
 				</executions>

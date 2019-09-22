@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2014 Yusuf Aytas, http://www.yusufaytas.com
+/**
+ * Copyright © 2013 Cetsoft. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,9 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- * Author : Yusuf Aytas
- * Date   : Dec 29, 2013
  */
 package com.cetsoft.imcache.spring;
 
