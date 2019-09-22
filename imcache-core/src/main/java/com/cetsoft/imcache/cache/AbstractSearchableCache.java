@@ -12,17 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Aug 18, 2015
  */
 package com.cetsoft.imcache.cache;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.Query;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class AbstractSearchableCache.
@@ -30,7 +29,8 @@ import com.cetsoft.imcache.cache.search.Query;
  * @param <K> the key type
  * @param <V> the value type
  */
-public abstract class AbstractSearchableCache<K, V> extends AbstractCache<K, V> implements SearchableCache<K, V> {
+public abstract class AbstractSearchableCache<K, V> extends AbstractCache<K, V> implements
+    SearchableCache<K, V> {
 
   /**
    * The index handler.
@@ -40,36 +40,38 @@ public abstract class AbstractSearchableCache<K, V> extends AbstractCache<K, V> 
   /**
    * Instantiates a new abstract searchable cache.
    *
+   * @param name the cache name
    * @param cacheLoader the cache loader
    * @param evictionListener the eviction listener
    * @param indexHandler the index handler
    */
-  public AbstractSearchableCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,
-            IndexHandler<K, V> indexHandler) {
-        super(cacheLoader, evictionListener);
-        this.indexHandler = indexHandler;
+  public AbstractSearchableCache(final String name, final CacheLoader<K, V> cacheLoader,
+      final EvictionListener<K, V> evictionListener,
+      IndexHandler<K, V> indexHandler) {
+    super(name, cacheLoader, evictionListener);
+    this.indexHandler = indexHandler;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * com.cetsoft.imcache.cache.SearchableCache#get(com.cetsoft.imcache.cache
+   * .search.Query)
+   */
+  @SuppressWarnings("unchecked")
+  public List<V> execute(Query query) {
+    List<K> keys = indexHandler.execute(query);
+    List<V> values = new ArrayList<V>(keys.size());
+    for (K key : keys) {
+      V value = get(key);
+      if (value != null) {
+        values.add(value);
+      }
     }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.SearchableCache#get(com.cetsoft.imcache.cache
-     * .search.Query)
-     */
-    @SuppressWarnings("unchecked")
-    public List<V> execute(Query query) {
-        List<K> keys = indexHandler.execute(query);
-        List<V> values = new ArrayList<V>(keys.size());
-        for (K key : keys) {
-            V value = get(key);
-            if (value != null) {
-                values.add(value);
-            }
-        }
-        if (query.getFilter() != null) {
-            values = (List<V>) query.getFilter().filter((List<Object>) values);
-        }
-        return values;
+    if (query.getFilter() != null) {
+      values = (List<V>) query.getFilter().filter((List<Object>) values);
     }
+    return values;
+  }
 }

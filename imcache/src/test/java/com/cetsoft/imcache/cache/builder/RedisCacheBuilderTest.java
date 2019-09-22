@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Aug 18, 2015
  */
@@ -20,10 +20,9 @@ package com.cetsoft.imcache.cache.builder;
 
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.redis.RedisCache;
+import org.junit.Test;
 
 /**
  * The Class RedisCacheBuilderTest.
@@ -34,10 +33,12 @@ public class RedisCacheBuilderTest {
    * Builds the.
    */
   @Test
-    public void build() {
-        Cache<Object, Object> cache = CacheBuilder.redisCache().cacheLoader(AbstractCacheBuilder.CACHE_LOADER)
-                .evictionListener(AbstractCacheBuilder.EVICTION_LISTENER).serializer(AbstractCacheBuilder.SERIALIZER)
-                .hostName("localhost").port(6379).concurrencyLevel(2).build();
-        assertTrue(cache instanceof RedisCache);
-    }
+  public void build() {
+    Cache<Object, Object> cache = CacheBuilder.redisCache()
+        .cacheLoader(BaseCacheBuilder.DEFAULT_CACHE_LOADER)
+        .evictionListener(BaseCacheBuilder.DEFAULT_EVICTION_LISTENER)
+        .serializer(BaseCacheBuilder.DEFAULT_SERIALIZER)
+        .hostName("localhost").port(6379).concurrencyLevel(2).build();
+    assertTrue(cache instanceof RedisCache);
+  }
 }

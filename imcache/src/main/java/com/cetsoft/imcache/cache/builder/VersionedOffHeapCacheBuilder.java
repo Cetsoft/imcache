@@ -12,68 +12,82 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Jan 6, 2014
  */
 package com.cetsoft.imcache.cache.builder;
 
+import static com.cetsoft.imcache.cache.util.ArgumentUtils.checkNotEmpty;
+import static com.cetsoft.imcache.cache.util.ArgumentUtils.checkNotNull;
+
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
-import com.cetsoft.imcache.cache.SearchableCache;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 import com.cetsoft.imcache.offheap.OffHeapCache;
 import com.cetsoft.imcache.offheap.VersionedOffHeapCache;
 import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBufferStore;
 import com.cetsoft.imcache.serialization.Serializer;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The Class VersionedOffHeapCacheBuilder.
  */
-public class VersionedOffHeapCacheBuilder extends SearchableCacheBuilder {
+public class VersionedOffHeapCacheBuilder extends BaseCacheBuilder {
 
+  /**
+   * Cache number
+   */
+  private final AtomicInteger cacheNumber = new AtomicInteger();
   /**
    * The concurrency level.
    */
-  int concurrencyLevel;
-
+  private int concurrencyLevel;
   /**
    * The eviction period.
    */
-  long evictionPeriod;
-
+  private long evictionPeriod;
   /**
    * The buffer cleaner period.
    */
-  long bufferCleanerPeriod;
-
+  private long bufferCleanerPeriod;
   /**
    * The serializer.
    */
-  Serializer<Object> serializer;
-
+  private Serializer<Object> serializer;
   /**
    * The buffer cleaner threshold.
    */
-  float bufferCleanerThreshold;
-
+  private float bufferCleanerThreshold;
   /**
    * The byte buffer store.
    */
-  OffHeapByteBufferStore byteBufferStore;
+  private OffHeapByteBufferStore byteBufferStore;
 
   /**
    * Instantiates a new off heap cache builder.
    */
   public VersionedOffHeapCacheBuilder() {
-        super();
-        concurrencyLevel = OffHeapCache.DEFAULT_CONCURRENCY_LEVEL;
-        evictionPeriod = OffHeapCache.DEFAULT_EVICTION_PERIOD;
-        bufferCleanerPeriod = OffHeapCache.DEFAULT_BUFFER_CLEANER_PERIOD;
-        bufferCleanerThreshold = OffHeapCache.DEFAULT_BUFFER_CLEANER_THRESHOLD;
-        serializer = SERIALIZER;
-    }
+    super();
+    name = "imcache-versioned-offheap-cache-" + cacheNumber.incrementAndGet();
+    concurrencyLevel = OffHeapCache.DEFAULT_CONCURRENCY_LEVEL;
+    evictionPeriod = OffHeapCache.DEFAULT_EVICTION_PERIOD;
+    bufferCleanerPeriod = OffHeapCache.DEFAULT_BUFFER_CLEANER_PERIOD;
+    bufferCleanerThreshold = OffHeapCache.DEFAULT_BUFFER_CLEANER_THRESHOLD;
+  }
+
+  /**
+   * Name redis version off heap cache.
+   *
+   * @param name the name
+   * @return the versioned offheap cache builder
+   */
+  public VersionedOffHeapCacheBuilder name(final String name) {
+    checkNotEmpty(name, "name can't be null or empty");
+    this.name = name;
+    return this;
+  }
 
   /**
    * Storage.
@@ -81,10 +95,11 @@ public class VersionedOffHeapCacheBuilder extends SearchableCacheBuilder {
    * @param bufferStore the buffer store
    * @return the off heap cache builder
    */
-  public VersionedOffHeapCacheBuilder storage(OffHeapByteBufferStore bufferStore) {
-        this.byteBufferStore = bufferStore;
-        return this;
-    }
+  public VersionedOffHeapCacheBuilder storage(final OffHeapByteBufferStore bufferStore) {
+    checkNotNull(bufferStore, "buffer store can't be null");
+    this.byteBufferStore = bufferStore;
+    return this;
+  }
 
   /**
    * Serializer.
@@ -94,10 +109,11 @@ public class VersionedOffHeapCacheBuilder extends SearchableCacheBuilder {
    * @return the off heap cache builder
    */
   @SuppressWarnings("unchecked")
-    public <V> VersionedOffHeapCacheBuilder serializer(Serializer<V> serializer) {
-        this.serializer = (Serializer<Object>) serializer;
-        return this;
-    }
+  public <V> VersionedOffHeapCacheBuilder serializer(final Serializer<V> serializer) {
+    checkNotNull(serializer, "serializer store can't be null");
+    this.serializer = (Serializer<Object>) serializer;
+    return this;
+  }
 
   /**
    * Cache loader.
@@ -108,10 +124,11 @@ public class VersionedOffHeapCacheBuilder extends SearchableCacheBuilder {
    * @return the off heap cache builder
    */
   @SuppressWarnings("unchecked")
-    public <K, V> VersionedOffHeapCacheBuilder cacheLoader(CacheLoader<K, V> cacheLoader) {
-        this.cacheLoader = (CacheLoader<Object, Object>) cacheLoader;
-        return this;
-    }
+  public <K, V> VersionedOffHeapCacheBuilder cacheLoader(final CacheLoader<K, V> cacheLoader) {
+    checkNotNull(cacheLoader, "cache loader can't be null");
+    this.cacheLoader = (CacheLoader<Object, Object>) cacheLoader;
+    return this;
+  }
 
   /**
    * Eviction listener.
@@ -122,25 +139,28 @@ public class VersionedOffHeapCacheBuilder extends SearchableCacheBuilder {
    * @return the off heap cache builder
    */
   @SuppressWarnings("unchecked")
-    public <K, V> VersionedOffHeapCacheBuilder evictionListener(EvictionListener<K, V> evictionListener) {
-        this.evictionListener = (EvictionListener<Object, Object>) evictionListener;
-        return this;
-    }
+  public <K, V> VersionedOffHeapCacheBuilder evictionListener(
+      final EvictionListener<K, V> evictionListener) {
+    checkNotNull(evictionListener, "eviction listener can't be null");
+    this.evictionListener = (EvictionListener<Object, Object>) evictionListener;
+    return this;
+  }
 
   /**
-   * Query executer.
+   * Query executor.
    *
    * @param <K> the key type
    * @param <V> the value type
-   * @param indexHandler the query executer
+   * @param indexHandler the query executor
    * @return the versioned off heap cache builder
    */
   @SuppressWarnings("unchecked")
-    public <K, V> VersionedOffHeapCacheBuilder indexHandler(IndexHandler<K, V> indexHandler) {
-        this.indexHandler = (IndexHandler<Object, Object>) indexHandler;
-        isSearchable = true;
-        return this;
-    }
+  public <K, V> VersionedOffHeapCacheBuilder indexHandler(final IndexHandler<K, V> indexHandler) {
+    checkNotNull(indexHandler, "index handler can't be null");
+    this.indexHandler = (IndexHandler<Object, Object>) indexHandler;
+    isSearchable = true;
+    return this;
+  }
 
   /**
    * Concurrency level.
@@ -148,13 +168,13 @@ public class VersionedOffHeapCacheBuilder extends SearchableCacheBuilder {
    * @param concurrencyLevel the concurrency level
    * @return the off heap cache builder
    */
-  public VersionedOffHeapCacheBuilder concurrencyLevel(int concurrencyLevel) {
-        if (concurrencyLevel > 11 && concurrencyLevel < 0) {
-            throw new IllegalArgumentException("ConcurrencyLevel must be between 0 and 11 inclusive.");
-        }
-        this.concurrencyLevel = concurrencyLevel;
-        return this;
+  public VersionedOffHeapCacheBuilder concurrencyLevel(final int concurrencyLevel) {
+    if (concurrencyLevel > 11 && concurrencyLevel < 0) {
+      throw new IllegalArgumentException("ConcurrencyLevel must be between 0 and 11 inclusive.");
     }
+    this.concurrencyLevel = concurrencyLevel;
+    return this;
+  }
 
   /**
    * Eviction period.
@@ -162,10 +182,11 @@ public class VersionedOffHeapCacheBuilder extends SearchableCacheBuilder {
    * @param evictionPeriod the eviction period
    * @return the off heap cache builder
    */
-  public VersionedOffHeapCacheBuilder evictionPeriod(long evictionPeriod) {
-        this.evictionPeriod = evictionPeriod;
-        return this;
-    }
+  public VersionedOffHeapCacheBuilder evictionPeriod(final long evictionPeriod) {
+    checkNotNull(evictionPeriod, "eviction period must be positive");
+    this.evictionPeriod = evictionPeriod;
+    return this;
+  }
 
   /**
    * Buffer cleaner period.
@@ -173,10 +194,11 @@ public class VersionedOffHeapCacheBuilder extends SearchableCacheBuilder {
    * @param bufferCleanerPeriod the buffer cleaner period
    * @return the off heap cache builder
    */
-  public VersionedOffHeapCacheBuilder bufferCleanerPeriod(long bufferCleanerPeriod) {
-        this.bufferCleanerPeriod = bufferCleanerPeriod;
-        return this;
-    }
+  public VersionedOffHeapCacheBuilder bufferCleanerPeriod(final long bufferCleanerPeriod) {
+    checkNotNull(bufferCleanerPeriod, "buffer cleaner period must be positive");
+    this.bufferCleanerPeriod = bufferCleanerPeriod;
+    return this;
+  }
 
   /**
    * Buffer cleaner threshold.
@@ -184,10 +206,10 @@ public class VersionedOffHeapCacheBuilder extends SearchableCacheBuilder {
    * @param bufferCleanerThreshold the buffer cleaner threshold
    * @return the off heap cache builder
    */
-  public VersionedOffHeapCacheBuilder bufferCleanerThreshold(float bufferCleanerThreshold) {
-        this.bufferCleanerThreshold = bufferCleanerThreshold;
-        return this;
-    }
+  public VersionedOffHeapCacheBuilder bufferCleanerThreshold(final float bufferCleanerThreshold) {
+    this.bufferCleanerThreshold = bufferCleanerThreshold;
+    return this;
+  }
 
   /**
    * Adds the index.
@@ -196,41 +218,38 @@ public class VersionedOffHeapCacheBuilder extends SearchableCacheBuilder {
    * @param indexType the index type
    * @return the versioned off heap cache builder
    */
-  public VersionedOffHeapCacheBuilder addIndex(String attributeName, IndexType indexType) {
-        searchable();
-        indexHandler.addIndex(attributeName, indexType);
-        return this;
+  public synchronized VersionedOffHeapCacheBuilder addIndex(final String attributeName,
+      final IndexType indexType) {
+    handleIndex(attributeName, indexType);
+    return this;
+  }
+
+  /**
+   * Builds the cache.
+   *
+   * @param <K> the key type
+   * @param <V> the value type
+   * @return the cache
+   */
+  @SuppressWarnings("unchecked")
+  public <K, V> VersionedOffHeapCache build() {
+    if (this.byteBufferStore == null) {
+      throw new NecessaryArgumentException("ByteBufferStore must be set!");
     }
-    
-    /**
-     * Builds the cache.
-     *
-     * @param <K> the key type
-     * @param <V> the value type
-     * @return the cache
-     */
-    @SuppressWarnings("unchecked")
-    public <K, V> SearchableCache<K, V> build() {
-        if (this.byteBufferStore == null) {
-            throw new NecessaryArgumentException("ByteBufferStore must be set!");
-        }
-        return (SearchableCache<K, V>) new VersionedOffHeapCache<K, V>(byteBufferStore, (Serializer<V>) serializer,
-                (CacheLoader<K, V>) cacheLoader, (EvictionListener<K, V>) evictionListener,
-                (IndexHandler<K, V>) indexHandler, bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel,
-                evictionPeriod);
-    }
-    
-    /**
-     * Builds the cache.
-     *
-     * @param <K> the key type
-     * @param <V> the value type
-     * @param cacheName the cache name
-     * @return the searchable cache
-     */
-    public <K, V> SearchableCache<K, V> build(String cacheName) {
-        SearchableCache<K, V> cache = build();
-        return cache;
-    }
-    
+    return new VersionedOffHeapCache<>(name, byteBufferStore,
+        (Serializer<V>) serializer, (CacheLoader<K, V>) cacheLoader,
+        (EvictionListener<K, V>) evictionListener, (IndexHandler<K, V>) indexHandler,
+        bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
+  }
+
+  /**
+   * Builds the cache.
+   *
+   * @return the cache
+   */
+  @SuppressWarnings("unchecked")
+  public VersionedOffHeapCache build(final String name) {
+    return name(name).build();
+  }
+
 }

@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Sep 23, 2013
  */
@@ -30,49 +30,49 @@ import java.io.ObjectOutputStream;
  * The Class Serializer.
  */
 public class Serializer {
-    
-    /**
-     * Serialize.
-     *
-     * @param object the object
-     * @return the byte[]
-     */
-    public static byte[] serialize(Object object) {
-        byte[] objectBytes = null;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            ObjectOutput out = new ObjectOutputStream(bos);
-            out.writeObject(object);
-            objectBytes = bos.toByteArray();
-            out.close();
-            bos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return objectBytes;
+
+  /**
+   * Serialize.
+   *
+   * @param object the object
+   * @return the byte[]
+   */
+  public static byte[] serialize(Object object) {
+    byte[] objectBytes = null;
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    try {
+      ObjectOutput out = new ObjectOutputStream(bos);
+      out.writeObject(object);
+      objectBytes = bos.toByteArray();
+      out.close();
+      bos.close();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-    
-    /**
-     * Deserialize.
-     *
-     * @param <C> the generic type
-     * @param bytes the bytes
-     * @return the c
-     */
-    @SuppressWarnings("unchecked")
-    public static <C> C deserialize(byte[] bytes) {
-        Object object = null;
-        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-        try {
-            ObjectInput in = new ObjectInputStream(bis);
-            object = in.readObject();
-            bis.close();
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return (C) object;
+    return objectBytes;
+  }
+
+  /**
+   * Deserialize.
+   *
+   * @param <C> the generic type
+   * @param bytes the bytes
+   * @return the c
+   */
+  @SuppressWarnings("unchecked")
+  public static <C> C deserialize(byte[] bytes) {
+    Object object = null;
+    ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+    try {
+      ObjectInput in = new ObjectInputStream(bis);
+      object = in.readObject();
+      bis.close();
+      in.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
     }
+    return (C) object;
+  }
 }

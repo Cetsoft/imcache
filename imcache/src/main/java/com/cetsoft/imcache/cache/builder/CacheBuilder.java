@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Sep 23, 2013
  */
@@ -21,7 +21,7 @@ package com.cetsoft.imcache.cache.builder;
 /**
  * The Class CacheBuilder.
  */
-public abstract class CacheBuilder {
+public class CacheBuilder {
 
   /**
    * Heap cache.
@@ -29,8 +29,8 @@ public abstract class CacheBuilder {
    * @return the heap cache builder
    */
   public static HeapCacheBuilder heapCache() {
-        return new HeapCacheBuilder();
-    }
+    return new HeapCacheBuilder();
+  }
 
   /**
    * Off heap cache.
@@ -38,8 +38,8 @@ public abstract class CacheBuilder {
    * @return the off heap cache builder
    */
   public static OffHeapCacheBuilder offHeapCache() {
-        return new OffHeapCacheBuilder();
-    }
+    return new OffHeapCacheBuilder();
+  }
 
   /**
    * Versioned Off heap cache.
@@ -47,8 +47,8 @@ public abstract class CacheBuilder {
    * @return the off heap cache builder
    */
   public static VersionedOffHeapCacheBuilder versionedOffHeapCache() {
-        return new VersionedOffHeapCacheBuilder();
-    }
+    return new VersionedOffHeapCacheBuilder();
+  }
 
   /**
    * Redis cache.
@@ -56,7 +56,7 @@ public abstract class CacheBuilder {
    * @return the redis cache builder
    */
   public static RedisCacheBuilder redisCache() {
-        return new RedisCacheBuilder();
-    }
-    
+    return new RedisCacheBuilder();
+  }
+
 }

@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Nov 8, 2013
  */
@@ -24,9 +24,11 @@ import java.util.List;
  * The Class DiffFilter.
  */
 public class DiffFilter extends LogicalFilter {
-    
-    /** The right filter. */
-    private Filter leftFilter, rightFilter;
+
+  /**
+   * The right filter.
+   */
+  private Filter leftFilter, rightFilter;
 
   /**
    * Instantiates a new diff filter.
@@ -35,9 +37,9 @@ public class DiffFilter extends LogicalFilter {
    * @param rightFilter the right filter
    */
   public DiffFilter(Filter leftFilter, Filter rightFilter) {
-        this.leftFilter = leftFilter;
-        this.rightFilter = rightFilter;
-    }
+    this.leftFilter = leftFilter;
+    this.rightFilter = rightFilter;
+  }
 
   /**
    * Gets the left filter.
@@ -45,8 +47,8 @@ public class DiffFilter extends LogicalFilter {
    * @return the left filter
    */
   public Filter getLeftFilter() {
-        return leftFilter;
-    }
+    return leftFilter;
+  }
 
   /**
    * Gets the right filter.
@@ -54,22 +56,22 @@ public class DiffFilter extends LogicalFilter {
    * @return the right filter
    */
   public Filter getRightFilter() {
-        return rightFilter;
+    return rightFilter;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * com.cetsoft.imcache.cache.search.filter.Filter#filter(java.util.List)
+   */
+  public List<Object> filter(List<Object> objects) {
+    List<Object> leftResult = leftFilter.filter(objects);
+    List<Object> rightResult = rightFilter.filter(objects);
+    for (Object object : rightResult) {
+      leftResult.remove(object);
     }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.search.filter.Filter#filter(java.util.List)
-     */
-    public List<Object> filter(List<Object> objects) {
-        List<Object> leftResult = leftFilter.filter(objects);
-        List<Object> rightResult = rightFilter.filter(objects);
-        for (Object object : rightResult) {
-            leftResult.remove(object);
-        }
-        return leftResult;
-    }
-    
+    return leftResult;
+  }
+
 }

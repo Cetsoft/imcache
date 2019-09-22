@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Aug 17, 2015
  */
@@ -21,10 +21,10 @@ package com.cetsoft.imcache.examples;
 import org.junit.Test;
 
 public class SpringExampleTest {
-    
-    @Test
-    public void example() {
-        SpringCacheExample.example();
-        SpringConfigurationExample.example();
-    }
+
+  @Test
+  public void example() {
+    SpringCacheExample.example();
+    SpringConfigurationExample.example();
+  }
 }

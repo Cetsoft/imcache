@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Aug 4, 2015
  */
@@ -28,27 +28,27 @@ import com.cetsoft.imcache.redis.RedisCache;
 import org.junit.Test;
 
 public class SpringCacheBuilderTest {
-    
-    @Test
-    public void build() {
-        SpringCacheBuilder builder = new SpringCacheBuilder();
-        
-        builder.setType("heap");
-        assertTrue(builder.build() instanceof HeapCache);
-        
-        builder.setType("redis");
-        builder.setConcurrencyLevel(2);
-        assertTrue(builder.build() instanceof RedisCache);
-        
-        builder.setType("offheap");
-        builder.setEvictionPeriod(2);
-        builder.setBufferCleanerPeriod(1000);
-        builder.setBufferCleanerThreshold(0.6F);
-        OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 2);
-        builder.setBufferStore(bufferStore);
-        assertTrue(builder.build() instanceof OffHeapCache);
-        
-        builder.setType("versioned_offheap");
-        assertTrue(builder.build() instanceof VersionedOffHeapCache);
-    }
+
+  @Test
+  public void build() {
+    SpringCacheBuilder builder = new SpringCacheBuilder();
+
+    builder.setType("heap");
+    assertTrue(builder.build() instanceof HeapCache);
+
+    builder.setType("redis");
+    builder.setConcurrencyLevel(2);
+    assertTrue(builder.build() instanceof RedisCache);
+
+    builder.setType("offheap");
+    builder.setEvictionPeriod(2);
+    builder.setBufferCleanerPeriod(1000);
+    builder.setBufferCleanerThreshold(0.6F);
+    OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 2);
+    builder.setBufferStore(bufferStore);
+    assertTrue(builder.build() instanceof OffHeapCache);
+
+    builder.setType("versioned_offheap");
+    assertTrue(builder.build() instanceof VersionedOffHeapCache);
+  }
 }

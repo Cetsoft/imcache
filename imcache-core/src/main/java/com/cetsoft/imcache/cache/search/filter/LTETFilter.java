@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Nov 8, 2013
  */
@@ -33,26 +33,26 @@ public class LTETFilter extends ArithmeticFilter {
    * @param value the value
    */
   public LTETFilter(String attributeName, Object value) {
-        super(attributeName, value);
+    super(attributeName, value);
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * com.cetsoft.imcache.cache.search.filter.Filter#filter(com.cetsoft.imcache
+   * .cache.search.index.CacheIndex)
+   */
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  public List<Object> filter(List<Object> objects) {
+    List<Object> result = new ArrayList<Object>();
+    for (Object object : objects) {
+      Comparable objectValue = (Comparable) getAttributeValue(object);
+      if (objectValue.compareTo(value) <= 0) {
+        result.add(object);
+      }
     }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.search.filter.Filter#filter(com.cetsoft.imcache
-     * .cache.search.index.CacheIndex)
-     */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public List<Object> filter(List<Object> objects) {
-        List<Object> result = new ArrayList<Object>();
-        for (Object object : objects) {
-            Comparable objectValue = (Comparable) getAttributeValue(object);
-            if (objectValue.compareTo(value) <= 0) {
-                result.add(object);
-            }
-        }
-        return result;
-    }
-    
+    return result;
+  }
+
 }

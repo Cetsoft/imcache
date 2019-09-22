@@ -12,28 +12,28 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Aug 4, 2015
  */
 package com.cetsoft.imcache.cache.search;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import com.cetsoft.imcache.cache.search.criteria.Criteria;
 import com.cetsoft.imcache.cache.search.criteria.ETCriteria;
 import com.cetsoft.imcache.cache.search.filter.Filter;
 import com.cetsoft.imcache.cache.search.filter.LTFilter;
+import org.junit.Test;
 
 public class CacheQueryTest {
-    
-    @Test
-    public void cacheQuery() {
-        Criteria etCriteria = new ETCriteria("id", 3);
-        Filter ltFilter = new LTFilter("age", 18);
-        Query query = CacheQuery.newQuery().setCriteria(etCriteria).setFilter(ltFilter);
-        assertEquals(etCriteria, query.getCriteria());
-        assertEquals(ltFilter, query.getFilter());
-    }
+
+  @Test
+  public void cacheQuery() {
+    Criteria etCriteria = new ETCriteria("id", 3);
+    Filter ltFilter = new LTFilter("age", 18);
+    Query query = CacheQuery.newQuery().setCriteria(etCriteria).setFilter(ltFilter);
+    assertEquals(etCriteria, query.getCriteria());
+    assertEquals(ltFilter, query.getFilter());
+  }
 }

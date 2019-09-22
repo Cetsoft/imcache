@@ -3,8 +3,7 @@ package com.cetsoft.imcache.cache;
 /**
  * The enum Cache category.
  */
-public enum CacheCategory
-{
+public enum CacheCategory {
   /**
    * Heap cache category.
    */

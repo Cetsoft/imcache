@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Sep 29, 2013
  */
@@ -25,17 +25,19 @@ import com.cetsoft.imcache.cache.search.filter.Filter;
  * The Class CacheQuery is a base class for creating cache queries.
  */
 public class CacheQuery implements Query {
-    
-    /** The criterias. */
-    private Criteria criteria;
-    
-    private Filter filter;
-    
-    /**
-     * Instantiates a new cache query.
-     */
-    private CacheQuery() {
-    }
+
+  /**
+   * The criterias.
+   */
+  private Criteria criteria;
+
+  private Filter filter;
+
+  /**
+   * Instantiates a new cache query.
+   */
+  private CacheQuery() {
+  }
 
   /**
    * New instance.
@@ -43,25 +45,25 @@ public class CacheQuery implements Query {
    * @return the query
    */
   public static Query newQuery() {
-        return new CacheQuery();
-    }
-    
-    public Query setCriteria(Criteria criteria) {
-        this.criteria = criteria;
-        return this;
-    }
-    
-    public Criteria getCriteria() {
-        return this.criteria;
-    }
-    
-    public Query setFilter(Filter filter) {
-        this.filter = filter;
-        return this;
-    }
-    
-    public Filter getFilter() {
-        return this.filter;
-    }
-    
+    return new CacheQuery();
+  }
+
+  public Query setCriteria(Criteria criteria) {
+    this.criteria = criteria;
+    return this;
+  }
+
+  public Criteria getCriteria() {
+    return this.criteria;
+  }
+
+  public Query setFilter(Filter filter) {
+    this.filter = filter;
+    return this;
+  }
+
+  public Filter getFilter() {
+    return this.filter;
+  }
+
 }

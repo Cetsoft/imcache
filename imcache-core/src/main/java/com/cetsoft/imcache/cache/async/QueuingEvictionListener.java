@@ -52,24 +52,24 @@ public abstract class QueuingEvictionListener<K, V> implements AsyncEvictionList
    */
   protected int batchSize;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.cetsoft.imcache.cache.EvictionListener#onEviction(java.lang.Object,
-     * java.lang.Object)
-     */
-    public void onEviction(K key, V value) {
-        while (true) {
-            try {
-                CacheTask<K, V> cacheTask = createCacheTask(key, value);
-                cacheTasks.put(cacheTask);
-                return;
-            } catch (InterruptedException e) {
-              Thread.currentThread().interrupt();
-            }
-        }
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * com.cetsoft.imcache.cache.EvictionListener#onEviction(java.lang.Object,
+   * java.lang.Object)
+   */
+  public void onEviction(K key, V value) {
+    while (true) {
+      try {
+        CacheTask<K, V> cacheTask = createCacheTask(key, value);
+        cacheTasks.put(cacheTask);
+        return;
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
     }
+  }
 
   /**
    * Creates the cache task.
@@ -79,17 +79,17 @@ public abstract class QueuingEvictionListener<K, V> implements AsyncEvictionList
    * @return the cache task
    */
   public CacheTask<K, V> createCacheTask(K key, V value) {
-        return new SimpleCacheTask<K, V>(key, value);
-    }
+    return new SimpleCacheTask<K, V>(key, value);
+  }
 
   /**
    * Drain queue.
    */
   protected void drainQueue() {
-        final List<CacheTask<K, V>> cacheTasksToBeDrained = new ArrayList<CacheTask<K, V>>(batchSize);
-        cacheTasks.drainTo(cacheTasksToBeDrained, batchSize);
-        save(cacheTasksToBeDrained);
-    }
+    final List<CacheTask<K, V>> cacheTasksToBeDrained = new ArrayList<CacheTask<K, V>>(batchSize);
+    cacheTasks.drainTo(cacheTasksToBeDrained, batchSize);
+    save(cacheTasksToBeDrained);
+  }
 
   /**
    * Save all.
@@ -106,11 +106,15 @@ public abstract class QueuingEvictionListener<K, V> implements AsyncEvictionList
    */
   protected static class SimpleCacheTask<K, V> implements CacheTask<K, V> {
 
-        /** The key. */
-        private K key;
+    /**
+     * The key.
+     */
+    private K key;
 
-        /** The value. */
-        private V value;
+    /**
+     * The value.
+     */
+    private V value;
 
     /**
      * Instantiates a new simple cache task.
@@ -119,27 +123,27 @@ public abstract class QueuingEvictionListener<K, V> implements AsyncEvictionList
      * @param value the value
      */
     public SimpleCacheTask(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see com.cetsoft.imcache.cache.async.CacheTask#getKey()
-         */
-        public K getKey() {
-            return key;
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see com.cetsoft.imcache.cache.async.CacheTask#getValue()
-         */
-        public V getValue() {
-            return value;
-        }
-
+      this.key = key;
+      this.value = value;
     }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.cetsoft.imcache.cache.async.CacheTask#getKey()
+     */
+    public K getKey() {
+      return key;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.cetsoft.imcache.cache.async.CacheTask#getValue()
+     */
+    public V getValue() {
+      return value;
+    }
+
+  }
 }

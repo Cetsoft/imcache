@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Aug 3, 2015
  */
@@ -31,32 +31,32 @@ public class CacheBuilderTest {
    * Heap cache.
    */
   @Test
-    public void heapCache() {
-        assertTrue(CacheBuilder.heapCache() instanceof HeapCacheBuilder);
-    }
+  public void heapCache() {
+    assertTrue(CacheBuilder.heapCache() instanceof HeapCacheBuilder);
+  }
 
   /**
    * Redis cache.
    */
   @Test
-    public void redisCache() {
-        assertTrue(CacheBuilder.redisCache() instanceof RedisCacheBuilder);
-    }
+  public void redisCache() {
+    assertTrue(CacheBuilder.redisCache() instanceof RedisCacheBuilder);
+  }
 
   /**
    * Off heap cache.
    */
   @Test
-    public void offHeapCache() {
-        assertTrue(CacheBuilder.offHeapCache() instanceof OffHeapCacheBuilder);
-    }
+  public void offHeapCache() {
+    assertTrue(CacheBuilder.offHeapCache() instanceof OffHeapCacheBuilder);
+  }
 
   /**
    * Versioned off heap cache.
    */
   @Test
-    public void versionedOffHeapCache() {
-        assertTrue(CacheBuilder.versionedOffHeapCache() instanceof VersionedOffHeapCacheBuilder);
-    }
-    
+  public void versionedOffHeapCache() {
+    assertTrue(CacheBuilder.versionedOffHeapCache() instanceof VersionedOffHeapCacheBuilder);
+  }
+
 }

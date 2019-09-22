@@ -68,8 +68,9 @@ public class HeapCacheTest {
   public void setup() {
     MockitoAnnotations.initMocks(this);
     cache = spy(
-        new HeapCache<>(cacheLoader, evictionListener, indexHandler, 100, TimeUnit.MILLISECONDS,
-            1000));
+        new HeapCache<>("simple-cache", cacheLoader, evictionListener, indexHandler, 100,
+            TimeUnit.SECONDS,
+            10000));
   }
 
   /**
@@ -80,6 +81,19 @@ public class HeapCacheTest {
     cache.put("a", "b");
 
     assertEquals(cache.get("a"), "b");
+    verify(indexHandler).add("a", "b");
+  }
+
+  /**
+   * Put.
+   */
+  @Test
+  public void putAndGetWithTimeout() throws InterruptedException {
+    cache.put("a", "b", TimeUnit.MILLISECONDS, 0);
+
+    Thread.sleep(2);
+
+    assertEquals(cache.get("a"), null);
     verify(indexHandler).add("a", "b");
   }
 

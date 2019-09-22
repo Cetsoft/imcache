@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Jul 10, 2015
  */
@@ -31,8 +31,8 @@ public class ThreadUtils {
    * @return the thread
    */
   public static Thread createDaemonThread(Runnable runnable, String threadName) {
-        Thread daemonThread = new Thread(runnable, threadName);
-        daemonThread.setDaemon(true);
-        return daemonThread;
-    }
+    Thread daemonThread = new Thread(runnable, threadName);
+    daemonThread.setDaemon(true);
+    return daemonThread;
+  }
 }

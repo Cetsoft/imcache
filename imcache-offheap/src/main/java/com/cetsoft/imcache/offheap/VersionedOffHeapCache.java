@@ -44,15 +44,13 @@ import java.util.concurrent.TimeUnit;
 public class VersionedOffHeapCache<K, V> implements SearchableCache<K, VersionedItem<V>> {
 
   /**
-   * The name.
-   */
-  private String name;
-
-  /**
    * The off heap cache.
    */
   protected OffHeapCache<K, VersionedItem<V>> offHeapCache;
-
+  /**
+   * The name.
+   */
+  private String name;
   /**
    * The read write lock.
    */
@@ -61,6 +59,7 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
   /**
    * Instantiates a new versioned off heap cache.
    *
+   * @param name the name
    * @param serializer the serializer
    * @param byteBufferStore the byte buffer store
    * @param cacheLoader the cache loader
@@ -71,14 +70,14 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
    * @param concurrencyLevel the concurrency level
    * @param evictionPeriod the eviction period
    */
-  public VersionedOffHeapCache(final Serializer<VersionedItem<V>> serializer,
+  public VersionedOffHeapCache(final String name, final Serializer<VersionedItem<V>> serializer,
       final OffHeapByteBufferStore byteBufferStore,
       final CacheLoader<K, VersionedItem<V>> cacheLoader,
       final EvictionListener<K, VersionedItem<V>> evictionListener,
       final IndexHandler<K, VersionedItem<V>> indexHandler,
       final long bufferCleanerPeriod, final float bufferCleanerThreshold,
       final int concurrencyLevel, final long evictionPeriod) {
-    offHeapCache = new OffHeapCache<>(cacheLoader, evictionListener,
+    offHeapCache = new OffHeapCache<>(name, cacheLoader, evictionListener,
         indexHandler,
         byteBufferStore, serializer, bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel,
         evictionPeriod);
@@ -88,6 +87,7 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
   /**
    * Instantiates a new versioned off heap cache.
    *
+   * @param name the name
    * @param byteBufferStore the byte buffer store
    * @param serializer the serializer
    * @param cacheLoader the cache loader
@@ -98,12 +98,13 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
    * @param concurrencyLevel the concurrency level
    * @param evictionPeriod the eviction period
    */
-  public VersionedOffHeapCache(OffHeapByteBufferStore byteBufferStore, Serializer<V> serializer,
+  public VersionedOffHeapCache(final String name, final OffHeapByteBufferStore byteBufferStore,
+      final Serializer<V> serializer,
       CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,
       IndexHandler<K, V> indexHandler,
       long bufferCleanerPeriod, float bufferCleanerThreshold, int concurrencyLevel,
       long evictionPeriod) {
-    this(new CacheItemSerializer<V>(serializer), byteBufferStore,
+    this(name, new CacheItemSerializer<V>(serializer), byteBufferStore,
         new CacheItemCacheLoader<K, V>(cacheLoader),
         new CacheItemEvictionListener<K, V>(evictionListener),
         new CacheItemIndexHandler<K, V>(indexHandler),
@@ -138,7 +139,7 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 
   @Override
   public void put(K key, VersionedItem<V> value, TimeUnit timeUnit, long duration) {
-
+    offHeapCache.put(key, value, timeUnit, duration);
   }
 
   /**
@@ -213,6 +214,23 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
    */
   public List<VersionedItem<V>> execute(Query query) {
     return offHeapCache.execute(query);
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see com.cetsoft.imcache.cache.Cache#getName()
+   */
+  public String getName() {
+    if (this.name != null) {
+      return name;
+    }
+    return this.getClass().getName();
+  }
+
+  @Override
+  public CacheStats stats() {
+    return offHeapCache.stats();
   }
 
   /**
@@ -353,14 +371,14 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
   protected static class CacheItemIndexHandler<K, V> implements IndexHandler<K, VersionedItem<V>> {
 
     /**
-     * The query executer.
+     * The query executor.
      */
     private final IndexHandler<K, V> indexHandler;
 
     /**
-     * Instantiates a new cache item query executer.
+     * Instantiates a new cache item query executor.
      *
-     * @param indexHandler the query executer
+     * @param indexHandler the query executor
      */
     public CacheItemIndexHandler(IndexHandler<K, V> indexHandler) {
       this.indexHandler = indexHandler;
@@ -419,23 +437,6 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
       return indexHandler.execute(query);
     }
 
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cetsoft.imcache.cache.Cache#getName()
-   */
-  public String getName() {
-    if (this.name != null) {
-      return name;
-    }
-    return this.getClass().getName();
-  }
-
-  @Override
-  public CacheStats stats() {
-    return offHeapCache.stats();
   }
 
 }

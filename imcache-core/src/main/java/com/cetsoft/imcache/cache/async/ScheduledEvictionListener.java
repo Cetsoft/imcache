@@ -39,15 +39,17 @@ public abstract class ScheduledEvictionListener<K, V> extends QueuingEvictionLis
    */
   public static final long DEFAULT_PERIOD = 3000;
 
-    /** The Constant NO_OF_EVICTION_DRAINERS. */
-    private static final AtomicInteger NO_OF_EVICTION_DRAINERS = new AtomicInteger();
+  /**
+   * The Constant NO_OF_EVICTION_DRAINERS.
+   */
+  private static final AtomicInteger NO_OF_EVICTION_DRAINERS = new AtomicInteger();
 
   /**
    * Instantiates a new scheduled eviction listener.
    */
   public ScheduledEvictionListener() {
-        this(DEFAULT_BATCH_SIZE, DEFAULT_PERIOD, DEFAULT_QUEUE_SIZE);
-    }
+    this(DEFAULT_BATCH_SIZE, DEFAULT_PERIOD, DEFAULT_QUEUE_SIZE);
+  }
 
   /**
    * Instantiates a new scheduled eviction listener.
@@ -57,9 +59,9 @@ public abstract class ScheduledEvictionListener<K, V> extends QueuingEvictionLis
    * @param queueSize the queue size
    */
   public ScheduledEvictionListener(final int batchSize, final long period, final int queueSize) {
-        this.batchSize = batchSize;
-        init(period, queueSize);
-    }
+    this.batchSize = batchSize;
+    init(period, queueSize);
+  }
 
   /**
    * Inits the eviction listener
@@ -68,27 +70,28 @@ public abstract class ScheduledEvictionListener<K, V> extends QueuingEvictionLis
    * @param queueSize the queue size
    */
   protected void init(final long period, final int queueSize) {
-        cacheTasks = new ArrayBlockingQueue<>(queueSize);
-        final ScheduledExecutorService drainerService = Executors.newSingleThreadScheduledExecutor(
-            runnable -> ThreadUtils.createDaemonThread(runnable, "imcache:batchAsyncEvictionDrainer(thread="
-                    + NO_OF_EVICTION_DRAINERS.incrementAndGet() + ")"));
-        drainerService.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-                drainQueue();
-            }
-        }, period, period, TimeUnit.MILLISECONDS);
-    }
+    cacheTasks = new ArrayBlockingQueue<>(queueSize);
+    final ScheduledExecutorService drainerService = Executors.newSingleThreadScheduledExecutor(
+        runnable -> ThreadUtils
+            .createDaemonThread(runnable, "imcache:batchAsyncEvictionDrainer(thread="
+                + NO_OF_EVICTION_DRAINERS.incrementAndGet() + ")"));
+    drainerService.scheduleAtFixedRate(new Runnable() {
+      public void run() {
+        drainQueue();
+      }
+    }, period, period, TimeUnit.MILLISECONDS);
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.cetsoft.imcache.cache.async.QueuingEvictionListener#drainQueue()
-     */
-    @Override
-    protected void drainQueue() {
-        while (!cacheTasks.isEmpty()) {
-            super.drainQueue();
-        }
+  /*
+   * (non-Javadoc)
+   *
+   * @see com.cetsoft.imcache.cache.async.QueuingEvictionListener#drainQueue()
+   */
+  @Override
+  protected void drainQueue() {
+    while (!cacheTasks.isEmpty()) {
+      super.drainQueue();
     }
+  }
 
 }

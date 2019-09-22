@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Sep 26, 2013
  */
@@ -24,21 +24,25 @@ package com.cetsoft.imcache.cache;
  * @param <V> the value type
  */
 public class SimpleItem<V> implements VersionedItem<V> {
-    
-    /** The version. */
-    private int version;
-    
-    /** The value. */
-    private V value;
+
+  /**
+   * The version.
+   */
+  private int version;
+
+  /**
+   * The value.
+   */
+  private V value;
 
   /**
    * Instantiates a new simple cache item.
    *
    * @param value the value
    */
-  public SimpleItem(V value) {
-        this.value = value;
-    }
+  public SimpleItem(final V value) {
+    this.value = value;
+  }
 
   /**
    * Instantiates a new simple cache item.
@@ -46,46 +50,46 @@ public class SimpleItem<V> implements VersionedItem<V> {
    * @param version the version
    * @param value the value
    */
-  public SimpleItem(int version, V value) {
-        this.version = version;
-        this.value = value;
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.cetsoft.imcache.cache.CacheItem#getValue()
-     */
-    public V getValue() {
-        return value;
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.cetsoft.imcache.cache.VersionedCacheItem#getVersion()
-     */
-    public int getVersion() {
-        return version;
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.cetsoft.imcache.cache.VersionedCacheItem#setVersion(int)
-     */
-    public int setVersion(int version) {
-        this.version = version;
-        return version;
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.cetsoft.imcache.cache.VersionedItem#update(java.lang.Object)
-     */
-    public void update(V value) {
-        this.value = value;
-    }
-    
+  public SimpleItem(final int version, final V value) {
+    this.version = version;
+    this.value = value;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see com.cetsoft.imcache.cache.CacheItem#getValue()
+   */
+  public V getValue() {
+    return value;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see com.cetsoft.imcache.cache.VersionedCacheItem#getVersion()
+   */
+  public int getVersion() {
+    return version;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see com.cetsoft.imcache.cache.VersionedCacheItem#setVersion(int)
+   */
+  public int setVersion(int version) {
+    this.version = version;
+    return version;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see com.cetsoft.imcache.cache.VersionedItem#update(java.lang.Object)
+   */
+  public void update(V value) {
+    this.value = value;
+  }
+
 }

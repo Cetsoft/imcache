@@ -28,6 +28,46 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class OffHeapByteBuffer implements OffHeapStore {
 
   /**
+   * The Constant DEFAULT_CONCURRENCY_LEVEL.
+   */
+  public final static int DEFAULT_CONCURRENCY_LEVEL = 4;
+  /**
+   * The Constant POINTER_SIZE.
+   */
+  private final static int POINTER_SIZE = 5;
+  /**
+   * The Constant USED.
+   */
+  private final static byte USED = 1;
+  /**
+   * The Constant FREE.
+   */
+  private final static byte FREE = 0;
+  /**
+   * The Constant DIRTY.
+   */
+  private final static byte DIRTY = -1;
+  /**
+   * The direct byte buffer.
+   */
+  private final DirectByteBuffer directByteBuffer;
+  /**
+   * The read write lock.
+   */
+  private final StripedReadWriteLock readWriteLock;
+  /**
+   * The offset.
+   */
+  private final AtomicInteger offset = new AtomicInteger(0);
+  /**
+   * The used memory.
+   */
+  private final AtomicInteger usedMemory = new AtomicInteger(0);
+  /**
+   * The dirty memory.
+   */
+  private final AtomicInteger dirtyMemory = new AtomicInteger(0);
+  /**
    * The index.
    */
   private volatile int index;
@@ -35,56 +75,6 @@ public class OffHeapByteBuffer implements OffHeapStore {
    * The capacity.
    */
   private volatile long capacity;
-
-  /**
-   * The direct byte buffer.
-   */
-  private final DirectByteBuffer directByteBuffer;
-
-  /**
-   * The read write lock.
-   */
-  private final StripedReadWriteLock readWriteLock;
-
-  /**
-   * The Constant DEFAULT_CONCURRENCY_LEVEL.
-   */
-  public final static int DEFAULT_CONCURRENCY_LEVEL = 4;
-
-  /**
-   * The Constant POINTER_SIZE.
-   */
-  private final static int POINTER_SIZE = 5;
-
-  /**
-   * The offset.
-   */
-  private final AtomicInteger offset = new AtomicInteger(0);
-
-  /**
-   * The used memory.
-   */
-  private final AtomicInteger usedMemory = new AtomicInteger(0);
-
-  /**
-   * The dirty memory.
-   */
-  private final AtomicInteger dirtyMemory = new AtomicInteger(0);
-
-  /**
-   * The Constant USED.
-   */
-  private final static byte USED = 1;
-
-  /**
-   * The Constant FREE.
-   */
-  private final static byte FREE = 0;
-
-  /**
-   * The Constant DIRTY.
-   */
-  private final static byte DIRTY = -1;
 
   /**
    * Instantiates a new off heap byte buffer.
@@ -301,6 +291,15 @@ public class OffHeapByteBuffer implements OffHeapStore {
   }
 
   /**
+   * Gets the index.
+   *
+   * @return the index
+   */
+  public int getIndex() {
+    return index;
+  }
+
+  /**
    * The Class Allocation.
    */
   private static class Allocation {
@@ -343,14 +342,5 @@ public class OffHeapByteBuffer implements OffHeapStore {
     public int getLength() {
       return length;
     }
-  }
-
-  /**
-   * Gets the index.
-   *
-   * @return the index
-   */
-  public int getIndex() {
-    return index;
   }
 }

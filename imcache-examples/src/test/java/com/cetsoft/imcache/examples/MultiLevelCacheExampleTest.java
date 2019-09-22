@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Aug 4, 2015
  */
@@ -21,9 +21,9 @@ package com.cetsoft.imcache.examples;
 import org.junit.Test;
 
 public class MultiLevelCacheExampleTest {
-    
-    @Test
-    public void example() {
-        MultiLevelCacheExample.example();
-    }
+
+  @Test
+  public void example() {
+    MultiLevelCacheExample.example();
+  }
 }

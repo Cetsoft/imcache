@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Sep 16, 2013
  */
@@ -25,9 +25,11 @@ package com.cetsoft.imcache.cache;
  * @param <V> the value type
  */
 public abstract class AbstractCache<K, V> implements Cache<K, V> {
-    
-    /** The name. */
-    private String name;
+
+  /**
+   * The name.
+   */
+  private final String name;
 
   /**
    * The cache loader.
@@ -42,13 +44,16 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
   /**
    * Instantiates a new abstract cache.
    *
+   * @param name the cache name
    * @param cacheLoader the cache loader
    * @param evictionListener the eviction listener
    */
-  public AbstractCache(CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener) {
-        this.cacheLoader = cacheLoader;
-        this.evictionListener = evictionListener;
-    }
+  public AbstractCache(final String name, final CacheLoader<K, V> cacheLoader,
+      final EvictionListener<K, V> evictionListener) {
+    this.name = name;
+    this.cacheLoader = cacheLoader;
+    this.evictionListener = evictionListener;
+  }
 
   /**
    * Gets the cache loader.
@@ -56,8 +61,8 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
    * @return the cache loader
    */
   public CacheLoader<K, V> getCacheLoader() {
-        return cacheLoader;
-    }
+    return cacheLoader;
+  }
 
   /**
    * Sets the cache loader.
@@ -65,8 +70,8 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
    * @param cacheLoader the cache loader
    */
   public void setCacheLoader(CacheLoader<K, V> cacheLoader) {
-        this.cacheLoader = cacheLoader;
-    }
+    this.cacheLoader = cacheLoader;
+  }
 
   /**
    * Gets the eviction listener.
@@ -74,27 +79,24 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
    * @return the eviction listener
    */
   public EvictionListener<K, V> getEvictionListener() {
-        return evictionListener;
-    }
+    return evictionListener;
+  }
 
   /**
    * Sets the eviction listener.
    *
    * @param evictionListener the eviction listener
    */
-  public void setEvictionListener(EvictionListener<K, V> evictionListener) {
-        this.evictionListener = evictionListener;
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.cetsoft.imcache.cache.Cache#getName()
-     */
-    public String getName() {
-        if (name != null) {
-            return name;
-        }
-        return this.getClass().getName();
-    }
+  public void setEvictionListener(final EvictionListener<K, V> evictionListener) {
+    this.evictionListener = evictionListener;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see com.cetsoft.imcache.cache.Cache#getName()
+   */
+  public String getName() {
+    return name;
+  }
 }

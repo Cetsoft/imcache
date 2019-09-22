@@ -7,6 +7,7 @@ import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.concurrent.ConcurrentCacheStats;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.Expiry;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,22 +24,35 @@ public class HeapCache<K, V> extends AbstractSearchableCache<K, V> {
   /**
    * Instantiates a new abstract cache.
    *
+   * @param name the cache name
    * @param cacheLoader the cache loader
    * @param evictionListener the eviction listener
    * @param indexHandler the index handler
    * @param limit the limit
-   * @param timeUnit the time unit
-   * @param duration the duration
+   * @param expiryUnit the time unit
+   * @param expiry the duration
    */
-  public HeapCache(final CacheLoader<K, V> cacheLoader,
+  public HeapCache(final String name, final CacheLoader<K, V> cacheLoader,
       final EvictionListener<K, V> evictionListener, final IndexHandler<K, V> indexHandler,
-      final long limit, final TimeUnit timeUnit, final long duration) {
-    super(cacheLoader, evictionListener, indexHandler);
+      final long limit, final TimeUnit expiryUnit, final long expiry) {
+    super(name, cacheLoader, evictionListener, indexHandler);
     this.caffeine = Caffeine.newBuilder()
         .maximumSize(limit)
-        .expireAfterWrite(duration, timeUnit)
+        .expireAfter(new Expiry<K, V>() {
+          public long expireAfterCreate(K key, V value, long currentTime) {
+            return currentTime + expiryUnit.MILLISECONDS.toMillis(expiry);
+          }
+
+          public long expireAfterUpdate(K key, V value, long currentTime, long currentDuration) {
+            return Long.MAX_VALUE;
+          }
+
+          public long expireAfterRead(K key, V value, long currentTime, long currentDuration) {
+            return Long.MAX_VALUE;
+          }
+        })
         .removalListener((key, value, cause) -> {
-          evictionListener.onEviction((K)key, (V)value);
+          evictionListener.onEviction(key, value);
           stats.incrementEvictionCount();
         })
         .build();

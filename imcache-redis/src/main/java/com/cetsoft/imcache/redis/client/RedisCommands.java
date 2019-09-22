@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Aug 7, 2015
  */
@@ -24,21 +24,21 @@ import java.io.UnsupportedEncodingException;
  * The Enum RedisCommands are enum values of corresponding redis commands.
  */
 public enum RedisCommands implements ByteCommand {
-    
-    PING, SET, GET, EXPIRE, PEXPIRE, FLUSHDB, DBSIZE;
-    
-    public static final String CHARSET = "UTF-8";
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.cetsoft.imcache.redis.client.ByteCommand#getBytes()
-     */
-    public byte[] getBytes() {
-        try {
-            return this.name().getBytes(CHARSET);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+
+  PING, SET, GET, EXPIRE, PEXPIRE, FLUSHDB, DBSIZE;
+
+  public static final String CHARSET = "UTF-8";
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see com.cetsoft.imcache.redis.client.ByteCommand#getBytes()
+   */
+  public byte[] getBytes() {
+    try {
+      return this.name().getBytes(CHARSET);
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
     }
+  }
 }

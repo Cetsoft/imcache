@@ -18,11 +18,10 @@
  */
 package com.cetsoft.imcache.cache.populator;
 
-import com.cetsoft.imcache.cache.util.ThreadUtils;
-import java.util.List;
-
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.CacheEntry;
+import com.cetsoft.imcache.cache.util.ThreadUtils;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,12 +34,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public abstract class ConcurrentCachePopulator<K, V> extends AbstractCachePopulator<K, V> {
 
-    private final ExecutorService populatorExecutor;
-    /** The concurrency level. */
-    private int concurrencyLevel;
-
-    /** The Constant DEFAULT_CONCURRENCY_LEVEL. */
-    private final static int DEFAULT_CONCURRENCY_LEVEL = 11;
+  /**
+   * The Constant DEFAULT_CONCURRENCY_LEVEL.
+   */
+  private final static int DEFAULT_CONCURRENCY_LEVEL = 11;
+  private final ExecutorService populatorExecutor;
+  /**
+   * The concurrency level.
+   */
+  private int concurrencyLevel;
 
   /**
    * Instantiates a new concurrent cache populator.
@@ -49,13 +51,14 @@ public abstract class ConcurrentCachePopulator<K, V> extends AbstractCachePopula
    * @param concurrencyLevel the concurrency level
    */
   public ConcurrentCachePopulator(final Cache<K, V> cache, final int concurrencyLevel) {
-        super(cache);
-        this.concurrencyLevel = concurrencyLevel;
-        final AtomicInteger populatorThreadNumber = new AtomicInteger();
-        this.populatorExecutor = Executors.newFixedThreadPool(11,runnable -> ThreadUtils
-            .createDaemonThread(runnable,
-                "imcache:cachePopulator(name=" + cache.getName() + ",thread=" + populatorThreadNumber.incrementAndGet() + ")"));
-    }
+    super(cache);
+    this.concurrencyLevel = concurrencyLevel;
+    final AtomicInteger populatorThreadNumber = new AtomicInteger();
+    this.populatorExecutor = Executors.newFixedThreadPool(11, runnable -> ThreadUtils
+        .createDaemonThread(runnable,
+            "imcache:cachePopulator(name=" + cache.getName() + ",thread=" + populatorThreadNumber
+                .incrementAndGet() + ")"));
+  }
 
   /**
    * Instantiates a new concurrent cache populator.
@@ -63,30 +66,30 @@ public abstract class ConcurrentCachePopulator<K, V> extends AbstractCachePopula
    * @param cache the cache
    */
   public ConcurrentCachePopulator(Cache<K, V> cache) {
-        this(cache, DEFAULT_CONCURRENCY_LEVEL);
-    }
+    this(cache, DEFAULT_CONCURRENCY_LEVEL);
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.cetsoft.imcache.cache.CachePopulator#pupulate()
-     */
-    public void pupulate() {
-        final List<CacheEntry<K, V>> entries = loadEntries();
-        if (entries.size() < concurrencyLevel) {
-            concurrencyLevel = entries.size();
-        }
-        final int partition = entries.size() / concurrencyLevel;
-        for (int i = 0; i < concurrencyLevel; i++) {
-            final int start = i * partition;
-            final int stop = i != concurrencyLevel - 1 ? (i + 1) * partition : entries.size();
-            populatorExecutor.execute(() -> {
-                for (int j = start; j < stop; j++) {
-                    cache.put(entries.get(j).getKey(), entries.get(j).getValue());
-                }
-            });
-        }
-        populatorExecutor.shutdown();
+  /*
+   * (non-Javadoc)
+   *
+   * @see com.cetsoft.imcache.cache.CachePopulator#pupulate()
+   */
+  public void pupulate() {
+    final List<CacheEntry<K, V>> entries = loadEntries();
+    if (entries.size() < concurrencyLevel) {
+      concurrencyLevel = entries.size();
     }
+    final int partition = entries.size() / concurrencyLevel;
+    for (int i = 0; i < concurrencyLevel; i++) {
+      final int start = i * partition;
+      final int stop = i != concurrencyLevel - 1 ? (i + 1) * partition : entries.size();
+      populatorExecutor.execute(() -> {
+        for (int j = start; j < stop; j++) {
+          cache.put(entries.get(j).getKey(), entries.get(j).getValue());
+        }
+      });
+    }
+    populatorExecutor.shutdown();
+  }
 
 }

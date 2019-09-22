@@ -11,28 +11,28 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Nov 8, 2013
  */
 package com.cetsoft.imcache.cache.search.filter;
 
-import java.lang.reflect.Field;
-
 import com.cetsoft.imcache.cache.search.AttributeException;
+import java.lang.reflect.Field;
 
 /**
  * The Class ArithmeticFilter.
  */
 public abstract class ArithmeticFilter extends LogicalFilter {
-    
-    /** The attribute name. */
-    private String attributeName;
 
   /**
    * The expected value.
    */
   protected Object value;
+  /**
+   * The attribute name.
+   */
+  private String attributeName;
 
   /**
    * Instantiates a new equals to filter.
@@ -41,9 +41,9 @@ public abstract class ArithmeticFilter extends LogicalFilter {
    * @param value the expected value
    */
   public ArithmeticFilter(String attributeName, Object value) {
-        this.attributeName = attributeName;
-        this.value = value;
-    }
+    this.attributeName = attributeName;
+    this.value = value;
+  }
 
   /**
    * Gets the attribute name.
@@ -51,8 +51,8 @@ public abstract class ArithmeticFilter extends LogicalFilter {
    * @return the attribute name
    */
   public String getAttributeName() {
-        return attributeName;
-    }
+    return attributeName;
+  }
 
   /**
    * Gets the indexed key.
@@ -61,13 +61,13 @@ public abstract class ArithmeticFilter extends LogicalFilter {
    * @return the indexed key
    */
   protected Object getAttributeValue(Object object) {
-        try {
-            Field field = object.getClass().getDeclaredField(attributeName);
-            field.setAccessible(true);
-            return field.get(object);
-        } catch (Exception e) {
-            throw new AttributeException(e);
-        }
+    try {
+      Field field = object.getClass().getDeclaredField(attributeName);
+      field.setAccessible(true);
+      return field.get(object);
+    } catch (Exception e) {
+      throw new AttributeException(e);
     }
-    
+  }
+
 }

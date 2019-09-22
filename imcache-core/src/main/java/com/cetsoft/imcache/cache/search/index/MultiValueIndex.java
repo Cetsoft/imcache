@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Oct 26, 2013
  */
@@ -32,80 +32,81 @@ import java.util.concurrent.locks.ReentrantLock;
  * values.
  */
 public abstract class MultiValueIndex extends CacheIndexBase {
-    
-    /** The lock. */
-    private Lock lock = new ReentrantLock();
 
   /**
    * The map.
    */
   protected Map<Object, Set<Object>> map;
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.search.index.CacheIndex#put(java.lang.Object,
-     * java.lang.Object)
-     */
-    public void put(Object indexedKey, Object key) {
-        Set<Object> keyList = map.get(indexedKey);
+  /**
+   * The lock.
+   */
+  private Lock lock = new ReentrantLock();
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * com.cetsoft.imcache.cache.search.index.CacheIndex#put(java.lang.Object,
+   * java.lang.Object)
+   */
+  public void put(Object indexedKey, Object key) {
+    Set<Object> keyList = map.get(indexedKey);
+    if (keyList == null) {
+      lock.lock();
+      try {
+        keyList = map.get(indexedKey);
         if (keyList == null) {
-            lock.lock();
-            try {
-                keyList = map.get(indexedKey);
-                if (keyList == null) {
-                    keyList = new HashSet<Object>(3);
-                    map.put(indexedKey, keyList);
-                }
-            } finally {
-                lock.unlock();
-            }
+          keyList = new HashSet<Object>(3);
+          map.put(indexedKey, keyList);
         }
-        synchronized (keyList) {
-            keyList.add(key);
-        }
+      } finally {
+        lock.unlock();
+      }
     }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.search.index.CacheIndex#remove(java.lang.Object
-     * , java.lang.Object)
-     */
-    public void remove(Object indexedKey, Object key) {
-        Set<Object> keyList = map.get(indexedKey);
-        if (keyList == null) {
-            return;
-        }
-        synchronized (keyList) {
-            keyList.remove(key);
-            if (keyList.size() == 0) {
-                lock.lock();
-                try {
-                    map.remove(key);
-                } finally {
-                    lock.unlock();
-                }
-            }
-        }
+    synchronized (keyList) {
+      keyList.add(key);
     }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.search.index.CacheIndex#equalsTo(java.lang.
-     * Object)
-     */
-    public List<Object> equalsTo(Object expectedValue) {
-        Set<Object> result = map.get(expectedValue);
-        if (result != null) {
-            synchronized (result) {
-                return new ArrayList<Object>(result);
-            }
-        }
-        return Collections.emptyList();
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * com.cetsoft.imcache.cache.search.index.CacheIndex#remove(java.lang.Object
+   * , java.lang.Object)
+   */
+  public void remove(Object indexedKey, Object key) {
+    Set<Object> keyList = map.get(indexedKey);
+    if (keyList == null) {
+      return;
     }
+    synchronized (keyList) {
+      keyList.remove(key);
+      if (keyList.size() == 0) {
+        lock.lock();
+        try {
+          map.remove(key);
+        } finally {
+          lock.unlock();
+        }
+      }
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * com.cetsoft.imcache.cache.search.index.CacheIndex#equalsTo(java.lang.
+   * Object)
+   */
+  public List<Object> equalsTo(Object expectedValue) {
+    Set<Object> result = map.get(expectedValue);
+    if (result != null) {
+      synchronized (result) {
+        return new ArrayList<Object>(result);
+      }
+    }
+    return Collections.emptyList();
+  }
 }

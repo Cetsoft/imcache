@@ -12,15 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Sep 28, 2013
  */
 package com.cetsoft.imcache.cache.search;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.cetsoft.imcache.cache.search.index.CacheIndex;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The Class ConcurrentIndexHandler handles the indexes for the caches in a thread-safe manner.
@@ -31,10 +30,10 @@ import com.cetsoft.imcache.cache.search.index.CacheIndex;
 public class ConcurrentIndexHandler<K, V> extends DefaultIndexHandler<K, V> {
 
   /**
-   * Instantiates a new concurrent query executer.
+   * Instantiates a new concurrent query executor.
    */
   public ConcurrentIndexHandler() {
-        indexes = new ConcurrentHashMap<String, CacheIndex>();
-    }
-    
+    indexes = new ConcurrentHashMap<String, CacheIndex>();
+  }
+
 }

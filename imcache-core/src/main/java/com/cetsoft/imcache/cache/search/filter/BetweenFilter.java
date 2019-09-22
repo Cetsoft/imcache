@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Nov 8, 2013
  */
@@ -26,9 +26,11 @@ import java.util.List;
  * upperBound.
  */
 public class BetweenFilter extends ArithmeticFilter {
-    
-    /** The upper bound. */
-    private Object upperBound;
+
+  /**
+   * The upper bound.
+   */
+  private Object upperBound;
 
   /**
    * Instantiates a new between filter.
@@ -38,27 +40,27 @@ public class BetweenFilter extends ArithmeticFilter {
    * @param upperBound the upper bound
    */
   public BetweenFilter(String attributeName, Object lowerBound, Object upperBound) {
-        super(attributeName, lowerBound);
-        this.upperBound = upperBound;
+    super(attributeName, lowerBound);
+    this.upperBound = upperBound;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * com.cetsoft.imcache.cache.search.filter.Filter#filter(com.cetsoft.imcache
+   * .cache.search.index.CacheIndex)
+   */
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public List<Object> filter(List<Object> objects) {
+    List<Object> result = new ArrayList<Object>();
+    for (Object object : objects) {
+      Comparable objectValue = (Comparable) getAttributeValue(object);
+      if (objectValue.compareTo(value) < 0 && objectValue.compareTo(upperBound) > 0) {
+        result.add(object);
+      }
     }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.search.filter.Filter#filter(com.cetsoft.imcache
-     * .cache.search.index.CacheIndex)
-     */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public List<Object> filter(List<Object> objects) {
-        List<Object> result = new ArrayList<Object>();
-        for (Object object : objects) {
-            Comparable objectValue = (Comparable) getAttributeValue(object);
-            if (objectValue.compareTo(value) < 0 && objectValue.compareTo(upperBound) > 0) {
-                result.add(object);
-            }
-        }
-        return result;
-    }
-    
+    return result;
+  }
+
 }

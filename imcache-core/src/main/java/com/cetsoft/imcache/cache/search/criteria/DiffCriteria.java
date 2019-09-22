@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Nov 8, 2013
  */
@@ -23,9 +23,11 @@ package com.cetsoft.imcache.cache.search.criteria;
  * rightCriteria.
  */
 public class DiffCriteria extends LogicalCriteria {
-    
-    /** The right criteria. */
-    private Criteria leftCriteria, rightCriteria;
+
+  /**
+   * The right criteria.
+   */
+  private Criteria leftCriteria, rightCriteria;
 
   /**
    * Instantiates a new diff criteria.
@@ -34,9 +36,9 @@ public class DiffCriteria extends LogicalCriteria {
    * @param rightCriteria the right criteria
    */
   public DiffCriteria(Criteria leftCriteria, Criteria rightCriteria) {
-        this.leftCriteria = leftCriteria;
-        this.rightCriteria = rightCriteria;
-    }
+    this.leftCriteria = leftCriteria;
+    this.rightCriteria = rightCriteria;
+  }
 
   /**
    * Gets the left criteria.
@@ -44,8 +46,8 @@ public class DiffCriteria extends LogicalCriteria {
    * @return the left criteria
    */
   public Criteria getLeftCriteria() {
-        return leftCriteria;
-    }
+    return leftCriteria;
+  }
 
   /**
    * Gets the right criteria.
@@ -53,7 +55,7 @@ public class DiffCriteria extends LogicalCriteria {
    * @return the right criteria
    */
   public Criteria getRightCriteria() {
-        return rightCriteria;
-    }
-    
+    return rightCriteria;
+  }
+
 }

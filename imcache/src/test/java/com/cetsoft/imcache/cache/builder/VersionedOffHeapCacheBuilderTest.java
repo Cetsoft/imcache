@@ -39,10 +39,10 @@ public class VersionedOffHeapCacheBuilderTest {
   public void build() {
     OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
     Cache<Object, Object> cache = CacheBuilder.versionedOffHeapCache().storage(bufferStore)
-        .cacheLoader(AbstractCacheBuilder.CACHE_LOADER)
-        .evictionListener(AbstractCacheBuilder.EVICTION_LISTENER)
+        .cacheLoader(BaseCacheBuilder.DEFAULT_CACHE_LOADER)
+        .evictionListener(BaseCacheBuilder.DEFAULT_EVICTION_LISTENER)
         .indexHandler(DummyIndexHandler.getInstance())
-        .addIndex("age", IndexType.RANGE_INDEX).serializer(AbstractCacheBuilder.SERIALIZER)
+        .addIndex("age", IndexType.RANGE_INDEX).serializer(BaseCacheBuilder.DEFAULT_SERIALIZER)
         .bufferCleanerPeriod(100).bufferCleanerThreshold(0.6f).concurrencyLevel(10)
         .evictionPeriod(100).build();
     assertTrue(cache instanceof SearchableCache);

@@ -31,20 +31,17 @@ import java.util.concurrent.locks.ReentrantLock;
 public class OffHeapByteBufferStore implements OffHeapStore {
 
   /**
-   * The buffer size.
-   */
-  private volatile int bufferSize;
-
-  /**
    * The buffers.
    */
   protected OffHeapByteBuffer[] buffers;
-
   /**
    * The available buffers.
    */
   protected BlockingQueue<Integer> availableBuffers;
-
+  /**
+   * The buffer size.
+   */
+  private volatile int bufferSize;
   /**
    * The current buffer.
    */

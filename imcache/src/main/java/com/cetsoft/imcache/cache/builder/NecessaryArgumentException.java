@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Jan 6, 2014
  */
@@ -22,9 +22,11 @@ package com.cetsoft.imcache.cache.builder;
  * The Class NecessaryArgumentException.
  */
 public class NecessaryArgumentException extends RuntimeException {
-    
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = -7420658148641484150L;
+
+  /**
+   * The Constant serialVersionUID.
+   */
+  private static final long serialVersionUID = -7420658148641484150L;
 
   /**
    * Instantiates a new necessary argument exception.
@@ -32,6 +34,6 @@ public class NecessaryArgumentException extends RuntimeException {
    * @param exception the exception
    */
   public NecessaryArgumentException(String exception) {
-        super(exception);
-    }
+    super(exception);
+  }
 }

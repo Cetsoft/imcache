@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : May 20, 2014
  */
@@ -28,43 +28,44 @@ import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBufferStore;
  * The Class MultiLevelCacheExample.
  */
 public class MultiLevelCacheExample {
-    
-    @SuppressWarnings("null")
-    public static void example() {
-        final CacheDao cacheDao = null;// This is just for example purposes.
-        OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(10000, 10);
-        final Cache<String, String> offHeapCache = CacheBuilder.offHeapCache().storage(bufferStore)
-                .cacheLoader((CacheLoader<String, String>) key -> cacheDao.load(key)).evictionListener(
-                (EvictionListener<String, String>) (key, value) -> cacheDao.store(key, value)).build();
-        Cache<String, String> multiLevelCache = CacheBuilder.heapCache().cacheLoader(
-            (CacheLoader<String, String>) key -> offHeapCache.get(key)).evictionListener(
-            (EvictionListener<String, String>) (key, value) -> offHeapCache.put(key, value)).capacity(10000).build();
-        multiLevelCache.put("red", "apple");
-    }
-    
+
+  @SuppressWarnings("null")
+  public static void example() {
+    final CacheDao cacheDao = null;// This is just for example purposes.
+    OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(10000, 10);
+    final Cache<String, String> offHeapCache = CacheBuilder.offHeapCache().storage(bufferStore)
+        .cacheLoader((CacheLoader<String, String>) key -> cacheDao.load(key)).evictionListener(
+            (EvictionListener<String, String>) (key, value) -> cacheDao.store(key, value)).build();
+    Cache<String, String> multiLevelCache = CacheBuilder.heapCache().cacheLoader(
+        (CacheLoader<String, String>) key -> offHeapCache.get(key)).evictionListener(
+        (EvictionListener<String, String>) (key, value) -> offHeapCache.put(key, value))
+        .capacity(10000).build();
+    multiLevelCache.put("red", "apple");
+  }
+
+  public static void main(String[] args) {
+    example();
+  }
+
+  /**
+   * The Interface CacheDao.
+   */
+  public static interface CacheDao {
+
     /**
-     * The Interface CacheDao.
+     * Load.
+     *
+     * @param key the key
+     * @return the string
      */
-    public static interface CacheDao {
-        
-        /**
-         * Load.
-         *
-         * @param key the key
-         * @return the string
-         */
-        String load(String key);
-        
-        /**
-         * Store.
-         *
-         * @param key the key
-         * @param value the value
-         */
-        void store(String key, String value);
-    }
-    
-    public static void main(String[] args) {
-        example();
-    }
+    String load(String key);
+
+    /**
+     * Store.
+     *
+     * @param key the key
+     * @param value the value
+     */
+    void store(String key, String value);
+  }
 }

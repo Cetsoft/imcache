@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Aug 3, 2015
  */
@@ -20,12 +20,12 @@ package com.cetsoft.imcache.cache.builder;
 
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.SearchableCache;
 import com.cetsoft.imcache.cache.search.index.IndexType;
 import com.cetsoft.imcache.heap.HeapCache;
+import java.util.concurrent.TimeUnit;
+import org.junit.Test;
 
 /**
  * The type Heap cache builder test.
@@ -36,11 +36,14 @@ public class HeapCacheBuilderTest {
    * Build.
    */
   @Test
-    public void build() {
-        Cache<Object, Object> cache = CacheBuilder.heapCache().cacheLoader(AbstractCacheBuilder.CACHE_LOADER)
-                .evictionListener(AbstractCacheBuilder.EVICTION_LISTENER).indexHandler(DummyIndexHandler.getInstance())
-                .addIndex("age", IndexType.RANGE_INDEX).capacity(1000).build();
-        assertTrue(cache instanceof SearchableCache);
-        assertTrue(cache instanceof HeapCache);
-    }
+  public void build() {
+    Cache<Object, Object> cache = CacheBuilder.heapCache()
+        .cacheLoader(BaseCacheBuilder.DEFAULT_CACHE_LOADER)
+        .name("my-heap-cache").expiryUnit(TimeUnit.DAYS).expiry(1)
+        .evictionListener(BaseCacheBuilder.DEFAULT_EVICTION_LISTENER)
+        .indexHandler(DummyIndexHandler.getInstance())
+        .addIndex("age", IndexType.RANGE_INDEX).capacity(1000).build();
+    assertTrue(cache instanceof SearchableCache);
+    assertTrue(cache instanceof HeapCache);
+  }
 }

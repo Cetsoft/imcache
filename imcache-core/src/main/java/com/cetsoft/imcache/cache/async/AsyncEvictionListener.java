@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Jun 5, 2014
  */
@@ -29,4 +29,5 @@ import com.cetsoft.imcache.cache.EvictionListener;
  * @param <V> the value type
  */
 public interface AsyncEvictionListener<K, V> extends EvictionListener<K, V> {
+
 }

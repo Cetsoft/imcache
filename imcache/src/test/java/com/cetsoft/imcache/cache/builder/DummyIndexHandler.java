@@ -12,17 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Aug 3, 2015
  */
 package com.cetsoft.imcache.cache.builder;
 
-import java.util.List;
-
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.cache.search.Query;
 import com.cetsoft.imcache.cache.search.index.IndexType;
+import java.util.List;
 
 /**
  * The type Dummy index handler.
@@ -35,28 +34,28 @@ public class DummyIndexHandler implements IndexHandler<Object, Object> {
    * @return the instance
    */
   public static DummyIndexHandler getInstance() {
-        return new DummyIndexHandler();
-    }
-    
-    @Override
-    public void addIndex(String attributeName, IndexType type) {
-    }
-    
-    @Override
-    public void add(Object key, Object value) {
-    }
-    
-    @Override
-    public void remove(Object key, Object value) {
-    }
-    
-    @Override
-    public void clear() {
-    }
-    
-    @Override
-    public List<Object> execute(Query query) {
-        return null;
-    }
-    
+    return new DummyIndexHandler();
+  }
+
+  @Override
+  public void addIndex(String attributeName, IndexType type) {
+  }
+
+  @Override
+  public void add(Object key, Object value) {
+  }
+
+  @Override
+  public void remove(Object key, Object value) {
+  }
+
+  @Override
+  public void clear() {
+  }
+
+  @Override
+  public List<Object> execute(Query query) {
+    return null;
+  }
+
 }

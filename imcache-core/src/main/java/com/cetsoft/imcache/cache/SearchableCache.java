@@ -12,15 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Sep 28, 2013
  */
 package com.cetsoft.imcache.cache;
 
-import java.util.List;
-
 import com.cetsoft.imcache.cache.search.Query;
+import java.util.List;
 
 /**
  * The Interface SearchableCache provides query execution for the caches.

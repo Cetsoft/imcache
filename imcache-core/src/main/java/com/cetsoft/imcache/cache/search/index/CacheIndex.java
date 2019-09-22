@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Sep 29, 2013
  */
@@ -92,5 +92,5 @@ public interface CacheIndex {
    * @return the list
    */
   List<Object> between(Object lowerBound, Object upperBound);
-    
+
 }

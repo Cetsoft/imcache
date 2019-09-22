@@ -12,15 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Nov 8, 2013
  */
 package com.cetsoft.imcache.cache.search.criteria;
 
-import java.util.List;
-
 import com.cetsoft.imcache.cache.search.index.CacheIndex;
+import java.util.List;
 
 /**
  * The Class ETCriteria is used to retrieve items equals to the given value.
@@ -34,18 +33,18 @@ public class ETCriteria extends ArithmeticCriteria {
    * @param expectedValue the expected value
    */
   public ETCriteria(String attributeName, Object expectedValue) {
-        super(attributeName, expectedValue);
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.search.criteria.Criteria#meets(com.cetsoft.
-     * imcache.cache.search.index.CacheIndex)
-     */
-    public List<Object> meets(CacheIndex cacheIndex) {
-        return cacheIndex.equalsTo(value);
-    }
-    
+    super(attributeName, expectedValue);
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * com.cetsoft.imcache.cache.search.criteria.Criteria#meets(com.cetsoft.
+   * imcache.cache.search.index.CacheIndex)
+   */
+  public List<Object> meets(CacheIndex cacheIndex) {
+    return cacheIndex.equalsTo(value);
+  }
+
 }

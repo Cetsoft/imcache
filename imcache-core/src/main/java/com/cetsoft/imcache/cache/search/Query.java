@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Sep 28, 2013
  */
@@ -28,6 +28,13 @@ import com.cetsoft.imcache.cache.search.filter.Filter;
 public interface Query {
 
   /**
+   * Returns list of Criterias.
+   *
+   * @return the list
+   */
+  Criteria getCriteria();
+
+  /**
    * Adds the criteria.
    *
    * @param criteria the criteria
@@ -36,11 +43,11 @@ public interface Query {
   Query setCriteria(Criteria criteria);
 
   /**
-   * Returns list of Criterias.
+   * Gets the filter.
    *
-   * @return the list
+   * @return the filter
    */
-  Criteria getCriteria();
+  Filter getFilter();
 
   /**
    * Sets the filter.
@@ -49,11 +56,4 @@ public interface Query {
    * @return the query
    */
   Query setFilter(Filter filter);
-
-  /**
-   * Gets the filter.
-   *
-   * @return the filter
-   */
-  Filter getFilter();
 }

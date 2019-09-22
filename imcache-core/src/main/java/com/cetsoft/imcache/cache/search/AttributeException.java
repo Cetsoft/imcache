@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Aug 4, 2015
  */
@@ -22,9 +22,11 @@ package com.cetsoft.imcache.cache.search;
  * The Class AttributeException is thrown where attribute is not found for the given object.
  */
 public class AttributeException extends RuntimeException {
-    
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = 8883617514611224481L;
+
+  /**
+   * The Constant serialVersionUID.
+   */
+  private static final long serialVersionUID = 8883617514611224481L;
 
   /**
    * Instantiates a new attribute exception.
@@ -32,6 +34,6 @@ public class AttributeException extends RuntimeException {
    * @param exception the exception
    */
   public AttributeException(Exception exception) {
-        super(exception);
-    }
+    super(exception);
+  }
 }

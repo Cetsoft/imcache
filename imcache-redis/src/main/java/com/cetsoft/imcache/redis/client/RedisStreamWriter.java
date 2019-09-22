@@ -27,116 +27,120 @@ import java.io.OutputStream;
  */
 public class RedisStreamWriter implements Closeable {
 
-    /** The Constant BUFFER_SIZE. */
-    public static final int BUFFER_SIZE = 8192;
+  /**
+   * The Constant BUFFER_SIZE.
+   */
+  public static final int BUFFER_SIZE = 8192;
+  /**
+   * The buffer.
+   */
+  final byte[] buffer = new byte[BUFFER_SIZE];
+  /**
+   * The output stream.
+   */
+  private final OutputStream outputStream;
+  /**
+   * The position.
+   */
+  int position;
 
-    /** The position. */
-    int position;
+  /**
+   * Instantiates a new redis stream writer.
+   *
+   * @param outputStream the output stream
+   */
+  public RedisStreamWriter(OutputStream outputStream) {
+    this.outputStream = outputStream;
+  }
 
-    /** The buffer. */
-    final byte[] buffer = new byte[BUFFER_SIZE];
+  /**
+   * Flushes output stream.
+   *
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  public void flush() throws IOException {
+    flushBuffer();
+    outputStream.flush();
+  }
 
-    /** The output stream. */
-    private final OutputStream outputStream;
-
-    /**
-     * Instantiates a new redis stream writer.
-     *
-     * @param outputStream the output stream
-     */
-    public RedisStreamWriter(OutputStream outputStream) {
-        this.outputStream = outputStream;
+  /**
+   * Write.
+   *
+   * @param theByte the the byte
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  public void write(byte theByte) throws IOException {
+    if (position == buffer.length) {
+      flushBuffer();
     }
+    buffer[position++] = theByte;
+  }
 
-    /**
-     * Flushes output stream.
-     *
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public void flush() throws IOException {
-        flushBuffer();
-        outputStream.flush();
+  /**
+   * Writes an int value.
+   *
+   * @param value the value
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  public void write(int value) throws IOException {
+    if (value < 0) {
+      write(RedisBytes.DASH_BYTE);
+      value = -value;
     }
+    byte[] intValue = ("" + value).getBytes("UTF-8");
+    write(intValue);
+  }
 
-    /**
-     * Write.
-     *
-     * @param theByte the the byte
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public void write(byte theByte) throws IOException {
-        if (position == buffer.length) {
-            flushBuffer();
-        }
-        buffer[position++] = theByte;
-    }
+  /**
+   * Writes a new line.
+   *
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  public void writeNewLine() throws IOException {
+    write(RedisBytes.CARRIAGE_RETURN_BYTE);
+    write(RedisBytes.LINE_FEED_BYTE);
+  }
 
-    /**
-     * Writes an int value.
-     *
-     * @param value the value
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public void write(int value) throws IOException {
-        if (value < 0) {
-            write(RedisBytes.DASH_BYTE);
-            value = -value;
-        }
-        byte[] intValue = ("" + value).getBytes("UTF-8");
-        write(intValue);
+  /**
+   * Writes given bytes.
+   *
+   * @param bytes the bytes
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  public void write(byte[] bytes) throws IOException {
+    int offset = 0;
+    while (offset != bytes.length) {
+      int length = bytes.length - offset;
+      if (buffer.length - position < bytes.length - offset) {
+        length = buffer.length - position;
+      }
+      write(bytes, offset, length);
+      offset += length;
+      position += length;
+      flushBuffer();
     }
+  }
 
-    /**
-     * Writes a new line.
-     *
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public void writeNewLine() throws IOException {
-        write(RedisBytes.CARRIAGE_RETURN_BYTE);
-        write(RedisBytes.LINE_FEED_BYTE);
-    }
+  /**
+   * Flushes buffer.
+   *
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  protected void flushBuffer() throws IOException {
+    outputStream.write(buffer, 0, position);
+    position = 0;
+  }
 
-    /**
-     * Writes given bytes.
-     *
-     * @param bytes the bytes
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public void write(byte[] bytes) throws IOException {
-        int offset = 0;
-        while (offset != bytes.length) {
-            int length = bytes.length - offset;
-            if (buffer.length - position < bytes.length - offset) {
-                length = buffer.length - position;
-            }
-            write(bytes, offset, length);
-            offset += length;
-            position += length;
-            flushBuffer();
-        }
-    }
-
-    /**
-     * Flushes buffer.
-     *
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    protected void flushBuffer() throws IOException {
-        outputStream.write(buffer, 0, position);
-        position = 0;
-    }
-
-    /**
-     * Writes bytes to output stream starting with offset and ending with offset
-     * + length.
-     *
-     * @param bytes the bytes
-     * @param offset the offset
-     * @param length the length
-     */
-    public void write(final byte[] bytes, final int offset, final int length){
-        System.arraycopy(bytes, offset, buffer, position, length);
-    }
+  /**
+   * Writes bytes to output stream starting with offset and ending with offset + length.
+   *
+   * @param bytes the bytes
+   * @param offset the offset
+   * @param length the length
+   */
+  public void write(final byte[] bytes, final int offset, final int length) {
+    System.arraycopy(bytes, offset, buffer, position, length);
+  }
 
   @Override
   public void close() throws IOException {

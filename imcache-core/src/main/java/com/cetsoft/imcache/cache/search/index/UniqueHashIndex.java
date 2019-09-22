@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Sep 29, 2013
  */
@@ -33,41 +33,41 @@ public class UniqueHashIndex extends CacheIndexBase {
    * The map.
    */
   protected Map<Object, Object> map = new ConcurrentHashMap<Object, Object>();
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.search.index.CacheIndex#put(java.lang.Object,
-     * java.lang.Object)
-     */
-    public void put(Object indexedKey, Object key) {
-        map.put(indexedKey, key);
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.search.index.CacheIndex#remove(java.lang.Object
-     * , java.lang.Object)
-     */
-    public void remove(Object indexedKey, Object key) {
-        map.remove(indexedKey);
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.search.index.CacheIndex#equalsTo(java.lang.
-     * Object)
-     */
-    public List<Object> equalsTo(Object expectedValue) {
-        List<Object> keys = new ArrayList<Object>(1);
-        Object indexedKey = map.get(expectedValue);
-        keys.add(indexedKey);
-        return keys;
-    }
-    
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * com.cetsoft.imcache.cache.search.index.CacheIndex#put(java.lang.Object,
+   * java.lang.Object)
+   */
+  public void put(Object indexedKey, Object key) {
+    map.put(indexedKey, key);
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * com.cetsoft.imcache.cache.search.index.CacheIndex#remove(java.lang.Object
+   * , java.lang.Object)
+   */
+  public void remove(Object indexedKey, Object key) {
+    map.remove(indexedKey);
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * com.cetsoft.imcache.cache.search.index.CacheIndex#equalsTo(java.lang.
+   * Object)
+   */
+  public List<Object> equalsTo(Object expectedValue) {
+    List<Object> keys = new ArrayList<Object>(1);
+    Object indexedKey = map.get(expectedValue);
+    keys.add(indexedKey);
+    return keys;
+  }
+
 }

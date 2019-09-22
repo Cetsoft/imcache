@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Jun 5, 2014
  */
@@ -37,16 +37,18 @@ public abstract class ConcurrentEvictionListener<K, V> extends QueuingEvictionLi
    * The Constant DEFAULT_CONCURRENCY_LEVEL.
    */
   public static final int DEFAULT_CONCURRENCY_LEVEL = 3;
-    
-    /** The Constant NO_OF_EVICTION_DRAINERS. */
-    private static final AtomicInteger NO_OF_EVICTION_DRAINERS = new AtomicInteger();
+
+  /**
+   * The Constant NO_OF_EVICTION_DRAINERS.
+   */
+  private static final AtomicInteger NO_OF_EVICTION_DRAINERS = new AtomicInteger();
 
   /**
    * Instantiates a new concurrent eviction listener.
    */
   public ConcurrentEvictionListener() {
-        this(DEFAULT_BATCH_SIZE, DEFAULT_QUEUE_SIZE, DEFAULT_CONCURRENCY_LEVEL);
-    }
+    this(DEFAULT_BATCH_SIZE, DEFAULT_QUEUE_SIZE, DEFAULT_CONCURRENCY_LEVEL);
+  }
 
   /**
    * Instantiates a new concurrent eviction listener.
@@ -55,10 +57,11 @@ public abstract class ConcurrentEvictionListener<K, V> extends QueuingEvictionLi
    * @param queueSize the queue size
    * @param concurrencyLevel the concurrency level
    */
-  public ConcurrentEvictionListener(final int batchSize, final int queueSize, final int concurrencyLevel) {
-        this.batchSize = batchSize;
-        init(queueSize, concurrencyLevel);
-    }
+  public ConcurrentEvictionListener(final int batchSize, final int queueSize,
+      final int concurrencyLevel) {
+    this.batchSize = batchSize;
+    init(queueSize, concurrencyLevel);
+  }
 
   /**
    * Inits the eviction listener
@@ -67,18 +70,19 @@ public abstract class ConcurrentEvictionListener<K, V> extends QueuingEvictionLi
    * @param concurrencyLevel the concurrency level
    */
   protected void init(int queueSize, int concurrencyLevel) {
-        cacheTasks = new ArrayBlockingQueue<>(queueSize);
-        final ExecutorService drainerService = Executors.newFixedThreadPool(concurrencyLevel,
-            runnable -> ThreadUtils.createDaemonThread(runnable, "imcache:concurrentAsyncEvictionDrainer(thread="
-                    + NO_OF_EVICTION_DRAINERS.incrementAndGet() + ")"));
-        // Creates runnables to drain cache task queue constantly.
-        for (int i = 0; i < concurrencyLevel; i++) {
-            drainerService.execute(() -> {
-                while (true) {
-                    drainQueue();
-                }
-            });
+    cacheTasks = new ArrayBlockingQueue<>(queueSize);
+    final ExecutorService drainerService = Executors.newFixedThreadPool(concurrencyLevel,
+        runnable -> ThreadUtils
+            .createDaemonThread(runnable, "imcache:concurrentAsyncEvictionDrainer(thread="
+                + NO_OF_EVICTION_DRAINERS.incrementAndGet() + ")"));
+    // Creates runnables to drain cache task queue constantly.
+    for (int i = 0; i < concurrencyLevel; i++) {
+      drainerService.execute(() -> {
+        while (true) {
+          drainQueue();
         }
+      });
     }
-    
+  }
+
 }

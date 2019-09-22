@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Sep 29, 2013
  */
@@ -31,6 +31,6 @@ public class NonUniqueHashIndex extends MultiValueIndex {
    * Instantiates a new non unique hash index.
    */
   public NonUniqueHashIndex() {
-        this.map = new ConcurrentHashMap<Object, Set<Object>>();
-    }
+    this.map = new ConcurrentHashMap<Object, Set<Object>>();
+  }
 }

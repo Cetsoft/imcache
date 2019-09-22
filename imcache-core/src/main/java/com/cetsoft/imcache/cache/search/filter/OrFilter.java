@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Nov 8, 2013
  */
@@ -27,9 +27,11 @@ import java.util.Set;
  * The Class OrFilter.
  */
 public class OrFilter extends LogicalFilter {
-    
-    /** The filters. */
-    private Filter[] filters;
+
+  /**
+   * The filters.
+   */
+  private Filter[] filters;
 
   /**
    * Instantiates a new or filter.
@@ -37,8 +39,8 @@ public class OrFilter extends LogicalFilter {
    * @param filters the filters
    */
   public OrFilter(Filter... filters) {
-        this.filters = filters;
-    }
+    this.filters = filters;
+  }
 
   /**
    * Gets the filters.
@@ -46,21 +48,21 @@ public class OrFilter extends LogicalFilter {
    * @return the filters
    */
   public Filter[] getFilters() {
-        return filters;
+    return filters;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * com.cetsoft.imcache.cache.search.filter.Filter#filter(java.util.List)
+   */
+  public List<Object> filter(List<Object> objects) {
+    Set<Object> results = new HashSet<Object>();
+    for (Filter filter : filters) {
+      List<Object> result = filter.filter(objects);
+      results.addAll(result);
     }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.search.filter.Filter#filter(java.util.List)
-     */
-    public List<Object> filter(List<Object> objects) {
-        Set<Object> results = new HashSet<Object>();
-        for (Filter filter : filters) {
-            List<Object> result = filter.filter(objects);
-            results.addAll(result);
-        }
-        return new ArrayList<Object>(results);
-    }
+    return new ArrayList<Object>(results);
+  }
 }

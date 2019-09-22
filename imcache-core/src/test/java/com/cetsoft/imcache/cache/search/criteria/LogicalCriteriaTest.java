@@ -12,27 +12,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Aug 4, 2015
  */
 package com.cetsoft.imcache.cache.search.criteria;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.mockito.Mock;
 
 public class LogicalCriteriaTest {
-    
-    @Mock
-    Criteria criteria;
-    
-    @Test
-    public void logicalCriteria() {
-        BetweenCriteria betweenCriteria = new BetweenCriteria("value", 3, 10);
-        assertTrue(betweenCriteria.or(criteria) instanceof OrCriteria);
-        assertTrue(betweenCriteria.and(criteria) instanceof AndCriteria);
-        assertTrue(betweenCriteria.diff(criteria) instanceof DiffCriteria);
-    }
+
+  @Mock
+  Criteria criteria;
+
+  @Test
+  public void logicalCriteria() {
+    BetweenCriteria betweenCriteria = new BetweenCriteria("value", 3, 10);
+    assertTrue(betweenCriteria.or(criteria) instanceof OrCriteria);
+    assertTrue(betweenCriteria.and(criteria) instanceof AndCriteria);
+    assertTrue(betweenCriteria.diff(criteria) instanceof DiffCriteria);
+  }
 }

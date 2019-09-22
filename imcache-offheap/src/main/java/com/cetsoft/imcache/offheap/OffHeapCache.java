@@ -53,74 +53,63 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class OffHeapCache<K, V> extends AbstractSearchableCache<K, V> {
 
-  private final ConcurrentCacheStats stats = new ConcurrentCacheStats();
-
-  /**
-   * The Constant DELTA.
-   */
-  private static final float DELTA = 0.00001f;
-
   /**
    * The default buffer cleaner period which is 10 minutes.
    */
   public static final long DEFAULT_BUFFER_CLEANER_PERIOD = 10 * 60 * 1000;
-
   /**
    * The default eviction period which is 10 minutes.
    */
   public static final long DEFAULT_EVICTION_PERIOD = 10 * 60 * 1000;
-
   /**
    * The default buffer cleaner threshold.
    */
   public static final float DEFAULT_BUFFER_CLEANER_THRESHOLD = 0.5f;
-
   /**
    * The Constant DEFAULT_CONCURRENCY_LEVEL.
    */
   public static final int DEFAULT_CONCURRENCY_LEVEL = 4;
-
+  /**
+   * The Constant DELTA.
+   */
+  private static final float DELTA = 0.00001f;
+  /**
+   * The Constant NO_OF_CLEANERS.
+   */
+  private static final AtomicInteger NO_OF_CLEANERS = new AtomicInteger();
+  /**
+   * The Constant NO_OF_EVICTORS.
+   */
+  private static final AtomicInteger NO_OF_EVICTORS = new AtomicInteger();
+  private final ConcurrentCacheStats stats = new ConcurrentCacheStats();
   /**
    * Eviction Period
    */
   private final long evictionPeriod;
-
   /**
    * The pointer map.
    */
   protected ConcurrentMap<K, Pointer> pointerMap = new ConcurrentHashMap<K, Pointer>();
-
   /**
    * The serializer.
    */
   private Serializer<V> serializer;
-
   /**
    * The buffer store.
    */
   private OffHeapByteBufferStore bufferStore;
-
   /**
    * The read write lock.
    */
   private StripedReadWriteLock readWriteLock;
 
   /**
-   * The Constant NO_OF_CLEANERS.
-   */
-  private static final AtomicInteger NO_OF_CLEANERS = new AtomicInteger();
-
-  /**
-   * The Constant NO_OF_EVICTORS.
-   */
-  private static final AtomicInteger NO_OF_EVICTORS = new AtomicInteger();
-
-  /**
    * Instantiates a new offheap cache.
    *
+   * @param name the name
    * @param cacheLoader the cache loader
    * @param evictionListener the eviction listener
-   * @param indexHandler the query executer
+   * @param indexHandler the query executor
    * @param byteBufferStore the byte buffer store
    * @param serializer the serializer
    * @param bufferCleanerPeriod the buffer cleaner period
@@ -128,14 +117,14 @@ public class OffHeapCache<K, V> extends AbstractSearchableCache<K, V> {
    * @param concurrencyLevel the concurrency level
    * @param evictionPeriod the eviction period
    */
-  public OffHeapCache(final CacheLoader<K, V> cacheLoader,
+  public OffHeapCache(final String name, final CacheLoader<K, V> cacheLoader,
       final EvictionListener<K, V> evictionListener,
       final IndexHandler<K, V> indexHandler, final OffHeapByteBufferStore byteBufferStore,
       final Serializer<V> serializer,
       final long bufferCleanerPeriod, final float bufferCleanerThreshold,
       final int concurrencyLevel,
       final long evictionPeriod) {
-    super(cacheLoader, evictionListener, indexHandler);
+    super(name, cacheLoader, evictionListener, indexHandler);
     this.evictionPeriod = evictionPeriod;
     initCache(byteBufferStore, serializer, bufferCleanerPeriod, bufferCleanerThreshold,
         concurrencyLevel);

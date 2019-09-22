@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Sep 23, 2013
  */
@@ -25,19 +25,19 @@ package com.cetsoft.imcache.serialization;
  */
 public interface Serializer<V> {
 
-    /**
-     * Serialize.
-     *
-     * @param value the value
-     * @return the byte[]
-     */
-    byte[] serialize(V value);
+  /**
+   * Serialize.
+   *
+   * @param value the value
+   * @return the byte[]
+   */
+  byte[] serialize(V value);
 
-    /**
-     * Deserialize.
-     *
-     * @param payload the payload
-     * @return the v
-     */
-    V deserialize(byte[] payload);
+  /**
+   * Deserialize.
+   *
+   * @param payload the payload
+   * @return the v
+   */
+  V deserialize(byte[] payload);
 }

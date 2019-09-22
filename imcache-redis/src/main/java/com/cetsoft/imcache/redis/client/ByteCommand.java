@@ -12,22 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Aug 7, 2015
  */
 package com.cetsoft.imcache.redis.client;
 
 /**
- * The Interface ByteCommand represent a byte command to be sent to redis
- * server.
+ * The Interface ByteCommand represent a byte command to be sent to redis server.
  */
 public interface ByteCommand {
-    
-    /**
-     * Gets the bytes associated with the command.
-     *
-     * @return the bytes
-     */
-    byte[] getBytes();
+
+  /**
+   * Gets the bytes associated with the command.
+   *
+   * @return the bytes
+   */
+  byte[] getBytes();
 }

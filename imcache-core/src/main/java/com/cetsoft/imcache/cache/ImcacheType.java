@@ -28,27 +28,31 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ImcacheType<K, V> implements CacheType<K, V> {
 
-    /** The ordinal counter. */
-    private static final AtomicInteger ordinalCounter = new AtomicInteger();
+  /**
+   * The ordinal counter.
+   */
+  private static final AtomicInteger ordinalCounter = new AtomicInteger();
 
-    /** The ordinal. */
-    private final int ordinal;
+  /**
+   * The ordinal.
+   */
+  private final int ordinal;
 
   /**
    * Instantiates a new imcache type.
    */
   public ImcacheType() {
-        ordinal = ordinalCounter.getAndIncrement();
-    }
+    ordinal = ordinalCounter.getAndIncrement();
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.cetsoft.imcache.cache.CacheType#getType()
-     */
-    @Override
-    public int getType() {
-        return ordinal;
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see com.cetsoft.imcache.cache.CacheType#getType()
+   */
+  @Override
+  public int getType() {
+    return ordinal;
+  }
 
 }

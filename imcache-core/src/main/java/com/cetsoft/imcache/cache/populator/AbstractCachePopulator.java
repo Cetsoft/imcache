@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Jan 4, 2014
  */
@@ -40,6 +40,6 @@ public abstract class AbstractCachePopulator<K, V> implements CachePopulator<K, 
    * @param cache the cache
    */
   public AbstractCachePopulator(Cache<K, V> cache) {
-        this.cache = cache;
-    }
+    this.cache = cache;
+  }
 }

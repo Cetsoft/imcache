@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * Author : Yusuf Aytas
  * Date   : Jan 4, 2014
  */
@@ -35,8 +35,8 @@ public class CacheUtils {
    * @return the cache entry
    */
   public static <K, V> CacheEntry<K, V> createEntry(K key, V value) {
-        return new DefaultCacheEntry<K, V>(key, value);
-    }
+    return new DefaultCacheEntry<K, V>(key, value);
+  }
 
   /**
    * The Class DefaultCacheEntry.
@@ -45,12 +45,16 @@ public class CacheUtils {
    * @param <V> the value type
    */
   protected static class DefaultCacheEntry<K, V> implements CacheEntry<K, V> {
-        
-        /** The key. */
-        private K key;
-        
-        /** The value. */
-        private V value;
+
+    /**
+     * The key.
+     */
+    private K key;
+
+    /**
+     * The value.
+     */
+    private V value;
 
     /**
      * Instantiates a new default cache entry.
@@ -59,27 +63,27 @@ public class CacheUtils {
      * @param value the value
      */
     public DefaultCacheEntry(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-        
-        /*
-         * (non-Javadoc)
-         * 
-         * @see com.cetsoft.imcache.cache.CacheEntry#getKey()
-         */
-        public K getKey() {
-            return key;
-        }
-        
-        /*
-         * (non-Javadoc)
-         * 
-         * @see com.cetsoft.imcache.cache.CacheEntry#getValue()
-         */
-        public V getValue() {
-            return value;
-        }
-        
+      this.key = key;
+      this.value = value;
     }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.cetsoft.imcache.cache.CacheEntry#getKey()
+     */
+    public K getKey() {
+      return key;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.cetsoft.imcache.cache.CacheEntry#getValue()
+     */
+    public V getValue() {
+      return value;
+    }
+
+  }
 }
