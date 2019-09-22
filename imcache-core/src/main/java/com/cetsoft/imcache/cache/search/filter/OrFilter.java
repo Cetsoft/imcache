@@ -49,12 +49,11 @@ public class OrFilter extends LogicalFilter {
   }
 
 
-  public List<Object> filter(List<Object> objects) {
-    Set<Object> results = new HashSet<Object>();
-    for (Filter filter : filters) {
-      List<Object> result = filter.filter(objects);
-      results.addAll(result);
+  public List<Object> filter(final List<Object> objects) {
+    final Set<Object> results = new HashSet<Object>();
+    for (final Filter filter : filters) {
+      results.addAll(filter.filter(objects));
     }
-    return new ArrayList<Object>(results);
+    return new ArrayList<>(results);
   }
 }

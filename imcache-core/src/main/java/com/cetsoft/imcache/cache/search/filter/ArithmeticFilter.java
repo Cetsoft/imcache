@@ -32,8 +32,7 @@
  */
 package com.cetsoft.imcache.cache.search.filter;
 
-import com.cetsoft.imcache.cache.search.AttributeException;
-import java.lang.reflect.Field;
+import static com.cetsoft.imcache.cache.util.ReflectionUtils.getFieldValue;
 
 /**
  * The Class ArithmeticFilter.
@@ -55,7 +54,7 @@ public abstract class ArithmeticFilter extends LogicalFilter {
    * @param attributeName the attribute name
    * @param value the expected value
    */
-  public ArithmeticFilter(String attributeName, Object value) {
+  public ArithmeticFilter(final String attributeName, final Object value) {
     this.attributeName = attributeName;
     this.value = value;
   }
@@ -76,13 +75,7 @@ public abstract class ArithmeticFilter extends LogicalFilter {
    * @return the indexed key
    */
   protected Object getAttributeValue(Object object) {
-    try {
-      Field field = object.getClass().getDeclaredField(attributeName);
-      field.setAccessible(true);
-      return field.get(object);
-    } catch (Exception e) {
-      throw new AttributeException(e);
-    }
+    return getFieldValue(attributeName, object);
   }
 
 }

@@ -58,9 +58,9 @@ public class DiffFilter extends LogicalFilter {
 
 
   public List<Object> filter(List<Object> objects) {
-    List<Object> leftResult = leftFilter.filter(objects);
-    List<Object> rightResult = rightFilter.filter(objects);
-    for (Object object : rightResult) {
+    final List<Object> leftResult = leftFilter.filter(objects);
+    final List<Object> rightResult = rightFilter.filter(objects);
+    for (final Object object : rightResult) {
       leftResult.remove(object);
     }
     return leftResult;

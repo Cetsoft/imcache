@@ -35,10 +35,10 @@ public class LTFilter extends ArithmeticFilter {
 
 
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public List<Object> filter(List<Object> objects) {
-    List<Object> result = new ArrayList<Object>(objects.size());
+  public List<Object> filter(final List<Object> objects) {
+    final List<Object> result = new ArrayList<Object>(objects.size());
     for (Object object : objects) {
-      Comparable objectValue = (Comparable) getAttributeValue(object);
+      final Comparable objectValue = (Comparable) getAttributeValue(object);
       if (objectValue.compareTo(value) < 0) {
         result.add(object);
       }

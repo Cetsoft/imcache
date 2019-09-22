@@ -33,7 +33,7 @@ public class AndFilter extends LogicalFilter {
    *
    * @param filters the filters
    */
-  public AndFilter(Filter... filters) {
+  public AndFilter(final Filter... filters) {
     this.filters = filters;
   }
 
@@ -47,27 +47,12 @@ public class AndFilter extends LogicalFilter {
   }
 
 
-  public List<Object> filter(List<Object> objects) {
-    List<Object> results = new ArrayList<Object>();
-    for (Filter filter : filters) {
-      List<Object> result = filter.filter(objects);
-      results = getObjects(results, result);
+  public List<Object> filter(final List<Object> objects) {
+    List<Object> results = new ArrayList<>();
+    for (final Filter filter : filters) {
+      results = filter.filter(objects);
     }
     return results;
   }
 
-  private List<Object> getObjects(List<Object> results, List<Object> result) {
-    if (results.size() == 0) {
-      results.addAll(result);
-    } else {
-      final List<Object> mergedResults = new ArrayList<>(results.size());
-      for (final Object object : result) {
-        if (results.contains(object)) {
-          mergedResults.add(object);
-        }
-      }
-      results = mergedResults;
-    }
-    return results;
-  }
 }

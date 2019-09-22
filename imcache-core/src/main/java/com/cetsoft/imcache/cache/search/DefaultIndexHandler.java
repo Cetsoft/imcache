@@ -15,6 +15,8 @@
  */
 package com.cetsoft.imcache.cache.search;
 
+import static com.cetsoft.imcache.cache.util.ReflectionUtils.getFieldValue;
+
 import com.cetsoft.imcache.cache.search.criteria.AndCriteria;
 import com.cetsoft.imcache.cache.search.criteria.ArithmeticCriteria;
 import com.cetsoft.imcache.cache.search.criteria.Criteria;
@@ -72,7 +74,7 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
 
   public void add(final K key, final V value) {
     for (final String attributeName : indexes.keySet()) {
-      final Object indexedKey = getIndexedKey(attributeName, value);
+      final Object indexedKey = getFieldValue(attributeName, value);
       if (indexedKey == null) {
         throw new NullPointerException();
       }
@@ -83,7 +85,7 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
 
   public void remove(final K key, final V value) {
     for (final String attributeName : indexes.keySet()) {
-      final Object indexedKey = getIndexedKey(attributeName, value);
+      final Object indexedKey = getFieldValue(attributeName, value);
       if (indexedKey == null) {
         throw new NullPointerException();
       }
@@ -193,29 +195,6 @@ public class DefaultIndexHandler<K, V> implements IndexHandler<K, V> {
       results.addAll(result);
     }
     return new ArrayList<>(results);
-  }
-
-  /**
-   * Gets the indexed key.
-   *
-   * @param attributeName the attribute name
-   * @param value the value
-   * @return the indexed key
-   */
-  protected Object getIndexedKey(final String attributeName, final V value) {
-    try {
-      return fields.computeIfAbsent(attributeName, (a) -> {
-        try {
-          final Field field = value.getClass().getDeclaredField(attributeName);
-          field.setAccessible(true);
-          return field;
-        } catch (NoSuchFieldException e) {
-          throw new AttributeException(e);
-        }
-      }).get(value);
-    } catch (IllegalAccessException e) {
-      throw new AttributeException(e);
-    }
   }
 
 }

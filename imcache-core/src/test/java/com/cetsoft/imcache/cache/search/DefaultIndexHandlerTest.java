@@ -21,11 +21,9 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-import com.cetsoft.imcache.cache.Cache;
 import com.cetsoft.imcache.cache.search.criteria.AndCriteria;
 import com.cetsoft.imcache.cache.search.criteria.ArithmeticCriteria;
 import com.cetsoft.imcache.cache.search.criteria.Criteria;
@@ -41,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
@@ -89,12 +88,6 @@ public class DefaultIndexHandlerTest {
   Criteria criteria;
 
   /**
-   * The cache.
-   */
-  @Mock
-  Cache<Object, Object> cache;
-
-  /**
    * The indexes.
    */
   @Mock
@@ -110,6 +103,27 @@ public class DefaultIndexHandlerTest {
    * The handler.
    */
   DefaultIndexHandler<Object, Object> handler;
+
+  private static class MyObject{
+    private String name;
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (!(o instanceof MyObject)) {
+        return false;
+      }
+      MyObject myObject = (MyObject) o;
+      return Objects.equals(name, myObject.name);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(name);
+    }
+  }
 
   /**
    * Setup.
@@ -157,17 +171,16 @@ public class DefaultIndexHandlerTest {
   @Test
   public void add() {
     String attributeName = "name";
-    Object object = new Object();
-    Set<String> keySet = new HashSet<String>();
+    MyObject object = new MyObject();
+    object.name = attributeName;
+    Set<String> keySet = new HashSet<>();
     keySet.add(attributeName);
     doReturn(keySet).when(indexes).keySet();
-    doReturn(object).when(handler).getIndexedKey(attributeName, object);
     doReturn(cacheIndex).when(indexes).get(attributeName);
     doNothing().when(cacheIndex).put(object, object);
     handler.add(object, object);
-    verify(cacheIndex).put(object, object);
+    verify(cacheIndex).put(attributeName, object);
     verify(indexes).get(attributeName);
-    verify(handler).getIndexedKey(attributeName, object);
   }
 
   /**
@@ -176,12 +189,10 @@ public class DefaultIndexHandlerTest {
   @Test(expected = AttributeException.class)
   public void addThrowsAttributeException() {
     String attributeName = "name";
-    Object object = new Object();
+    MyObject object = new MyObject();
     Set<String> keySet = new HashSet<String>();
-    keySet.add(attributeName);
+    keySet.add("ada");
     doReturn(keySet).when(indexes).keySet();
-    doThrow(new AttributeException(new Exception())).when(handler)
-        .getIndexedKey(attributeName, object);
     doReturn(cacheIndex).when(indexes).get(attributeName);
     doNothing().when(cacheIndex).put(object, object);
     handler.add(object, object);
@@ -193,11 +204,10 @@ public class DefaultIndexHandlerTest {
   @Test(expected = NullPointerException.class)
   public void addIndexedKeyNull() {
     String attributeName = "name";
-    Object object = new Object();
+    MyObject object = new MyObject();
     Set<String> keySet = new HashSet<String>();
     keySet.add(attributeName);
     doReturn(keySet).when(indexes).keySet();
-    doReturn(null).when(handler).getIndexedKey(attributeName, object);
     handler.add(object, object);
   }
 
@@ -207,17 +217,17 @@ public class DefaultIndexHandlerTest {
   @Test
   public void remove() {
     String attributeName = "name";
-    Object object = new Object();
+    MyObject object = new MyObject();
+    object.name = attributeName;
     Set<String> keySet = new HashSet<String>();
     keySet.add(attributeName);
     doReturn(keySet).when(indexes).keySet();
-    doReturn(object).when(handler).getIndexedKey(attributeName, object);
     doReturn(cacheIndex).when(indexes).get(attributeName);
     doNothing().when(cacheIndex).remove(object, object);
     handler.remove(object, object);
-    verify(cacheIndex).remove(object, object);
+
+    verify(cacheIndex).remove(attributeName, object);
     verify(indexes).get(attributeName);
-    verify(handler).getIndexedKey(attributeName, object);
   }
 
   /**
@@ -226,11 +236,10 @@ public class DefaultIndexHandlerTest {
   @Test(expected = NullPointerException.class)
   public void removeIndexedKeyNull() {
     String attributeName = "name";
-    Object object = new Object();
+    MyObject object = new MyObject();
     Set<String> keySet = new HashSet<String>();
     keySet.add(attributeName);
     doReturn(keySet).when(indexes).keySet();
-    doReturn(null).when(handler).getIndexedKey(attributeName, object);
     handler.remove(object, object);
   }
 
@@ -383,20 +392,4 @@ public class DefaultIndexHandlerTest {
     assertTrue(actualObjects.contains(object3));
   }
 
-  /**
-   * Gets the indexed key.
-   *
-   * @return the indexed key
-   */
-  @Test
-  public void getIndexedKey() {
-    Runnable runnable = new Runnable() {
-      @SuppressWarnings("unused")
-      String runnable = "runnable";
-
-      public void run() {
-      }
-    };
-    assertEquals("runnable", handler.getIndexedKey("runnable", runnable));
-  }
 }

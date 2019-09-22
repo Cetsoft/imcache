@@ -36,9 +36,9 @@ public class GTFilter extends ArithmeticFilter {
 
   @SuppressWarnings({"unchecked", "rawtypes"})
   public List<Object> filter(List<Object> objects) {
-    List<Object> result = new ArrayList<Object>(objects.size());
-    for (Object object : objects) {
-      Comparable objectValue = (Comparable) getAttributeValue(object);
+    final List<Object> result = new ArrayList<Object>(objects.size());
+    for (final Object object : objects) {
+      final Comparable objectValue = (Comparable) getAttributeValue(object);
       if (objectValue.compareTo(value) > 0) {
         result.add(object);
       }
