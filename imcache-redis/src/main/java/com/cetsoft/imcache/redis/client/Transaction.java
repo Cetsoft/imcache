@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2015 Cetsoft, http://www.cetsoft.com
+/**
+ * Copyright © 2013 Cetsoft. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,31 +12,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Author : Yusuf Aytas
- * Date   : Aug 17, 2015
  */
 package com.cetsoft.imcache.redis.client;
 
 /**
- * The Interface Transaction provides monitor for a resource between threads. If
- * a thread opens a transaction, any subsequent request to open will wait until
- * the thread closes transaction. For example: byte[] read(){
- * transaction.open(); try{ byte[] bytes = new byte[1024];
- * inputStream.read(bytes); return bytes; }finally{ transaction.close(); } } In
- * this example, no other can read from outputStream until thread closes
- * transaction.
+ * The Interface Transaction provides monitor for a resource between threads. If a thread opens a
+ * transaction, any subsequent request to open will wait until the thread closes transaction. For
+ * example: byte[] read(){ transaction.open(); try{ byte[] bytes = new byte[1024];
+ * inputStream.read(bytes); return bytes; }finally{ transaction.close(); } } In this example, no
+ * other can read from outputStream until thread closes transaction.
  */
 public interface Transaction {
-    
-    /**
-     * Opens a new transaction.
-     */
-    void open();
-    
-    /**
-     * Closes a new transaction.
-     */
-    void close();
-    
+
+  /**
+   * Opens a new transaction.
+   */
+  void open();
+
+  /**
+   * Closes a new transaction.
+   */
+  void close();
+
 }

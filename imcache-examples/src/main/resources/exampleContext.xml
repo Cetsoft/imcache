@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:lang="http://www.springframework.org/schema/lang"
-	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:cache="http://www.springframework.org/schema/cache"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+<beans xmlns:cache="http://www.springframework.org/schema/cache"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.1.xsd
-        http://www.springframework.org/schema/lang
-        http://www.springframework.org/schema/lang/spring-lang-3.1.xsd
-        http://www.springframework.org/schema/tx
-     	http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+
+
+
+
      	http://www.springframework.org/schema/cache
         http://www.springframework.org/schema/cache/spring-cache.xsd">
 
-	<context:component-scan base-package="com.cetsoft.imcache.examples" />
-	<cache:annotation-driven />
-	
-	<bean id="cacheManager" class="com.cetsoft.imcache.spring.ImcacheCacheManager"/>
-	
-	<bean id="cache" class="com.cetsoft.imcache.cache.Cache" factory-bean="cacheBuilder" factory-method="build"/>
-	
-	<bean id="cacheBuilder" class="com.cetsoft.imcache.spring.SpringCacheBuilder">
-		<property name="type" value="offheap"/>
-		<property name="bufferStore">
-			<ref bean="bufferStore"/>
-		</property>
-	</bean>
-	
-	<bean id="bufferStore" class="com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBufferStore">
-		<constructor-arg name="capacity" value="100000"/>
-		<constructor-arg name="bufferSize"  value="10"/>
-	</bean>	
+  <context:component-scan base-package="com.cetsoft.imcache.examples"/>
+  <cache:annotation-driven/>
+
+  <bean class="com.cetsoft.imcache.spring.ImcacheCacheManager" id="cacheManager"/>
+
+  <bean class="com.cetsoft.imcache.cache.Cache" factory-bean="cacheBuilder" factory-method="build"
+    id="cache"/>
+
+  <bean class="com.cetsoft.imcache.spring.SpringCacheBuilder" id="cacheBuilder">
+    <property name="type" value="offheap"/>
+    <property name="bufferStore">
+      <ref bean="bufferStore"/>
+    </property>
+  </bean>
+
+  <bean class="com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBufferStore" id="bufferStore">
+    <constructor-arg name="capacity" value="100000"/>
+    <constructor-arg name="bufferSize" value="10"/>
+  </bean>
 </beans>

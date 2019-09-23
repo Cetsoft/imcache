@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2015 Cetsoft, http://www.cetsoft.com
+/**
+ * Copyright © 2013 Cetsoft. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,9 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Author : Yusuf Aytas
- * Date   : Nov 8, 2013
  */
 package com.cetsoft.imcache.cache.search.filter;
 
@@ -22,38 +19,20 @@ package com.cetsoft.imcache.cache.search.filter;
  * The Class LogicalFilter.
  */
 public abstract class LogicalFilter implements Filter {
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.search.filter.Filter#and(com.cetsoft.imcache
-     * .cache.search.filter.Filter)
-     */
-    public Filter and(Filter filter) {
-        return new AndFilter(this, filter);
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.search.filter.Filter#or(com.cetsoft.imcache
-     * .cache.search.filter.Filter)
-     */
-    public Filter or(Filter filter) {
-        return new OrFilter(this, filter);
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.search.filter.Filter#diff(com.cetsoft.imcache
-     * .cache.search.filter.Filter)
-     */
-    public Filter diff(Filter filter) {
-        return new DiffFilter(this, filter);
-    }
-    
+
+
+  public Filter and(Filter filter) {
+    return new AndFilter(this, filter);
+  }
+
+
+  public Filter or(Filter filter) {
+    return new OrFilter(this, filter);
+  }
+
+
+  public Filter diff(Filter filter) {
+    return new DiffFilter(this, filter);
+  }
+
 }

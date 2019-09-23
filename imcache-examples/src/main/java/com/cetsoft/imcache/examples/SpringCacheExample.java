@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2015 Cetsoft, http://www.cetsoft.com
+/**
+ * Copyright © 2013 Cetsoft. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,9 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Author : Yusuf Aytas
- * Date   : May 20, 2014
  */
 package com.cetsoft.imcache.examples;
 
@@ -30,79 +27,85 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SpringCacheExample {
-    
-    /** The cache manager. */
-    @Autowired
-    CacheManager cacheManager;
-    
-    public static void example() {
-        @SuppressWarnings("resource")
-        ApplicationContext context = new ClassPathXmlApplicationContext("exampleContext.xml");
-        SpringCacheExample example = context.getBean(SpringCacheExample.class);
-        example.getBook(0);
-        example.getBook(0);
-    }
-    
+
+  /**
+   * The cache manager.
+   */
+  @Autowired
+  CacheManager cacheManager;
+
+  public static void example() {
+    @SuppressWarnings("resource")
+    ApplicationContext context = new ClassPathXmlApplicationContext("exampleContext.xml");
+    SpringCacheExample example = context.getBean(SpringCacheExample.class);
+    example.getBook(0);
+    example.getBook(0);
+  }
+
+  public static void main(String[] args) {
+    example();
+  }
+
+  /**
+   * Gets the book.
+   *
+   * @param id the id
+   * @return the book
+   */
+  @Cacheable("books")
+  public Book getBook(int id) {
+    return new Book();
+  }
+
+  /**
+   * The Class Book.
+   */
+  public class Book {
+
     /**
-     * Gets the book.
+     * The id.
+     */
+    private int id;
+
+    /**
+     * The name.
+     */
+    private String name;
+
+    /**
+     * Gets the id.
      *
-     * @param id the id
-     * @return the book
+     * @return the id
      */
-    @Cacheable("books")
-    public Book getBook(int id) {
-        return new Book();
+    public int getId() {
+      return id;
     }
-    
+
     /**
-     * The Class Book.
+     * Sets the id.
+     *
+     * @param id the new id
      */
-    public class Book {
-        
-        /** The id. */
-        private int id;
-        
-        /** The name. */
-        private String name;
-        
-        /**
-         * Gets the id.
-         *
-         * @return the id
-         */
-        public int getId() {
-            return id;
-        }
-        
-        /**
-         * Sets the id.
-         *
-         * @param id the new id
-         */
-        public void setId(int id) {
-            this.id = id;
-        }
-        
-        /**
-         * Gets the name.
-         *
-         * @return the name
-         */
-        public String getName() {
-            return name;
-        }
-        
-        /**
-         * Sets the name.
-         *
-         * @param name the new name
-         */
-        public void setName(String name) {
-            this.name = name;
-        }
+    public void setId(int id) {
+      this.id = id;
     }
-    
-    public static void main(String[] args) {
-        example();
+
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    public String getName() {
+      return name;
     }
+
+    /**
+     * Sets the name.
+     *
+     * @param name the new name
+     */
+    public void setName(String name) {
+      this.name = name;
+    }
+  }
 }

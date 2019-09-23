@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2015 Cetsoft, http://www.cetsoft.com
+/**
+ * Copyright © 2013 Cetsoft. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,9 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Author : Yusuf Aytas
- * Date   : Sep 28, 2013
  */
 package com.cetsoft.imcache.cache.search;
 
@@ -22,39 +19,38 @@ import com.cetsoft.imcache.cache.search.criteria.Criteria;
 import com.cetsoft.imcache.cache.search.filter.Filter;
 
 /**
- * The Interface Query is a piece of code (a query) that is sent to a cache in
- * order to get information back from the cache. It is used as the way of
- * retrieving the information from cache.
+ * The Interface Query is a piece of code (a query) that is sent to a cache in order to get
+ * information back from the cache. It is used as the way of retrieving the information from cache.
  */
 public interface Query {
-    
-    /**
-     * Adds the criteria.
-     *
-     * @param criteria the criteria
-     * @return the query
-     */
-    Query setCriteria(Criteria criteria);
-    
-    /**
-     * Returns list of Criterias.
-     *
-     * @return the list
-     */
-    Criteria getCriteria();
-    
-    /**
-     * Sets the filter.
-     *
-     * @param filter the filter
-     * @return the query
-     */
-    Query setFilter(Filter filter);
-    
-    /**
-     * Gets the filter.
-     *
-     * @return the filter
-     */
-    Filter getFilter();
+
+  /**
+   * Returns list of Criterias.
+   *
+   * @return the list
+   */
+  Criteria getCriteria();
+
+  /**
+   * Adds the criteria.
+   *
+   * @param criteria the criteria
+   * @return the query
+   */
+  Query setCriteria(Criteria criteria);
+
+  /**
+   * Gets the filter.
+   *
+   * @return the filter
+   */
+  Filter getFilter();
+
+  /**
+   * Sets the filter.
+   *
+   * @param filter the filter
+   * @return the query
+   */
+  Query setFilter(Filter filter);
 }

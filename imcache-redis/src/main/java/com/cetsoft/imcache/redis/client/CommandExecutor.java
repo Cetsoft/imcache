@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2015 Cetsoft, http://www.cetsoft.com
+/**
+ * Copyright © 2013 Cetsoft. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,27 +12,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Author : Yusuf Aytas
- * Date   : Aug 7, 2015
  */
 package com.cetsoft.imcache.redis.client;
 
 import java.io.IOException;
 
 /**
- * The Interface CommandExecutor is responsible for executing given byte
- * command. It throws ConnectionException in case of a connection failure.
+ * The Interface CommandExecutor is responsible for executing given byte command. It throws
+ * ConnectionException in case of a connection failure.
  */
 public interface CommandExecutor {
-    
-    /**
-     * Executes the given byte command.
-     *
-     * @param command the command
-     * @param args the args
-     * @throws ConnectionException the connection exception
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    void execute(final ByteCommand command, final byte[]... args) throws ConnectionException, IOException;
+
+  /**
+   * Executes the given byte command.
+   *
+   * @param command the command
+   * @param args the args
+   * @throws ConnectionException the connection exception
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  void execute(final ByteCommand command, final byte[]... args)
+      throws ConnectionException, IOException;
 }

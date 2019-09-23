@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2015 Cetsoft, http://www.cetsoft.com
+/**
+ * Copyright © 2013 Cetsoft. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,27 +12,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Author : Yusuf Aytas
- * Date   : Aug 4, 2015
  */
 package com.cetsoft.imcache.cache.search;
 
 /**
- * The Class AttributeException is thrown where attribute is not found for the
- * given object.
+ * The Class AttributeException is thrown where attribute is not found for the given object.
  */
 public class AttributeException extends RuntimeException {
-    
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = 8883617514611224481L;
-    
-    /**
-     * Instantiates a new attribute exception.
-     *
-     * @param exception the exception
-     */
-    public AttributeException(Exception exception) {
-        super(exception);
-    }
+
+  /**
+   * The Constant serialVersionUID.
+   */
+  private static final long serialVersionUID = 8883617514611224481L;
+
+  /**
+   * Instantiates a new attribute exception.
+   *
+   * @param exception the exception
+   */
+  public AttributeException(Exception exception) {
+    super(exception);
+  }
 }

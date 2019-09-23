@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2015 Cetsoft, http://www.cetsoft.com
+/**
+ * Copyright © 2013 Cetsoft. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,29 +12,29 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Author : Yusuf Aytas
- * Date   : May 20, 2014
  */
 package com.cetsoft.imcache.offheap;
 
 /**
- * The Class StaleItemException is thrown where local cache item does not have
- * the latest version of the cache item.
+ * The Class StaleItemException is thrown where local cache item does not have the latest version of
+ * the cache item.
  */
 public class StaleItemException extends RuntimeException {
-    
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = 5688389152095338751L;
-    
-    /**
-     * Instantiates a new stale item exception.
-     *
-     * @param expectedVersion the expected version
-     * @param actualVersion the actual version
-     */
-    public StaleItemException(int expectedVersion, int actualVersion) {
-        super("Expected version for the item is " + expectedVersion + " but the actual value was " + actualVersion);
-    }
-    
+
+  /**
+   * The Constant serialVersionUID.
+   */
+  private static final long serialVersionUID = 5688389152095338751L;
+
+  /**
+   * Instantiates a new stale item exception.
+   *
+   * @param expectedVersion the expected version
+   * @param actualVersion the actual version
+   */
+  public StaleItemException(int expectedVersion, int actualVersion) {
+    super("Expected version for the item is " + expectedVersion + " but the actual value was "
+        + actualVersion);
+  }
+
 }

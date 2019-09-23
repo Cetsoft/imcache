@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2015 Cetsoft, http://www.cetsoft.com
+/**
+ * Copyright © 2013 Cetsoft. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,23 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Author : Yusuf Aytas
- * Date   : Aug 3, 2015
  */
 package com.cetsoft.imcache.cache.util;
 
-import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 import com.cetsoft.imcache.cache.CacheEntry;
+import org.junit.Test;
 
 public class CacheUtilsTest {
-    
-    @Test
-    public void createEntry() {
-        CacheEntry<Integer, Integer> cacheEntry = CacheUtils.createEntry(1, 2);
-        assertEquals(new Integer(1), cacheEntry.getKey());
-        assertEquals(new Integer(2), cacheEntry.getValue());
-    }
+
+  @Test
+  public void createEntry() {
+    CacheEntry<Integer, Integer> cacheEntry = CacheUtils.createEntry(1, 2);
+    assertEquals(new Integer(1), cacheEntry.getKey());
+    assertEquals(new Integer(2), cacheEntry.getValue());
+  }
 }

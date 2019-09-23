@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2015 Cetsoft, http://www.cetsoft.com
+/**
+ * Copyright © 2013 Cetsoft. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,46 +12,38 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Author : Yusuf Aytas
- * Date   : Nov 8, 2013
  */
 package com.cetsoft.imcache.cache.search.criteria;
 
+import com.cetsoft.imcache.cache.search.index.CacheIndex;
 import java.util.List;
 
-import com.cetsoft.imcache.cache.search.index.CacheIndex;
-
 /**
- * The Class BetweenCriteria is used to retrieve items greater than lowerBound
- * and less than upperBound.
+ * The Class BetweenCriteria is used to retrieve items greater than lowerBound and less than
+ * upperBound.
  */
 public class BetweenCriteria extends ArithmeticCriteria {
-    
-    /** The upper bound. */
-    private Object upperBound;
-    
-    /**
-     * Instantiates a new between criteria.
-     *
-     * @param attributeName the attribute name
-     * @param lowerBound the lower bound
-     * @param upperBound the upper bound
-     */
-    public BetweenCriteria(String attributeName, Object lowerBound, Object upperBound) {
-        super(attributeName, lowerBound);
-        this.upperBound = upperBound;
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.search.criteria.Criteria#meets(com.cetsoft.
-     * imcache.cache.search.index.CacheIndex)
-     */
-    public List<Object> meets(CacheIndex cacheIndex) {
-        return cacheIndex.between(value, upperBound);
-    }
-    
+
+  /**
+   * The upper bound.
+   */
+  private Object upperBound;
+
+  /**
+   * Instantiates a new between criteria.
+   *
+   * @param attributeName the attribute name
+   * @param lowerBound the lower bound
+   * @param upperBound the upper bound
+   */
+  public BetweenCriteria(String attributeName, Object lowerBound, Object upperBound) {
+    super(attributeName, lowerBound);
+    this.upperBound = upperBound;
+  }
+
+
+  public List<Object> meets(CacheIndex cacheIndex) {
+    return cacheIndex.between(value, upperBound);
+  }
+
 }

@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2015 Cetsoft, http://www.cetsoft.com
+/**
+ * Copyright © 2013 Cetsoft. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,9 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Author : Yusuf Aytas
- * Date   : Aug 17, 2015
  */
 package com.cetsoft.imcache.redis.client;
 
@@ -27,68 +24,66 @@ import java.util.concurrent.locks.ReentrantLock;
  * The Class RedisTransaction.
  */
 public class RedisTransaction implements Transaction {
-    
-    /** The transaction lock. */
-    Lock transactionLock = new ReentrantLock();
-    
-    /** The transaction condition. */
-    Condition transactionCondition = transactionLock.newCondition();
-    
-    /** The thread in transaction. */
-    AtomicReference<Thread> threadInTransaction = new AtomicReference<Thread>();
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.cetsoft.imcache.redis.client.Transaction#open()
-     */
-    @Override
-    public void open() {
-        Thread currentThread = Thread.currentThread();
-        try {
-            if (threadInTransaction.get() == null) {
-                transactionLock.lock();
-                try {
-                    if (threadInTransaction.get() == null) {
-                        threadInTransaction.set(currentThread);
-                        return;
-                    }
-                } finally {
-                    transactionLock.unlock();
-                }
-                open();
-            } else if (currentThread.equals(threadInTransaction.get())) {
-                return;
-            } else {
-                transactionLock.lock();
-                try {
-                    while (threadInTransaction.get() != null) {
-                        transactionCondition.await();
-                    }
-                } finally {
-                    transactionLock.unlock();
-                }
-                open();
-            }
-        } catch (InterruptedException e) {
-            //ignore interruption.
-        }
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.cetsoft.imcache.redis.client.Transaction#close()
-     */
-    @Override
-    public void close() {
+
+  /**
+   * The transaction lock.
+   */
+  final Lock transactionLock = new ReentrantLock();
+
+  /**
+   * The transaction condition.
+   */
+  final Condition transactionCondition = transactionLock.newCondition();
+
+  /**
+   * The thread in transaction.
+   */
+  final AtomicReference<Thread> threadInTransaction = new AtomicReference<Thread>();
+
+
+  @Override
+  public void open() {
+    final Thread currentThread = Thread.currentThread();
+    try {
+      if (threadInTransaction.get() == null) {
         transactionLock.lock();
         try {
-            threadInTransaction.set(null);
-            transactionCondition.signal();
+          if (threadInTransaction.get() == null) {
+            threadInTransaction.set(currentThread);
+            return;
+          }
         } finally {
-            transactionLock.unlock();
+          transactionLock.unlock();
         }
+        open();
+      } else if (currentThread.equals(threadInTransaction.get())) {
+        return;
+      } else {
+        transactionLock.lock();
+        try {
+          while (threadInTransaction.get() != null) {
+            transactionCondition.await();
+          }
+        } finally {
+          transactionLock.unlock();
+        }
+        open();
+      }
+    } catch (InterruptedException e) {
+      Thread.interrupted();
     }
-    
+  }
+
+
+  @Override
+  public void close() {
+    transactionLock.lock();
+    try {
+      threadInTransaction.set(null);
+      transactionCondition.signal();
+    } finally {
+      transactionLock.unlock();
+    }
+  }
+
 }

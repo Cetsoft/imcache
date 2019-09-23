@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2015 Cetsoft, http://www.cetsoft.com
+/**
+ * Copyright © 2013 Cetsoft. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,11 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Author : Yusuf Aytas
- * Date   : Sep 15, 2013
  */
 package com.cetsoft.imcache.cache;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Interface Cache.
@@ -25,69 +24,73 @@ package com.cetsoft.imcache.cache;
  * @param <V> the value type
  */
 public interface Cache<K, V> {
-    
-    /**
-     * Puts the value with the specified key.
-     *
-     * @param key the key
-     * @param value the value
-     */
-    void put(K key, V value);
-    
-    /**
-     * Gets the value with the specified key.
-     *
-     * @param key the key
-     * @return the value
-     */
-    V get(K key);
-    
-    /**
-     * Invalidate the value with the specified key.
-     *
-     * @param key the key
-     * @return the value
-     */
-    V invalidate(K key);
-    
-    /**
-     * Check if Cache contains the specified key.
-     *
-     * @param key the key
-     * @return true, if successful
-     */
-    boolean contains(K key);
-    
-    /**
-     * Clear the cache.
-     */
-    void clear();
-    
-    /**
-     * Calculates the Hit ratio.
-     *
-     * @return the double
-     */
-    double hitRatio();
-    
-    /**
-     * Gets the specified name if exist, otherwise returns the class name.
-     *
-     * @return the name
-     */
-    String getName();
-    
-    /**
-     * Sets the name.
-     *
-     * @param name the new name
-     */
-    void setName(String name);
-    
-    /**
-     * Returns the number of elements in this cache.
-     * 
-     * @return the number of elements
-     */
-    int size();
+
+  /**
+   * Puts the value with the specified key.
+   *
+   * @param key the key
+   * @param value the value
+   */
+  void put(K key, V value);
+
+  /**
+   * Puts the value with the specified key and ttl value
+   *
+   * @param key the key
+   * @param value the value
+   * @param timeUnit the time unit
+   * @param duration time to live
+   */
+  void put(K key, V value, TimeUnit timeUnit, long duration);
+
+  /**
+   * Gets the value with the specified key.
+   *
+   * @param key the key
+   * @return the value
+   */
+  V get(K key);
+
+  /**
+   * Invalidate the value with the specified key.
+   *
+   * @param key the key
+   * @return the value
+   */
+  V invalidate(K key);
+
+  /**
+   * Check if Cache contains the specified key.
+   *
+   * @param key the key
+   * @return true, if successful
+   */
+  boolean contains(K key);
+
+  /**
+   * Clear the cache.
+   */
+  void clear();
+
+  /**
+   * Gets the specified name if exist, otherwise returns the class name.
+   *
+   * @return the name
+   */
+  String getName();
+
+  /**
+   * Returns estimated number of elements in this cache
+   *
+   * @return the number of elements
+   */
+  long size();
+
+  /**
+   * Returns the cache stats
+   *
+   * @return cache stats
+   */
+  CacheStats stats();
+
 }

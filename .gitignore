@@ -1,6 +1,8 @@
 .classpath
 .project
 .settings/
+.idea/
+.mvn
 bin/
 target/
 flexi-core/.classpath

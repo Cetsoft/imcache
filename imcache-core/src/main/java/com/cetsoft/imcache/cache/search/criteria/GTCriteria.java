@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2015 Cetsoft, http://www.cetsoft.com
+/**
+ * Copyright © 2013 Cetsoft. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,40 +12,30 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Author : Yusuf Aytas
- * Date   : Nov 8, 2013
  */
 package com.cetsoft.imcache.cache.search.criteria;
 
-import java.util.List;
-
 import com.cetsoft.imcache.cache.search.index.CacheIndex;
+import java.util.List;
 
 /**
  * The Class GTCriteria is used to retrieve items greater than the given value.
  */
 public class GTCriteria extends ArithmeticCriteria {
-    
-    /**
-     * Instantiates a new gT criteria.
-     *
-     * @param attributeName the attribute name
-     * @param value the value
-     */
-    public GTCriteria(String attributeName, Object value) {
-        super(attributeName, value);
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cetsoft.imcache.cache.search.criteria.Criteria#meets(com.cetsoft.
-     * imcache.cache.search.index.CacheIndex)
-     */
-    public List<Object> meets(CacheIndex cacheIndex) {
-        return cacheIndex.greaterThan(value);
-    }
-    
+
+  /**
+   * Instantiates a new gT criteria.
+   *
+   * @param attributeName the attribute name
+   * @param value the value
+   */
+  public GTCriteria(String attributeName, Object value) {
+    super(attributeName, value);
+  }
+
+
+  public List<Object> meets(CacheIndex cacheIndex) {
+    return cacheIndex.greaterThan(value);
+  }
+
 }
