@@ -15,8 +15,10 @@
  */
 package com.cetsoft.imcache.redis.client;
 
+import static com.cetsoft.imcache.redis.client.RedisCommands.CHARSET;
+
 import java.io.IOException;
-import java.nio.ByteBuffer;
+import java.io.UnsupportedEncodingException;
 
 /**
  * The Class RedisClient.
@@ -129,21 +131,15 @@ public class RedisClient implements Client {
       }
       //redis don't accept expiry in milliseconds, so converting to milliseconds.
       commandExecutor.execute(RedisCommands.PEXPIRE, key, longToBytes(expiryInMillis));
-      final String expireStatus = commandResult.getStatus();
-      if (!setStatus.equals(STATUS_OK)) {
-        throw new ConnectionException("Command couldn't run successfully " + expireStatus);
-      }
+      commandResult.getInt();
     } finally {
       transaction.close();
     }
   }
 
-  public byte[] longToBytes(final long longToBeConverted) {
-    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-    buffer.putLong(longToBeConverted);
-    return buffer.array();
+  public byte[] longToBytes(final long longToBeConverted) throws UnsupportedEncodingException {
+    return Long.toString(longToBeConverted).getBytes(CHARSET);
   }
-
 
   @Override
   public byte[] get(final byte[] key) throws ConnectionException, IOException {

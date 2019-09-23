@@ -98,12 +98,16 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
   public V get(final K key) {
     try {
       final byte[] serializedKey = serializer.serialize(key);
-      V value = (V) serializer.deserialize(client.get(serializedKey));
+      byte[] serializedValue = client.get(serializedKey);
+      V value = null;
+      if(serializedValue != null && serializedValue.length > 0){
+        value = (V) serializer.deserialize(serializedValue);
+      }
       if (value == null) {
         stats.incrementMissCount();
         value = cacheLoader.load(key);
         if (value != null) {
-          byte[] serializedValue = serializer.serialize(value);
+          serializedValue = serializer.serialize(value);
           client.set(serializedKey, serializedValue);
           stats.incrementLoadCount();
         }

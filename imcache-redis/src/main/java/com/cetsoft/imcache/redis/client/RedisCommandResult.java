@@ -41,7 +41,7 @@ public class RedisCommandResult implements CommandResult {
   public byte[] getBytes() throws ConnectionException, IOException {
     final RedisStreamReader streamReader = getStreamReader();
     checkMessageType(streamReader, RedisBytes.DOLLAR_BYTE);
-    int length = streamReader.readInt();
+    final int length = streamReader.readInt();
     return streamReader.read(length);
   }
 
@@ -75,8 +75,7 @@ public class RedisCommandResult implements CommandResult {
     final byte actualByte = streamReader.readByte();
     if (actualByte != expectedByte) {
       throw new ConnectionException(
-          "Expected(" + ((char) expectedByte) + "), Found(" + ((char) actualByte)
-              + ").");
+          "Expected(" + ((char) expectedByte) + "), Found(" + ((char) actualByte) + ").");
     }
   }
 
