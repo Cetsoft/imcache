@@ -70,12 +70,8 @@ from a resource implements this interface. When data is not found the cache, loa
 The listener interface for receiving eviction events. The class that is interested in processing a eviction event
 implements this interface. When the eviction event occurs,that object's onEviction method is invoked.
 ### The Heap Cache
-HeapCache uses LRU(Least Recently Used) as eviction strategy by the help of LinkedHashMap. As a result, 
-HeapCache discards the least recently used items first when eviction required. Eviction occurs if the size of
-the cache is equal to the cache capacity in a put operation.
-### The Concurrent Heap Cache
-ConcurrentHeapCache uses LRU(Least Recently Used) as eviction strategy by the help of ConcurrentLinkedHashMap. 
-As a result, ConcurrentHeapCache discards the least recently used items firstwhen eviction required.
+HeapCache uses LRU(Least Recently Used) as eviction strategy by the help of caffeine. 
+As a result, caffeine discards the least recently used items first when eviction required.
 Eviction occurs if the size of the cache is equal to the cache capacity in a put operation
 ### The Off Heap Cache
 The Class OffHeapCache is a cache that uses offheap byte buffers to store or retrieve data by serializing
