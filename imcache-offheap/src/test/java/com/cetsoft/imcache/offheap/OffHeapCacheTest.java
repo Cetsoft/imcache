@@ -125,6 +125,7 @@ public class OffHeapCacheTest {
     cache.invalidate("a");
 
     verify(indexHandler).add("a", "b");
+    verify(indexHandler).remove("a", "b");
     assertEquals(cache.get("a"), null);
   }
 
