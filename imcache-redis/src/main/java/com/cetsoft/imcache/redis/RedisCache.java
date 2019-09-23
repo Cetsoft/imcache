@@ -85,9 +85,7 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
     try {
       client.set(serializer.serialize(key), serializer.serialize(value),
           TimeUnit.MILLISECONDS.toMillis(duration));
-    } catch (ConnectionException e) {
-      throw new RedisCacheException(e);
-    } catch (IOException e) {
+    } catch (ConnectionException|IOException e) {
       throw new RedisCacheException(e);
     }
   }
@@ -115,9 +113,7 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
         stats.incrementHitCount();
       }
       return value;
-    } catch (ConnectionException e) {
-      throw new RedisCacheException(e);
-    } catch (IOException e) {
+    } catch (ConnectionException|IOException e) {
       throw new RedisCacheException(e);
     }
   }
@@ -133,9 +129,7 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
       evictionListener.onEviction(key, value);
       stats.incrementEvictionCount();
       return value;
-    } catch (ConnectionException e) {
-      throw new RedisCacheException(e);
-    } catch (IOException e) {
+    } catch (ConnectionException|IOException e) {
       throw new RedisCacheException(e);
     }
   }
@@ -151,9 +145,7 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
   public void clear() {
     try {
       client.flushdb();
-    } catch (ConnectionException e) {
-      throw new RedisCacheException(e);
-    } catch (IOException e) {
+    } catch (ConnectionException|IOException e) {
       throw new RedisCacheException(e);
     }
   }
@@ -163,9 +155,7 @@ public class RedisCache<K, V> extends AbstractCache<K, V> {
   public long size() {
     try {
       return client.dbsize();
-    } catch (ConnectionException e) {
-      throw new RedisCacheException(e);
-    } catch (IOException e) {
+    } catch (ConnectionException|IOException e) {
       throw new RedisCacheException(e);
     }
   }
