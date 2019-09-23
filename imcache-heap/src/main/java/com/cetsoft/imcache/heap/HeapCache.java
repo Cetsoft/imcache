@@ -1,17 +1,15 @@
 /**
  * Copyright © 2013 Cetsoft. All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package com.cetsoft.imcache.heap;
 
@@ -21,9 +19,13 @@ import com.cetsoft.imcache.cache.CacheStats;
 import com.cetsoft.imcache.cache.EvictionListener;
 import com.cetsoft.imcache.cache.search.IndexHandler;
 import com.cetsoft.imcache.concurrent.ConcurrentCacheStats;
+import com.github.benmanes.caffeine.cache.CacheWriter;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Expiry;
+import com.github.benmanes.caffeine.cache.RemovalCause;
 import java.util.concurrent.TimeUnit;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * The type Heap cache.
@@ -70,19 +72,28 @@ public class HeapCache<K, V> extends AbstractSearchableCache<K, V> {
           evictionListener.onEviction(key, value);
           stats.incrementEvictionCount();
         })
+        .writer(new CacheWriter<K, V>() {
+          @Override
+          public void write(@NonNull K key, @NonNull V value) {
+            indexHandler.add(key, value);
+          }
+
+          @Override
+          public void delete(@NonNull K key, @Nullable V value, @NonNull RemovalCause cause) {
+            indexHandler.remove(key, value);
+          }
+        })
         .build();
   }
 
   @Override
   public void put(final K key, final V value) {
     caffeine.put(key, value);
-    indexHandler.add(key, value);
   }
 
   @Override
   public void put(final K key, final V value, final TimeUnit timeUnit, final long duration) {
     caffeine.policy().expireVariably().get().put(key, value, duration, timeUnit);
-    indexHandler.add(key, value);
   }
 
   @Override
@@ -107,21 +118,20 @@ public class HeapCache<K, V> extends AbstractSearchableCache<K, V> {
 
   @Override
   public V invalidate(final K key) {
-    V value = caffeine.getIfPresent(key);
-    caffeine.invalidate(key);
-    indexHandler.remove(key, value);
-    return value;
+    return caffeine.asMap().remove(key);
   }
 
   @Override
   public boolean contains(final K key) {
-    return caffeine.getIfPresent(key) != null;
+    return caffeine.asMap().containsKey(key);
   }
 
   @Override
   public void clear() {
-    caffeine.cleanUp();
-    indexHandler.clear();
+    synchronized (this) {
+      caffeine.invalidateAll();
+      indexHandler.clear();
+    }
   }
 
   @Override

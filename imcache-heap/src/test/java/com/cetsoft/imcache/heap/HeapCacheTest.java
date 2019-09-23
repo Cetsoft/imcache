@@ -127,6 +127,8 @@ public class HeapCacheTest {
 
   @Test
   public void clear() {
+    cache.put("a", "b");
+
     cache.clear();
 
     assertEquals(0, cache.size());
