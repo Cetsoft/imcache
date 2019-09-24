@@ -47,7 +47,7 @@ public class MultiLevelCacheExample {
   /**
    * The Interface CacheDao.
    */
-  public static interface CacheDao {
+  public interface CacheDao {
 
     /**
      * Load.

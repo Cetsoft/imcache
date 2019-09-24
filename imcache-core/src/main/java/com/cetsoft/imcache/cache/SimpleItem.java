@@ -41,7 +41,7 @@ public class SimpleItem<V> implements VersionedItem<V> {
    */
   public SimpleItem(final V value) {
     this.value = value;
-    this.version = -1;
+    this.version = 0;
   }
 
   /**
@@ -60,6 +60,10 @@ public class SimpleItem<V> implements VersionedItem<V> {
     return value;
   }
 
+  @Override
+  public VersionedItem<V> update(V newValue) {
+    return new SimpleItem<>(version + 1, newValue);
+  }
 
   public int getVersion() {
     return version;

@@ -126,17 +126,16 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
       final PutOperation<V> putOperation) {
     final int version = value.getVersion();
     VersionedItem<V> exValue = get(key);
-    if (exValue != null && version != exValue.getVersion()) {
+    if (exValue != null && version < exValue.getVersion()) {
       throw new StaleItemException(version, exValue.getVersion());
     }
     writeLock(key);
     try {
       exValue = get(key);
-      if (exValue != null && version != exValue.getVersion()) {
+      if (exValue != null && version < exValue.getVersion()) {
         throw new StaleItemException(version, exValue.getVersion());
       }
-      final VersionedItem<V> newValue = new SimpleItem<>(version + 1, value.getValue());
-      putOperation.put(newValue);
+      putOperation.put(value);
     } finally {
       writeUnlock(key);
     }
@@ -260,7 +259,7 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
       if (value == null) {
         return null;
       }
-      return new SimpleItem<>(0, value);
+      return new SimpleItem<>(value);
     }
 
   }

@@ -49,7 +49,8 @@ public class VersionedOffHeapCacheExample {
             if (value == null) {
               cache.put("apple", new SimpleItem<>(newValue));
             } else {
-              cache.put("apple", new SimpleItem<>(newValue));
+              value = value.update(newValue);
+              cache.put("apple", value);
             }
             System.out.println(cache.get("apple").getValue());
             break;

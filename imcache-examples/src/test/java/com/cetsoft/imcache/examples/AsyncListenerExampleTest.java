@@ -20,7 +20,7 @@ import org.junit.Test;
 public class AsyncListenerExampleTest {
 
   @Test
-  public void example() {
+  public void example() throws InterruptedException {
     AsyncListenerExample.example();
   }
 }

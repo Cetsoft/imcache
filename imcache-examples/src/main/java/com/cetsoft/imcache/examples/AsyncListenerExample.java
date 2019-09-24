@@ -1,17 +1,15 @@
 /**
  * Copyright © 2013 Cetsoft. All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package com.cetsoft.imcache.examples;
 
@@ -26,13 +24,13 @@ import java.util.List;
  */
 public class AsyncListenerExample {
 
-  public static void example() {
+  public static void example() throws InterruptedException {
     final StringDAO stringDAO = new StringDAO();
-    Cache<String, String> cache = CacheBuilder.heapCache()
+    final Cache<String, String> cache = CacheBuilder.heapCache()
         .evictionListener(new ScheduledEvictionListener<String, String>() {
           @Override
           public void save(List<CacheTask<String, String>> cacheTasks) {
-            for (CacheTask<String, String> task : cacheTasks) {
+            for (final CacheTask<String, String> task : cacheTasks) {
               stringDAO.update(task.getKey(), task.getValue());
             }
           }
@@ -40,7 +38,7 @@ public class AsyncListenerExample {
     cache.put("key", "value");
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InterruptedException {
     example();
   }
 
@@ -50,6 +48,7 @@ public class AsyncListenerExample {
   private static class StringDAO {
 
     public void update(String key, String value) {
+      System.out.println("key=" + key + " is updated with value=" + value);
     }
   }
 

@@ -68,6 +68,7 @@ public class VersionedOffHeapCacheBuilder extends BaseCacheBuilder {
   public VersionedOffHeapCacheBuilder() {
     super();
     name = "imcache-versioned-offheap-cache-" + cacheNumber.incrementAndGet();
+    serializer = DEFAULT_SERIALIZER;
     concurrencyLevel = OffHeapCache.DEFAULT_CONCURRENCY_LEVEL;
     evictionPeriod = OffHeapCache.DEFAULT_EVICTION_PERIOD;
     bufferCleanerPeriod = OffHeapCache.DEFAULT_BUFFER_CLEANER_PERIOD;
