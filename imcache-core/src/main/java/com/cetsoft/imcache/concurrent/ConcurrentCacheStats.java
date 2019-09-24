@@ -49,18 +49,18 @@ public class ConcurrentCacheStats implements CacheStats {
   }
 
   @Override
-  public long requestCount() {
+  public long getRequestCount() {
     return hitCount.longValue() + missCount.longValue();
   }
 
   @Override
   public double hitRate() {
-    return hitCount.doubleValue() / requestCount();
+    return hitCount.doubleValue() / getRequestCount();
   }
 
   @Override
   public double missRate() {
-    return missCount.doubleValue() / requestCount();
+    return missCount.doubleValue() / getRequestCount();
   }
 
   /**

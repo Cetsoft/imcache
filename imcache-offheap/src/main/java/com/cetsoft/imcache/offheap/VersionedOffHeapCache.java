@@ -1,17 +1,15 @@
 /**
  * Copyright © 2013 Cetsoft. All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package com.cetsoft.imcache.offheap;
 
@@ -44,10 +42,7 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
    * The off heap cache.
    */
   protected OffHeapCache<K, VersionedItem<V>> offHeapCache;
-  /**
-   * The name.
-   */
-  private String name;
+
   /**
    * The read write lock.
    */
@@ -96,42 +91,54 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
    * @param evictionPeriod the eviction period
    */
   public VersionedOffHeapCache(final String name, final OffHeapByteBufferStore byteBufferStore,
-      final Serializer<V> serializer,
-      CacheLoader<K, V> cacheLoader, EvictionListener<K, V> evictionListener,
-      IndexHandler<K, V> indexHandler,
-      long bufferCleanerPeriod, float bufferCleanerThreshold, int concurrencyLevel,
-      long evictionPeriod) {
-    this(name, new CacheItemSerializer<V>(serializer), byteBufferStore,
-        new CacheItemCacheLoader<K, V>(cacheLoader),
-        new CacheItemEvictionListener<K, V>(evictionListener),
-        new CacheItemIndexHandler<K, V>(indexHandler),
+      final Serializer<V> serializer, final CacheLoader<K, V> cacheLoader,
+      final EvictionListener<K, V> evictionListener, final IndexHandler<K, V> indexHandler,
+      final long bufferCleanerPeriod, final float bufferCleanerThreshold,
+      final int concurrencyLevel,
+      final long evictionPeriod) {
+    this(name, new CacheItemSerializer<>(serializer), byteBufferStore,
+        new CacheItemCacheLoader<>(cacheLoader),
+        new CacheItemEvictionListener<>(evictionListener),
+        new CacheItemIndexHandler<>(indexHandler),
         bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
   }
 
 
   public void put(K key, VersionedItem<V> value) {
-    int version = value.getVersion();
+    putInternal(key, value, versionedItem -> offHeapCache.put(key, versionedItem));
+  }
+
+  @Override
+  public void put(final K key, VersionedItem<V> value, final TimeUnit timeUnit,
+      final long duration) {
+    putInternal(key, value,
+        versionedItem -> offHeapCache.put(key, versionedItem, timeUnit, duration));
+  }
+
+  @FunctionalInterface
+  private interface PutOperation<V> {
+
+    void put(VersionedItem<V> versionedItem);
+  }
+
+  protected void putInternal(final K key, final VersionedItem<V> value,
+      final PutOperation<V> putOperation) {
+    final int version = value.getVersion();
     VersionedItem<V> exValue = get(key);
     if (exValue != null && version != exValue.getVersion()) {
       throw new StaleItemException(version, exValue.getVersion());
     }
-    version++;
     writeLock(key);
     try {
       exValue = get(key);
-      if (value.getVersion() == version) {
-        throw new StaleItemException(version, exValue == null ? version - 1 : exValue.getVersion());
+      if (exValue != null && version != exValue.getVersion()) {
+        throw new StaleItemException(version, exValue.getVersion());
       }
-      value.setVersion(version);
-      offHeapCache.put(key, value);
+      final VersionedItem<V> newValue = new SimpleItem<>(version + 1, value.getValue());
+      putOperation.put(newValue);
     } finally {
       writeUnlock(key);
     }
-  }
-
-  @Override
-  public void put(K key, VersionedItem<V> value, TimeUnit timeUnit, long duration) {
-    offHeapCache.put(key, value, timeUnit, duration);
   }
 
   /**
@@ -184,10 +191,7 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 
 
   public String getName() {
-    if (this.name != null) {
-      return name;
-    }
-    return this.getClass().getName();
+    return this.offHeapCache.getName();
   }
 
   @Override
@@ -251,11 +255,11 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
 
 
     public VersionedItem<V> load(K key) {
-      V value = cacheLoader.load(key);
+      final V value = cacheLoader.load(key);
       if (value == null) {
         return null;
       }
-      return new SimpleItem<V>(value);
+      return new SimpleItem<>(value);
     }
 
   }
@@ -297,9 +301,8 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
       byte[] version = new byte[4];
       System.arraycopy(payload, 0, newPayload, 0, payload.length - 4);
       System.arraycopy(payload, payload.length - 4, version, 0, 4);
-      SimpleItem<V> cacheItem = new SimpleItem<V>(serializer.deserialize(newPayload));
-      cacheItem.setVersion(SerializationUtils.deserializeInt(version));
-      return cacheItem;
+      return new SimpleItem<>(SerializationUtils.deserializeInt(version),
+          serializer.deserialize(newPayload));
     }
 
   }

@@ -55,7 +55,7 @@ public interface CacheStats {
    *
    * @return request count
    */
-  long requestCount();
+  long getRequestCount();
 
   /**
    * The hit rate

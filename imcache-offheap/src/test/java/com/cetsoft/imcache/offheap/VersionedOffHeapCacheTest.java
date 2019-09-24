@@ -16,23 +16,18 @@
 package com.cetsoft.imcache.offheap;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doNothing;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
-import com.cetsoft.imcache.cache.VersionedItem;
+import com.cetsoft.imcache.cache.SimpleItem;
 import com.cetsoft.imcache.cache.search.IndexHandler;
-import com.cetsoft.imcache.offheap.VersionedOffHeapCache.CacheItemSerializer;
-import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBuffer;
 import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBufferStore;
-import com.cetsoft.imcache.offheap.bytebuffer.Pointer;
 import com.cetsoft.imcache.serialization.Serializer;
-import java.util.Map.Entry;
-import java.util.Random;
-import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -48,88 +43,55 @@ public class VersionedOffHeapCacheTest {
    * The cache loader.
    */
   @Mock
-  CacheLoader<Object, Object> cacheLoader;
+  CacheLoader<String, String> cacheLoader;
 
   /**
    * The eviction listener.
    */
   @Mock
-  EvictionListener<Object, Object> evictionListener;
+  EvictionListener<String, String> evictionListener;
 
   /**
    * The index handler.
    */
   @Mock
-  IndexHandler<Object, Object> indexHandler;
+  IndexHandler<String, String> indexHandler;
 
   /**
-   * The entry.
+   * The cache.
    */
-  @Mock
-  Entry<Object, Pointer> entry;
+  VersionedOffHeapCache<String, String> cache;
 
   /**
    * The serializer.
    */
-  @Mock
-  Serializer<Object> serializer;
+  Serializer<String> serializer = new Serializer<String>() {
+
+    @Override
+    public byte[] serialize(String value) {
+      return value.getBytes();
+    }
+
+    @Override
+    public String deserialize(byte[] payload) {
+      return new String(payload);
+    }
+  };
 
   /**
    * The buffer store.
    */
   @Spy
-  OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(1000, 10);
-
-  /**
-   * The buffer.
-   */
-  @Mock
-  OffHeapByteBuffer buffer;
-
-  /**
-   * The pointer map.
-   */
-  @Mock
-  ConcurrentMap<Object, Pointer> pointerMap;
-
-  /**
-   * The pointer.
-   */
-  @Mock
-  Pointer pointer;
-
-  /**
-   * The cache.
-   */
-  VersionedOffHeapCache<Object, Object> cache;
-
-  /**
-   * The random.
-   */
-  Random random = new Random();
-
-  /**
-   * The value.
-   */
-  @Mock
-  VersionedItem<Object> value;
-
-  /**
-   * The ex value.
-   */
-  @Mock
-  VersionedItem<Object> exValue;
-
+  OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(1000, 2);
   /**
    * Setup.
    */
   @Before
   public void setup() {
     MockitoAnnotations.initMocks(this);
-    cache = spy(
-        new VersionedOffHeapCache<Object, Object>("versioned-offheap", bufferStore, serializer,
-            cacheLoader, evictionListener,
-            indexHandler, 100000L, 0.5f, 1, 100000L));
+    cache = spy(new VersionedOffHeapCache<String, String>("versioned-offheap",
+            bufferStore, serializer, cacheLoader, evictionListener, indexHandler,
+            100000L, 0.5f, 1, 100000L));
     cache.offHeapCache = spy(cache.offHeapCache);
   }
 
@@ -138,12 +100,63 @@ public class VersionedOffHeapCacheTest {
    */
   @Test
   public void put() {
-    Object object = new Object();
-    doReturn(0).when(value).getVersion();
-    doReturn(null).when(cache).get(object);
-    doNothing().when(cache.offHeapCache).put(object, value);
-    cache.put(object, value);
-    verify(cache.offHeapCache).put(object, value);
+    final String key = "key1", value = "valueA";
+
+    cache.put(key, new SimpleItem(value));
+
+    verify(cache.offHeapCache).put(key, new SimpleItem<>(0, value));
+  }
+
+  /**
+   * Put.
+   */
+  @Test
+  public void putWithTimeout() throws InterruptedException {
+    final String key = "key1", value = "valueA";
+
+    cache.put(key, new SimpleItem(value), TimeUnit.MILLISECONDS, 1000);
+
+    assertEquals(new SimpleItem<>(0, value), cache.get(key));
+  }
+
+  /**
+   * contains.
+   */
+  @Test
+  public void contains() throws InterruptedException {
+    final String key = "key11", value = "valueA";
+
+    cache.put(key, new SimpleItem(value), TimeUnit.MILLISECONDS, 1000);
+
+    assertTrue(cache.contains(key));
+  }
+
+  /**
+   * invalidate.
+   */
+  @Test
+  public void invalidate() throws InterruptedException {
+    final String key = "key12", value = "valueA";
+
+    cache.put(key, new SimpleItem(value), TimeUnit.MILLISECONDS, 1000);
+    cache.invalidate(key);
+
+    assertEquals(null, cache.get(key));
+  }
+
+
+  /**
+   * size.
+   */
+  @Test
+  public void size() throws InterruptedException {
+    final int size = 5;
+    for (int i = 0; i < 5; i++) {
+      cache.put( "key|" + i, new SimpleItem(i +""));
+    }
+    assertEquals(size, cache.size());
+    cache.clear();
+    assertEquals(0, cache.size());
   }
 
   /**
@@ -151,11 +164,10 @@ public class VersionedOffHeapCacheTest {
    */
   @Test(expected = StaleItemException.class)
   public void putVersionAreNotSame() {
-    Object object = new Object();
-    doReturn(0).when(value).getVersion();
-    doReturn(1).when(exValue).getVersion();
-    doReturn(exValue).when(cache).get(object);
-    cache.put(object, value);
+    final String key = "key2", value = "valueA";
+
+    cache.put(key, new SimpleItem(2, value));
+    cache.put(key, new SimpleItem(value));
   }
 
   /**
@@ -163,30 +175,10 @@ public class VersionedOffHeapCacheTest {
    */
   @Test(expected = StaleItemException.class)
   public void putVersionRaceCondition() {
-    Object object = new Object();
-    doReturn(0).doReturn(1).when(value).getVersion();
-    doReturn(null).when(cache).get(object);
-    doNothing().when(cache.offHeapCache).put(object, value);
-    cache.put(object, value);
-  }
+    final String key = "key3", value = "valueA";
 
-  /**
-   * Serialize cache item serializer.
-   */
-  @Test
-  public void serializeCacheItemSerializer() {
-    Object object = new Object();
-    CacheItemSerializer<Object> cacheItemSerializer = new CacheItemSerializer<Object>(serializer);
-    int size = 100;
-    byte[] expectedBytes = new byte[size];
-    random.nextBytes(expectedBytes);
-    doReturn(expectedBytes).when(serializer).serialize(object);
-    doReturn(object).when(serializer).deserialize(expectedBytes);
-    doReturn(object).when(value).getValue();
-    doReturn(13).when(value).getVersion();
-    byte[] bytes = cacheItemSerializer.serialize(value);
-    VersionedItem<Object> item = cacheItemSerializer.deserialize(bytes);
-    assertEquals(13, item.getVersion());
-    assertEquals(object, item.getValue());
+    doReturn(null).doReturn(new SimpleItem<>(2, value)).when(cache).get(key);
+
+    cache.put(key, new SimpleItem<>(value));
   }
 }
