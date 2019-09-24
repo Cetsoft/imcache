@@ -153,4 +153,4 @@ Note that queries to caches that live outside of JVM can't be executed. Thus, qu
 `./mvnw license:format`
 #### Coverage
 `./mvnw clean verify -Dgpg.skip`
-Open ${module}/target/site/jacoco/index.html` where module is imcache-core, imcache-heap and etc.
+Open `${module}/target/site/jacoco/index.html` where module is imcache-core, imcache-heap and etc.

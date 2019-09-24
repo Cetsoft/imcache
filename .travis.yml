@@ -9,5 +9,5 @@ branches:
     - master
 
 after_success:
-  - ./mvnw clean test
-  - ./mvnw clean cobertura:cobertura coveralls:report
+  - ./mvnw clean test -Dgpg.skip
+  - ./mvnw clean verify -Dgpg.skip
