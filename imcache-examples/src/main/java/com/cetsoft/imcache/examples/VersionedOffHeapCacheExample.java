@@ -36,32 +36,29 @@ public class VersionedOffHeapCacheExample {
         .build();
     ExecutorService service = Executors.newFixedThreadPool(3);
     for (int i = 0; i < 100000; i++) {
-      service.execute(new Runnable() {
-        public void run() {
-          try {
-            Thread.sleep(100);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          while (true) {
-            try {
-              VersionedItem<String> value = cache.get("apple");
-              String newValue = getRandomString();
-              if (value == null) {
-                cache.put("apple", new SimpleItem<String>(newValue));
-              } else {
-                value.update(newValue);
-                cache.put("apple", value);
-              }
-              System.out.println(cache.get("apple").getValue());
-              break;
-            } catch (StaleItemException ex) {
-              ex.printStackTrace();
-            }
-          }
-          VersionedItem<String> item = cache.get("apple");
-          System.out.println(item.getVersion());
+      service.execute(() -> {
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
         }
+        while (true) {
+          try {
+            VersionedItem<String> value = cache.get("apple");
+            String newValue = getRandomString();
+            if (value == null) {
+              cache.put("apple", new SimpleItem<>(newValue));
+            } else {
+              cache.put("apple", new SimpleItem<>(newValue));
+            }
+            System.out.println(cache.get("apple").getValue());
+            break;
+          } catch (StaleItemException ex) {
+            ex.printStackTrace();
+          }
+        }
+        VersionedItem<String> item = cache.get("apple");
+        System.out.println(item.getVersion());
       });
     }
   }
