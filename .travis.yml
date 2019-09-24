@@ -10,4 +10,4 @@ branches:
 
 after_success:
   - ./mvnw clean test -Dgpg.skip
-  - ./mvnw clean verify -Dgpg.skip
+  - ./mvnw clean test jacoco:report coveralls:report
