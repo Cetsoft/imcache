@@ -7,8 +7,9 @@ Imcache is a Java Caching Library.Imcache intends to speed up applications by pr
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.cetsoft/imcache/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.cetsoft/imcache/)
 [![License](http://img.shields.io/:license-apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html) [![Join the chat at https://gitter.im/Cetsoft/imcache](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Cetsoft/imcache?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-### Pom Reference
+### Reference
 In order to use imcache, you need to specify your dependency as follows:
+#### Maven
 ```xml
 <dependency>
   <groupId>com.cetsoft</groupId>
@@ -16,9 +17,14 @@ In order to use imcache, you need to specify your dependency as follows:
   <version>0.2.0</version><!--Can be updated for later versions-->
 </dependency>
 ```
+#### Gradle
+```groovy
+compile group: 'com.cetsoft', name: 'imcache', version: '0.2.0'
+```
+For full dependency reference: https://mvnrepository.com/artifact/com.cetsoft/imcache
 ### Simple Application
 ```java
-Cache<String,User> cache = CacheBuilder.heapCache().
+final Cache<String,User> cache = CacheBuilder.heapCache().
 cacheLoader(new CacheLoader<String, User>() {
     public User load(String key) {
         return userDAO.get(key);
@@ -29,8 +35,8 @@ cacheLoader(new CacheLoader<String, User>() {
     }
 }).capacity(10000).build();
 //If there is not a user in the heap cache it'll be loaded via userDAO.
-User user = cache.get("#unique identifier"); 
-User newUser = new User("email", "Richard", "Murray")
+final User user = cache.get("#unique identifier"); 
+final User newUser = new User("email", "Richard", "Murray")
 //When maximum value for cache size is reached, eviction event occurs.
 //In case of eviction, newUser will be saved to db.
 cache.put(newUser.getEmail(), newUser);
@@ -54,7 +60,7 @@ Cache Builder is one of the core asset of the imcache. You can create simple hea
 Cache Builder. Let's see Cache Builder in action below.
 ```java
 void example(){
-    Cache<Integer,Integer> cache = CacheBuilder.heapCache().
+    final Cache<Integer,Integer> cache = CacheBuilder.heapCache().
     cacheLoader(new CacheLoader<Integer, Integer>() {
   	//Here you can load the key from another cache like offheapcache
         public Integer load(Integer key) {
@@ -83,7 +89,7 @@ is a good choice to start OffHeapCache. Let's see sample OffHeapCache use.
 ```java
 void example(){
     //8388608 is 8 MB and 10 buffers. 8MB*10 = 80 MB.
-    OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
+    final OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
     final Cache<Integer,SimpleObject> offHeapCache = CacheBuilder.offHeapCache().
     storage(bufferStore).build();
 }
@@ -98,7 +104,7 @@ is a good choice to start VersionedOffHeapCache. Let's see sample VersionedOffHe
 ```java
 void example(){
     //8388608 is 8 MB and 10 buffers. 8MB*10 = 80 MB.
-    OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
+    final OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 10);
     final Cache<Integer,VersionedItem<SimpleObject>> offHeapCache = 
     CacheBuilder.versionedOffHeapCache().storage(bufferStore).build();
     VersionedItem<SimpleObject> versionedItem = offHeapCache.get(12);
@@ -142,8 +148,9 @@ Note that queries to caches that live outside of JVM can't be executed. Thus, qu
 ## Support
 ### Contributing
 #### Compiling Project
-`./mvnw install -DskipTests -Dgpg.skip`
+`./mvnw install -DskipTests -Dgp`g.skip`
 #### License Header
 `./mvnw license:format`
 #### Coverage
-`./mvnw clean cobertura:cobertura coveralls:report -Dgpg.skip`
+`./mvnw clean verify`
+Open ${module}/target/site/jacoco/index.html` where module is imcache-core, imcache-heap and etc.
