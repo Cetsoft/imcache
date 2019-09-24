@@ -14,12 +14,12 @@ In order to use imcache, you need to specify your dependency as follows:
 <dependency>
   <groupId>com.cetsoft</groupId>
   <artifactId>imcache</artifactId>
-  <version>0.2.0</version><!--Can be updated for later versions-->
+  <version>0.3.0</version><!--Can be updated for later versions-->
 </dependency>
 ```
 #### Gradle
 ```groovy
-compile group: 'com.cetsoft', name: 'imcache', version: '0.2.0'
+compile group: 'com.cetsoft', name: 'imcache', version: '0.3.0'
 ```
 For full dependency reference: https://mvnrepository.com/artifact/com.cetsoft/imcache
 ### Simple Application
