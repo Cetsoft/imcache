@@ -16,6 +16,7 @@
 package com.cetsoft.imcache.cache;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
@@ -32,5 +33,6 @@ public class SimpleItemTest {
     assertEquals(10, item2.getValue().intValue());
 
     assertEquals(item2.getVersion() + 1, item2.update(3).getVersion());
+    assertFalse(item2.equals(item2.update(4)));
   }
 }

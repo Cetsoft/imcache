@@ -23,11 +23,14 @@
     <module>imcache-core</module>
     <module>imcache-redis</module>
   </modules>
+
   <properties>
     <org.springframework.version>5.1.9.RELEASE</org.springframework.version>
     <mockito.version>1.8.4</mockito.version>
     <junit.version>4.11</junit.version>
     <sourceEncoding>UTF-8</sourceEncoding>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
   <licenses>
     <license>
@@ -129,7 +132,7 @@
         <configuration>
           <forkCount>3</forkCount>
           <reuseForks>true</reuseForks>
-          <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+          <argLine>@{argLine} -Xmx1024m -XX:MaxPermSize=256m</argLine>
         </configuration>
       </plugin>
       <plugin>
@@ -159,22 +162,24 @@
       <!-- 				</executions> -->
       <!-- 			</plugin> -->
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <version>2.7</version>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.4</version>
         <executions>
           <execution>
-            <phase>package</phase>
+            <id>prepare-agent</id>
             <goals>
-              <goal>cobertura</goal>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>post-unit-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.eluder.coveralls</groupId>
-        <artifactId>coveralls-maven-plugin</artifactId>
-        <version>3.1.0</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
