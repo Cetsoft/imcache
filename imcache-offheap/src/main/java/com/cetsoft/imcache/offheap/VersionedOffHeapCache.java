@@ -70,9 +70,8 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
       final long bufferCleanerPeriod, final float bufferCleanerThreshold,
       final int concurrencyLevel, final long evictionPeriod) {
     offHeapCache = new OffHeapCache<>(name, cacheLoader, evictionListener,
-        indexHandler,
-        byteBufferStore, serializer, bufferCleanerPeriod, bufferCleanerThreshold, concurrencyLevel,
-        evictionPeriod);
+        indexHandler, byteBufferStore, serializer, bufferCleanerPeriod,
+        bufferCleanerThreshold, concurrencyLevel, evictionPeriod);
     this.readWriteLock = new StripedReadWriteLock(concurrencyLevel);
   }
 
@@ -259,7 +258,7 @@ public class VersionedOffHeapCache<K, V> implements SearchableCache<K, Versioned
       if (value == null) {
         return null;
       }
-      return new SimpleItem<>(value);
+      return new SimpleItem<>(0, value);
     }
 
   }

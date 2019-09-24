@@ -171,6 +171,18 @@ public class VersionedOffHeapCacheTest {
   }
 
   /**
+   * Put version are not same.
+   */
+  @Test
+  public void getLoadsData() {
+    final String key = "keyLoading", value = "valueA";
+
+    doReturn(value).when(cacheLoader).load(key);
+
+    assertEquals(new SimpleItem<>(0, value), cache.get(key));
+  }
+
+  /**
    * Put version race condition.
    */
   @Test(expected = StaleItemException.class)

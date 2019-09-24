@@ -238,6 +238,7 @@ public class OffHeapCache<K, V> extends AbstractSearchableCache<K, V> {
     synchronized (this) {
       pointerMap.clear();
       bufferStore.free();
+      indexHandler.clear();
     }
   }
 
