@@ -45,4 +45,20 @@ public class VersionedOffHeapCacheBuilderTest {
     assertTrue(cache instanceof SearchableCache);
     assertTrue(cache instanceof VersionedOffHeapCache);
   }
+
+  /**
+   *
+   */
+  @Test(expected = NecessaryArgumentException.class)
+  public void buildThrowsNecessaryArgumentException() {
+    CacheBuilder.versionedOffHeapCache().build("my-cache");
+  }
+
+  /**
+   *
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void buildThrowsIllegalArgumentExceptionForNegativeConcurrency() {
+    CacheBuilder.versionedOffHeapCache().concurrencyLevel(-1).build("my-cache");
+  }
 }

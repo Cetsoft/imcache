@@ -15,6 +15,9 @@
  */
 package com.cetsoft.imcache.cache;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyList;
@@ -120,6 +123,26 @@ public class AbstractSearchableCacheTest {
         .execute(CacheQuery.newQuery().setCriteria(criteria).setFilter(filter));
     assertTrue(items.contains(item1));
     assertTrue(items.contains(item2));
+    abstractCache.setCacheLoader(key -> null);
+    assertNull(abstractCache.getCacheLoader().load(1));
+    assertEquals("searchable-cache", abstractCache.getName());
+    abstractCache.setEvictionListener((key, value) -> {
+    });
+  }
+
+  @Test
+  public void imcacheException() {
+      final Throwable throwable = new NullPointerException("null");
+      assertEquals("java.lang.NullPointerException: null", new ImcacheException(throwable).getMessage());
+  }
+
+  @Test
+  public void cacheCategories()
+  {
+    assertTrue(CacheCategory.HEAP.isInMemory());
+    assertTrue(CacheCategory.OFFHEAP.isInMemory());
+    assertTrue(CacheCategory.VERSIONED_OFFHEAP.isInMemory());
+    assertFalse(CacheCategory.REDIS.isInMemory());
   }
 
   private static class Item {

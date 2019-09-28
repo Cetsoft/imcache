@@ -82,6 +82,17 @@ public class RedisClientTest {
   }
 
   @Test
+  public void setWithTimeout() throws ConnectionException, IOException {
+    byte[] key = {'1'};
+    byte[] value = {'1'};
+    final long millis = 10;
+    doReturn("OK").when(commandResult).getStatus();
+    redisClient.set(key, value, millis);
+    verify(commandExecutor).execute(RedisCommands.SET, key, value);
+    verify(commandExecutor).execute(RedisCommands.PEXPIRE, key, Long.toString(millis).getBytes());
+  }
+
+  @Test
   public void get() throws ConnectionException, IOException {
     byte[] key = {'1'};
     byte[] value = {'1'};

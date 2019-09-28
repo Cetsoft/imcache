@@ -34,5 +34,8 @@ public class SimpleItemTest {
 
     assertEquals(item2.getVersion() + 1, item2.update(3).getVersion());
     assertFalse(item2.equals(item2.update(4)));
+
+    item.hashCode();
+    item.toString();
   }
 }

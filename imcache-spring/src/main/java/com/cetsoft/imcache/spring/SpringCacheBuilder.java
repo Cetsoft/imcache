@@ -88,11 +88,6 @@ public class SpringCacheBuilder extends BaseCacheBuilder {
   public <K, V> Cache<K, V> build() {
 
     switch (this.type) {
-
-      case HEAP:
-        return CacheBuilder.heapCache().cacheLoader(cacheLoader).evictionListener(evictionListener)
-            .indexHandler(indexHandler).capacity(heapCapacity).build();
-
       case OFFHEAP:
         return CacheBuilder.offHeapCache().cacheLoader(cacheLoader)
             .evictionListener(evictionListener)

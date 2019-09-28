@@ -22,17 +22,26 @@ public enum CacheCategory {
   /**
    * Heap cache category.
    */
-  HEAP,
+  HEAP(true),
   /**
    * Offheap cache category.
    */
-  OFFHEAP,
+  OFFHEAP(true),
   /**
    * Versioned offheap cache category.
    */
-  VERSIONED_OFFHEAP,
+  VERSIONED_OFFHEAP(true),
   /**
    * Redis cache category.
    */
-  REDIS
-}
+  REDIS(false);
+
+  private final boolean inMemory;
+
+  CacheCategory(boolean inMemory) {
+    this.inMemory = inMemory;
+  }
+
+  public boolean isInMemory() {
+    return inMemory;
+  }}

@@ -15,6 +15,7 @@
  */
 package com.cetsoft.imcache.redis.client;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.doNothing;
@@ -61,6 +62,10 @@ public class ConnectionTest {
     assertNotNull(connection.getStreamReader());
     assertNotNull(connection.getStreamWriter());
     verify(socket).setSoTimeout(Connection.DEFAULT_SOCKET_TIMEOUT);
+    assertEquals(connection.getHost(), Connection.DEFAULT_HOST);
+    assertEquals(connection.getPort(), Connection.DEFAULT_PORT);
+    assertEquals(connection.getSocketTimeout(), Connection.DEFAULT_SOCKET_TIMEOUT);
+    assertEquals(connection.getTimeout(), Connection.DEFAULT_TIMEOUT);
   }
 
   @Test(expected = ConnectionException.class)
@@ -69,6 +74,15 @@ public class ConnectionTest {
     doReturn(socket).when(connection).createSocket();
     doThrow(new SocketException()).when(socket).setSoTimeout(Connection.DEFAULT_SOCKET_TIMEOUT);
     connection.open();
+  }
+
+  @Test
+  public void close() throws ConnectionException, IOException {
+    doReturn(true).when(connection).isConnected();
+    doNothing().when(socket).close();
+    doNothing().when(redisOutputStream).flush();
+    connection.close();
+    verify(socket).close();
   }
 
   @Test(expected = ConnectionException.class)

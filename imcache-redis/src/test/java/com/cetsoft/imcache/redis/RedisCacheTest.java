@@ -16,6 +16,7 @@
 package com.cetsoft.imcache.redis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -27,6 +28,7 @@ import com.cetsoft.imcache.redis.client.Client;
 import com.cetsoft.imcache.redis.client.ConnectionException;
 import com.cetsoft.imcache.serialization.Serializer;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -116,6 +118,23 @@ public class RedisCacheTest {
     verify(client).set(serializer.serialize(key), serializer.serialize(value));
   }
 
+  @Test
+  public void putWithTimeout() throws ConnectionException, IOException {
+    int key = 3;
+    int value = 5;
+    cache.put(key, value, TimeUnit.MILLISECONDS, 100);
+    verify(client).set(serializer.serialize(key), serializer.serialize(value), 100);
+  }
+
+  @Test(expected = RedisCacheException.class)
+  public void putWithTimeoutThrowsIOException() throws ConnectionException, IOException {
+    int key = 3;
+    int value = 5;
+    doThrow(new IOException("")).when(client).set(serializer.serialize(key), serializer.serialize(value), 100);
+    cache.put(key, value, TimeUnit.MILLISECONDS, 100);
+  }
+
+
   @Test(expected = RedisCacheException.class)
   public void putConnectionException() throws ConnectionException, IOException {
     doThrow(new ConnectionException("")).when(client).set((byte[]) any(), (byte[]) any());
@@ -184,6 +203,19 @@ public class RedisCacheTest {
     int key = 3;
     doThrow(new IOException("")).when(client).get(serializer.serialize(key));
     cache.get(key);
+  }
+
+  @Test
+  public void contains() throws ConnectionException, IOException {
+    int key = 3;
+    int value = 5;
+    doReturn(serializer.serialize(value)).when(client).get(serializer.serialize(key));
+    assertTrue(cache.contains(key));
+  }
+
+  @Test
+  public void stats() throws ConnectionException, IOException {
+    assertTrue(cache.stats() != null);
   }
 
 }

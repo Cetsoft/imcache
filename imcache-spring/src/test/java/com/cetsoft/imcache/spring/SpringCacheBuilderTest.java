@@ -17,17 +17,21 @@ package com.cetsoft.imcache.spring;
 
 import static org.junit.Assert.assertTrue;
 
+import com.cetsoft.imcache.cache.search.DefaultIndexHandler;
 import com.cetsoft.imcache.heap.HeapCache;
 import com.cetsoft.imcache.offheap.OffHeapCache;
 import com.cetsoft.imcache.offheap.VersionedOffHeapCache;
 import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBufferStore;
 import com.cetsoft.imcache.redis.RedisCache;
+import com.cetsoft.imcache.serialization.Serializer;
 import org.junit.Test;
 
 public class SpringCacheBuilderTest {
 
   @Test
   public void build() {
+    assertTrue(new SpringCacheBuilder("heap").build() instanceof HeapCache);
+
     SpringCacheBuilder builder = new SpringCacheBuilder();
 
     builder.setType("heap");
@@ -35,15 +39,34 @@ public class SpringCacheBuilderTest {
 
     builder.setType("redis");
     builder.setConcurrencyLevel(2);
+    builder.setCacheLoader(key -> null);
+    builder.setEvictionListener((key, value) -> {
+    });
+    builder.setIndexHandler(new DefaultIndexHandler<>());
+    builder.setRedisHost("localhost");
+    builder.setRedisPort(6379);
+    builder.setSerializer(new Serializer<Object>() {
+      @Override
+      public byte[] serialize(Object value) {
+        return value.toString().getBytes();
+      }
+
+      @Override
+      public Object deserialize(byte[] payload) {
+        return new String(payload);
+      }
+    });
+
     assertTrue(builder.build() instanceof RedisCache);
 
     builder.setType("offheap");
     builder.setEvictionPeriod(2);
+    builder.setHeapCapacity(19999);
     builder.setBufferCleanerPeriod(1000);
     builder.setBufferCleanerThreshold(0.6F);
     OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(8388608, 2);
     builder.setBufferStore(bufferStore);
-    assertTrue(builder.build() instanceof OffHeapCache);
+    assertTrue(builder.build("off-heap") instanceof OffHeapCache);
 
     builder.setType("versioned_offheap");
     assertTrue(builder.build() instanceof VersionedOffHeapCache);

@@ -16,6 +16,7 @@
 package com.cetsoft.imcache.spring;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -79,6 +80,13 @@ public class ImcacheCacheTest {
     imcache.put(1, 1);
     assertEquals(1, cache.get(1));
     verify(cache).put(1, 1);
+  }
+
+  @Test
+  public void evict(){
+    imcache.put(1, 1);
+    imcache.evict(1);
+    assertNull(cache.get(1));
   }
 
   @Test

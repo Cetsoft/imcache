@@ -17,6 +17,7 @@ package com.cetsoft.imcache.cache.builder;
 
 import static com.cetsoft.imcache.cache.util.ArgumentUtils.checkNotEmpty;
 import static com.cetsoft.imcache.cache.util.ArgumentUtils.checkNotNull;
+import static com.cetsoft.imcache.cache.util.ArgumentUtils.checkPositive;
 
 import com.cetsoft.imcache.cache.CacheLoader;
 import com.cetsoft.imcache.cache.EvictionListener;
@@ -167,9 +168,7 @@ public class VersionedOffHeapCacheBuilder extends BaseCacheBuilder {
    * @return the off heap cache builder
    */
   public VersionedOffHeapCacheBuilder concurrencyLevel(final int concurrencyLevel) {
-    if (concurrencyLevel > 11 && concurrencyLevel < 0) {
-      throw new IllegalArgumentException("ConcurrencyLevel must be between 0 and 11 inclusive.");
-    }
+    checkPositive(concurrencyLevel, "ConcurrencyLevel must be between 0 and 11 inclusive.");
     this.concurrencyLevel = concurrencyLevel;
     return this;
   }

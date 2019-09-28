@@ -15,8 +15,12 @@
  */
 package com.cetsoft.imcache.cache.builder;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.cetsoft.imcache.cache.Cache;
+import com.cetsoft.imcache.offheap.OffHeapCache;
+import com.cetsoft.imcache.offheap.bytebuffer.OffHeapByteBufferStore;
 import org.junit.Test;
 
 /**
@@ -45,7 +49,14 @@ public class CacheBuilderTest {
    */
   @Test
   public void offHeapCache() {
-    assertTrue(CacheBuilder.offHeapCache() instanceof OffHeapCacheBuilder);
+    final String key = "key", value = "value";
+    final OffHeapByteBufferStore bufferStore = new OffHeapByteBufferStore(10000, 10);
+    final Cache<String, String> cache = CacheBuilder.offHeapCache()
+        .storage(bufferStore)
+        .build();
+    cache.put(key, value);
+    assertEquals(value, cache.get(key));
+    assertTrue(cache instanceof OffHeapCache);
   }
 
   /**

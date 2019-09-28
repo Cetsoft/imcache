@@ -160,9 +160,7 @@ public class OffHeapCacheBuilder extends BaseCacheBuilder {
    * @return the off heap cache builder
    */
   public OffHeapCacheBuilder concurrencyLevel(final int concurrencyLevel) {
-    if (concurrencyLevel > 11 && concurrencyLevel < 0) {
-      throw new IllegalArgumentException("ConcurrencyLevel must be between 0 and 11 inclusive.");
-    }
+    checkPositive(concurrencyLevel, "ConcurrencyLevel must be between 0 and 11 inclusive.");
     this.concurrencyLevel = concurrencyLevel;
     return this;
   }

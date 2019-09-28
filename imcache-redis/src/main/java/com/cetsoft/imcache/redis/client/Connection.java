@@ -202,12 +202,6 @@ public class Connection {
         socket.close();
       } catch (IOException ex) {
         throw new ConnectionException(ex);
-      } finally {
-        try {
-          socket.close();
-        } catch (IOException e) {
-          throw new ConnectionException(e);
-        }
       }
     }
   }

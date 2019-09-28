@@ -53,6 +53,14 @@ public class OffHeapCacheBuilderTest {
    */
   @Test(expected = NecessaryArgumentException.class)
   public void buildThrowsNecessaryArgumentException() {
-    CacheBuilder.offHeapCache().build();
+    CacheBuilder.offHeapCache().build("my-cache");
+  }
+
+  /**
+   *
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void buildThrowsIllegalArgumentExceptionForNegativeConcurrency() {
+    CacheBuilder.offHeapCache().concurrencyLevel(-1).build("my-cache");
   }
 }
