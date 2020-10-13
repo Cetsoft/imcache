@@ -25,7 +25,7 @@
   <properties>
     <org.springframework.version>5.1.9.RELEASE</org.springframework.version>
     <mockito.version>1.8.4</mockito.version>
-    <junit.version>4.11</junit.version>
+    <junit.version>4.13.1</junit.version>
     <sourceEncoding>UTF-8</sourceEncoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
