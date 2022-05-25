@@ -23,7 +23,7 @@
   </modules>
 
   <properties>
-    <org.springframework.version>5.1.9.RELEASE</org.springframework.version>
+    <org.springframework.version>5.2.22.RELEASE</org.springframework.version>
     <mockito.version>1.8.4</mockito.version>
     <junit.version>4.13.1</junit.version>
     <sourceEncoding>UTF-8</sourceEncoding>
